@@ -510,7 +510,12 @@ export const uploadProfileMedia = async (type, file) => {
   const form = new FormData();
   form.append('image', file);
   const endpoint = type === 'cover' ? '/profile/cover' : '/profile/avatar';
-  return unwrap(await apiRequest(endpoint, { method: 'POST', body: form }));
+  const envelope = unwrap(await apiRequest(endpoint, { method: 'POST', body: form }));
+  const payload = envelope?.data ?? envelope ?? {};
+  return {
+    avatar:     payload.avatar     ?? null,
+    coverImage: payload.coverImage ?? null,
+  };
 };
 
 export const getSkills = async () => {

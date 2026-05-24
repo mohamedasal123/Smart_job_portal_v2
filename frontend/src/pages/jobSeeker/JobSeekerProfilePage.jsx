@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useAuth } from '../../context/useAuth';
 import { Link, useLocation } from 'react-router-dom';
 import ConfirmModal from '../../components/ConfirmModal';
 import SeekerApplicationCard from '../../components/jobSeeker/SeekerApplicationCard';
@@ -214,6 +215,7 @@ function Section({ id, title, icon, children, actions }) {
 export default function JobSeekerProfilePage() {
   const { addToast } = useToast();
   const location = useLocation();
+  const { patchUser, refreshUser } = useAuth();
   const avatarInputRef = useRef(null);
   const coverInputRef = useRef(null);
   const [profile, setProfile] = useState(null);
@@ -316,7 +318,11 @@ export default function JobSeekerProfilePage() {
         avatar: result.avatar || prev.avatar,
         coverImage: result.coverImage || prev.coverImage,
       }));
+      if (type !== 'cover' && result.avatar) {
+        patchUser({ profile_image: result.avatar, avatar: result.avatar });
+      }
       addToast({ title: 'Image updated', message: type === 'cover' ? 'Cover image updated.' : 'Profile photo updated.', type: 'success' });
+      await refreshUser();
     } catch (error) {
       addToast({ title: 'Upload failed', message: error.message || 'Please upload a valid image under 2MB.', type: 'error' });
     } finally {
@@ -557,106 +563,106 @@ export default function JobSeekerProfilePage() {
       </div>
 
       {activeProfileTab === 'overview' && (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
-        <Section title="About & Contact" icon="contact_page" id="about">
-          <div className="grid grid-cols-1 gap-stack-md">
-            <InlineField label="Professional summary" value={profile.bio} icon="notes" multiline onSave={(value) => saveProfilePatch({ bio: value })} placeholder="Tell recruiters about yourself" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-              <InlineField label="Email" value={profile.email} icon="mail" type="email" onSave={(value) => saveProfilePatch({ email: value })} placeholder="Add email" />
-              <InlineField label="Phone" value={profile.phone} icon="call" onSave={(value) => saveProfilePatch({ phone: value })} placeholder="Add phone" />
-              <InlineField label="Location" value={profile.location} icon="location_on" onSave={(value) => saveProfilePatch({ location: value })} placeholder="Add location" />
-              <InlineField label="Expected salary" value={profile.expectedSalary} icon="payments" onSave={(value) => saveProfilePatch({ expectedSalary: value })} placeholder="Add expected salary" />
-              <InlineField label="Portfolio" value={profile.portfolio} icon="language" type="url" onSave={(value) => saveProfilePatch({ portfolio: value })} placeholder="https://" />
-              <InlineField label="LinkedIn" value={profile.linkedin} icon="link" type="url" onSave={(value) => saveProfilePatch({ linkedin: value })} placeholder="https://linkedin.com/in/..." />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+          <Section title="About & Contact" icon="contact_page" id="about">
+            <div className="grid grid-cols-1 gap-stack-md">
+              <InlineField label="Professional summary" value={profile.bio} icon="notes" multiline onSave={(value) => saveProfilePatch({ bio: value })} placeholder="Tell recruiters about yourself" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+                <InlineField label="Email" value={profile.email} icon="mail" type="email" onSave={(value) => saveProfilePatch({ email: value })} placeholder="Add email" />
+                <InlineField label="Phone" value={profile.phone} icon="call" onSave={(value) => saveProfilePatch({ phone: value })} placeholder="Add phone" />
+                <InlineField label="Location" value={profile.location} icon="location_on" onSave={(value) => saveProfilePatch({ location: value })} placeholder="Add location" />
+                <InlineField label="Expected salary" value={profile.expectedSalary} icon="payments" onSave={(value) => saveProfilePatch({ expectedSalary: value })} placeholder="Add expected salary" />
+                <InlineField label="Portfolio" value={profile.portfolio} icon="language" type="url" onSave={(value) => saveProfilePatch({ portfolio: value })} placeholder="https://" />
+                <InlineField label="LinkedIn" value={profile.linkedin} icon="link" type="url" onSave={(value) => saveProfilePatch({ linkedin: value })} placeholder="https://linkedin.com/in/..." />
+              </div>
             </div>
-          </div>
-        </Section>
+          </Section>
 
-        <Section title="Experience & Education" icon="school" id="experience">
-          <div className="grid grid-cols-1 gap-stack-md">
-            <InlineField label="Years of experience" value={profile.yearsOfExperience} icon="work" type="number" onSave={(value) => saveProfilePatch({ years_of_experience: value })} placeholder="Add years of experience" />
-            <InlineField label="Education level" value={profile.educationLevel} icon="school" onSave={(value) => saveProfilePatch({ education_level: value })} placeholder="Add education level" />
-          </div>
-        </Section>
-      </div>
+          <Section title="Experience & Education" icon="school" id="experience">
+            <div className="grid grid-cols-1 gap-stack-md">
+              <InlineField label="Years of experience" value={profile.yearsOfExperience} icon="work" type="number" onSave={(value) => saveProfilePatch({ years_of_experience: value })} placeholder="Add years of experience" />
+              <InlineField label="Education level" value={profile.educationLevel} icon="school" onSave={(value) => saveProfilePatch({ education_level: value })} placeholder="Add education level" />
+            </div>
+          </Section>
+        </div>
       )}
 
       {activeProfileTab === 'skills' && (
-      <Section title="Skills" icon="psychology" id="skills">
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-gutter">
-          <div className="space-y-stack-md">
-            <form onSubmit={handleAddSkill} className="bg-surface-container-low rounded-xl border border-outline-variant p-4 flex flex-col gap-3 lg:flex-row lg:items-center">
-              <span className="material-symbols-outlined text-on-surface-variant">search</span>
-              <input className="w-full bg-transparent border-none focus:ring-0 font-body-md text-on-surface placeholder:text-outline-variant outline-none" placeholder="Add a new skill..." type="text" value={newSkill} onChange={(event) => setNewSkill(event.target.value)} />
-              <select className="rounded-lg border border-outline-variant bg-surface-container-lowest px-3 py-2 text-sm text-primary outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20" value={newSkillCategory} onChange={(event) => setNewSkillCategory(event.target.value)}>
-                {SKILL_CATEGORY_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-              </select>
-              {editingSkill && <button className="rounded-lg border border-outline-variant px-3 py-2 font-label-sm text-on-surface-variant hover:bg-surface-container-lowest" onClick={() => { setEditingSkill(null); setNewSkill(''); setNewSkillCategory('technical'); }} type="button">Cancel</button>}
-              {newSkill && <button className="bg-secondary text-on-secondary font-label-sm px-3 py-2 rounded flex items-center justify-center gap-1 hover:opacity-90 transition-opacity" type="submit"><span className="material-symbols-outlined text-[16px]">{editingSkill ? 'save' : 'add'}</span>{editingSkill ? 'Save' : 'Add'}</button>}
-            </form>
-            {[
-              ['Technical Skills', technicalSkills],
-              ['Soft Skills', softSkills],
-              ['Tools & Platforms', tools],
-            ].map(([title, items]) => (
-              <div className="rounded-xl border border-outline-variant bg-surface-container-low p-4" key={title}>
-                <h3 className="font-h3 text-primary mb-3">{title}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {items.length ? items.map((skill) => <SkillChip key={skill.id} skill={skill} onEdit={startEditSkill} onRemove={setSkillPendingRemoval} />) : <p className="text-on-surface-variant text-sm">No {title.toLowerCase()} added yet.</p>}
+        <Section title="Skills" icon="psychology" id="skills">
+          <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-gutter">
+            <div className="space-y-stack-md">
+              <form onSubmit={handleAddSkill} className="bg-surface-container-low rounded-xl border border-outline-variant p-4 flex flex-col gap-3 lg:flex-row lg:items-center">
+                <span className="material-symbols-outlined text-on-surface-variant">search</span>
+                <input className="w-full bg-transparent border-none focus:ring-0 font-body-md text-on-surface placeholder:text-outline-variant outline-none" placeholder="Add a new skill..." type="text" value={newSkill} onChange={(event) => setNewSkill(event.target.value)} />
+                <select className="rounded-lg border border-outline-variant bg-surface-container-lowest px-3 py-2 text-sm text-primary outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20" value={newSkillCategory} onChange={(event) => setNewSkillCategory(event.target.value)}>
+                  {SKILL_CATEGORY_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                </select>
+                {editingSkill && <button className="rounded-lg border border-outline-variant px-3 py-2 font-label-sm text-on-surface-variant hover:bg-surface-container-lowest" onClick={() => { setEditingSkill(null); setNewSkill(''); setNewSkillCategory('technical'); }} type="button">Cancel</button>}
+                {newSkill && <button className="bg-secondary text-on-secondary font-label-sm px-3 py-2 rounded flex items-center justify-center gap-1 hover:opacity-90 transition-opacity" type="submit"><span className="material-symbols-outlined text-[16px]">{editingSkill ? 'save' : 'add'}</span>{editingSkill ? 'Save' : 'Add'}</button>}
+              </form>
+              {[
+                ['Technical Skills', technicalSkills],
+                ['Soft Skills', softSkills],
+                ['Tools & Platforms', tools],
+              ].map(([title, items]) => (
+                <div className="rounded-xl border border-outline-variant bg-surface-container-low p-4" key={title}>
+                  <h3 className="font-h3 text-primary mb-3">{title}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {items.length ? items.map((skill) => <SkillChip key={skill.id} skill={skill} onEdit={startEditSkill} onRemove={setSkillPendingRemoval} />) : <p className="text-on-surface-variant text-sm">No {title.toLowerCase()} added yet.</p>}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-          <aside className="rounded-xl border border-outline-variant bg-surface-container-low p-4 h-fit">
-            <h3 className="font-h3 text-primary mb-2 flex items-center gap-2"><span className="material-symbols-outlined text-secondary">tips_and_updates</span>Suggested for You</h3>
-            <p className="font-body-sm text-body-sm text-on-surface-variant mb-4">Use the filters to add Technical Skills, Soft Skills, or Tools & Platforms to the matching section.</p>
-            <div className="mb-4 flex flex-wrap gap-2">
-              {SKILL_CATEGORY_FILTERS.map((filter) => (
-                <button className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${suggestionCategory === filter.value ? 'border-secondary bg-secondary text-on-secondary' : 'border-outline-variant bg-surface text-on-surface-variant hover:bg-surface-container-lowest'}`} key={filter.value} onClick={() => setSuggestionCategory(filter.value)} type="button">
-                  {filter.label}
-                </button>
               ))}
             </div>
-            <div className="flex flex-col gap-2">
-              {filteredSuggestions.length ? filteredSuggestions.map((skill) => (
-                <button className="flex items-center justify-between p-3 border border-outline-variant rounded-lg hover:border-secondary hover:bg-surface-container-lowest transition-colors group text-left" key={skill.id} onClick={() => addSuggestedSkill(skill)} type="button">
-                  <span><span className="font-body-md text-sm text-primary font-bold block">{skill.name}</span><span className="font-label-sm text-[12px] text-on-surface-variant">{skill.category === 'soft_skill' ? 'Soft Skill' : skill.category === 'tool' ? 'Tool' : 'Technical'}</span></span>
-                  <span className="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors">add_circle</span>
-                </button>
-              )) : <p className="text-on-surface-variant text-sm">You've added all suggested skills.</p>}
-            </div>
-          </aside>
-        </div>
-      </Section>
+            <aside className="rounded-xl border border-outline-variant bg-surface-container-low p-4 h-fit">
+              <h3 className="font-h3 text-primary mb-2 flex items-center gap-2"><span className="material-symbols-outlined text-secondary">tips_and_updates</span>Suggested for You</h3>
+              <p className="font-body-sm text-body-sm text-on-surface-variant mb-4">Use the filters to add Technical Skills, Soft Skills, or Tools & Platforms to the matching section.</p>
+              <div className="mb-4 flex flex-wrap gap-2">
+                {SKILL_CATEGORY_FILTERS.map((filter) => (
+                  <button className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${suggestionCategory === filter.value ? 'border-secondary bg-secondary text-on-secondary' : 'border-outline-variant bg-surface text-on-surface-variant hover:bg-surface-container-lowest'}`} key={filter.value} onClick={() => setSuggestionCategory(filter.value)} type="button">
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-col gap-2">
+                {filteredSuggestions.length ? filteredSuggestions.map((skill) => (
+                  <button className="flex items-center justify-between p-3 border border-outline-variant rounded-lg hover:border-secondary hover:bg-surface-container-lowest transition-colors group text-left" key={skill.id} onClick={() => addSuggestedSkill(skill)} type="button">
+                    <span><span className="font-body-md text-sm text-primary font-bold block">{skill.name}</span><span className="font-label-sm text-[12px] text-on-surface-variant">{skill.category === 'soft_skill' ? 'Soft Skill' : skill.category === 'tool' ? 'Tool' : 'Technical'}</span></span>
+                    <span className="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors">add_circle</span>
+                  </button>
+                )) : <p className="text-on-surface-variant text-sm">You've added all suggested skills.</p>}
+              </div>
+            </aside>
+          </div>
+        </Section>
       )}
 
       {activeProfileTab === 'saved' && (
-      <Section title="Saved Jobs" icon="bookmark" id="saved-jobs">
-        {savedJobs.length ? (
-          <Stagger className="grid grid-cols-1 xl:grid-cols-2 gap-gutter" delayChildren={0.05} staggerChildren={0.05}>
-            {savedJobs.map((job) => <Stagger.Item key={job.id}><SeekerJobCard job={job} onSavedStateChange={(jobId, isSaved) => { if (!isSaved) setSavedJobs((prev) => prev.filter((item) => item.id !== jobId)); }} /></Stagger.Item>)}
-          </Stagger>
-        ) : (
-          <SeekerEmptyState icon="bookmark_border" title="Your wishlist is empty" description="Browse jobs and use the bookmark action to keep them here." />
-        )}
-      </Section>
+        <Section title="Saved Jobs" icon="bookmark" id="saved-jobs">
+          {savedJobs.length ? (
+            <Stagger className="grid grid-cols-1 xl:grid-cols-2 gap-gutter" delayChildren={0.05} staggerChildren={0.05}>
+              {savedJobs.map((job) => <Stagger.Item key={job.id}><SeekerJobCard job={job} onSavedStateChange={(jobId, isSaved) => { if (!isSaved) setSavedJobs((prev) => prev.filter((item) => item.id !== jobId)); }} /></Stagger.Item>)}
+            </Stagger>
+          ) : (
+            <SeekerEmptyState icon="bookmark_border" title="Your wishlist is empty" description="Browse jobs and use the bookmark action to keep them here." />
+          )}
+        </Section>
       )}
 
       {activeProfileTab === 'applications' && (
-      <Section
-        actions={<div className="flex gap-2 overflow-x-auto pb-1">{APPLICATION_TABS.map((tab) => <button className={`px-3 py-1.5 rounded-full font-label-md whitespace-nowrap border transition-colors ${applicationFilter === tab.value ? 'bg-secondary text-on-secondary border-secondary' : 'bg-surface border-outline-variant text-on-surface-variant hover:bg-surface-container-low'}`} key={tab.value} onClick={() => setApplicationFilter(tab.value)} type="button">{tab.label}</button>)}</div>}
-        icon="work_history"
-        id="applications"
-        title="Applications"
-      >
-        {filteredApplications.length ? (
-          <Stagger className="space-y-gutter" delayChildren={0.05} staggerChildren={0.06}>
-            {filteredApplications.map((application) => <Stagger.Item key={application.id}><SeekerApplicationCard application={application} /></Stagger.Item>)}
-          </Stagger>
-        ) : (
-          <SeekerEmptyState icon="description" title="No applications found" description={applicationFilter === 'all' ? "You haven't applied to any jobs yet." : `You don't have any ${applicationFilter.replace('_', ' ')} applications.`} />
-        )}
-      </Section>
+        <Section
+          actions={<div className="flex gap-2 overflow-x-auto pb-1">{APPLICATION_TABS.map((tab) => <button className={`px-3 py-1.5 rounded-full font-label-md whitespace-nowrap border transition-colors ${applicationFilter === tab.value ? 'bg-secondary text-on-secondary border-secondary' : 'bg-surface border-outline-variant text-on-surface-variant hover:bg-surface-container-low'}`} key={tab.value} onClick={() => setApplicationFilter(tab.value)} type="button">{tab.label}</button>)}</div>}
+          icon="work_history"
+          id="applications"
+          title="Applications"
+        >
+          {filteredApplications.length ? (
+            <Stagger className="space-y-gutter" delayChildren={0.05} staggerChildren={0.06}>
+              {filteredApplications.map((application) => <Stagger.Item key={application.id}><SeekerApplicationCard application={application} /></Stagger.Item>)}
+            </Stagger>
+          ) : (
+            <SeekerEmptyState icon="description" title="No applications found" description={applicationFilter === 'all' ? "You haven't applied to any jobs yet." : `You don't have any ${applicationFilter.replace('_', ' ')} applications.`} />
+          )}
+        </Section>
       )}
 
       <ConfirmModal

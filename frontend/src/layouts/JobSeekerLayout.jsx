@@ -292,9 +292,10 @@ export default function JobSeekerLayout({ children }) {
     }
   };
 
-  const displayName = user?.name || 'Job Seeker';
+  const displayName = user?.profile?.name || user?.name || 'Job Seeker';
   const displayEmail = user?.email || '';
   const initials = getInitials(displayName);
+  const profileImage = user?.profile_image || user?.avatar || null;
   const unreadCount = recentNotifications.filter((notification) => !notification.read_at && !notification.read).length;
 
   return (
@@ -391,9 +392,17 @@ export default function JobSeekerLayout({ children }) {
                 className="flex items-center gap-stack-sm hover:opacity-80 transition-opacity"
                 type="button"
               >
-                <div className="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-h3 text-h3">
-                  {initials}
-                </div>
+                {profileImage ? (
+                  <img
+                    alt={displayName}
+                    className="w-10 h-10 rounded-full object-cover border border-outline-variant"
+                    src={profileImage}
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-h3 text-h3">
+                    {initials}
+                  </div>
+                )}
                 <div className="text-left hidden lg:block">
                   <p className="font-body-md text-body-md font-semibold text-primary leading-tight">{displayName}</p>
                   <p className="font-label-sm text-label-sm text-on-surface-variant leading-tight max-w-[150px] truncate" title={displayEmail}>{displayEmail}</p>

@@ -68,7 +68,7 @@ export default function CompanyLayout() {
   const routePath = location[ROUTE_PATH_KEY];
   const [profile, setProfile] = useState({ name: '', logo: '' });
   const [recentNotifications, setRecentNotifications] = useState([]);
-  
+
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -83,7 +83,7 @@ export default function CompanyLayout() {
     companyDataService.getCompanyProfile().then(res => {
       if (isMounted) setProfile(res);
     }).catch(console.error);
-    
+
     const fetchNotifs = () => {
       companyDataService.getCompanyNotifications().then(notifications => {
         if (isMounted) {
@@ -106,13 +106,13 @@ export default function CompanyLayout() {
     };
 
     fetchNotifs();
-    
+
     // Listen for custom event to trigger refresh immediately
     const handleUpdate = () => fetchNotifs();
     window.addEventListener('notifications_updated', handleUpdate);
-    
-    return () => { 
-      isMounted = false; 
+
+    return () => {
+      isMounted = false;
       window.removeEventListener('notifications_updated', handleUpdate);
     };
   }, []);
@@ -186,6 +186,7 @@ export default function CompanyLayout() {
   const displayName = profile.name || user?.name || 'Company';
   const displayEmail = user?.email || '';
   const initials = displayName.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase();
+  const companyImage = user?.profile_image || user?.avatar || profile.logo || null;
   const unreadCount = recentNotifications.filter(n => !n.read_at && !n.read).length;
   const sidebarContent = (onNavigate) => (
     <>
@@ -268,7 +269,7 @@ export default function CompanyLayout() {
             >
               <span className="material-symbols-outlined">menu</span>
             </button>
-            <button 
+            <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="hidden md:flex w-10 h-10 rounded-lg items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"
               title="Toggle Sidebar"
@@ -279,10 +280,10 @@ export default function CompanyLayout() {
 
           <div className="flex items-center gap-stack-md">
             <ThemeToggle compact />
-            
+
             {/* Notifications Dropdown */}
             <div className="relative" ref={notifRef}>
-              <button 
+              <button
                 onClick={() => setIsNotifOpen(!isNotifOpen)}
                 className="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors relative"
               >
@@ -293,7 +294,7 @@ export default function CompanyLayout() {
                   </span>
                 )}
               </button>
-              
+
               {isNotifOpen && (
                 <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-80 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-md overflow-hidden z-50">
                   <div className="px-4 py-3 border-b border-outline-variant bg-surface-container-low flex justify-between items-center gap-3">
@@ -308,8 +309,8 @@ export default function CompanyLayout() {
                   </div>
                   <div className="max-h-[300px] overflow-y-auto">
                     {recentNotifications.length > 0 ? recentNotifications.map((notif, i) => (
-                      <div 
-                        key={notif.id || i} 
+                      <div
+                        key={notif.id || i}
                         className="px-4 py-3 border-b border-outline-variant last:border-0 hover:bg-surface-container-low transition-colors text-left text-sm relative group cursor-pointer"
                         onClick={(e) => handleNotifClick(notif, e)}
                       >
@@ -329,15 +330,15 @@ export default function CompanyLayout() {
             </div>
 
             <div className="h-8 w-px bg-outline-variant" />
-            
+
             {/* User Profile Dropdown */}
             <div className="relative" ref={profileRef}>
-              <button 
+              <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
                 className="flex items-center gap-stack-sm hover:opacity-80 transition-opacity"
               >
-                {profile.logo ? (
-                  <img alt={displayName} className="w-10 h-10 rounded-full object-cover border border-outline-variant" src={profile.logo} />
+                {companyImage ? (
+                  <img alt={displayName} className="w-10 h-10 rounded-full object-cover border border-outline-variant" src={companyImage} />
                 ) : (
                   <div className="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-h3 text-h3">
                     {initials}
@@ -356,24 +357,24 @@ export default function CompanyLayout() {
                     <p className="font-semibold text-primary">{displayName}</p>
                     <p className="text-xs text-on-surface-variant truncate" title={displayEmail}>{displayEmail}</p>
                   </div>
-                  <Link 
-                    to={ROUTES.COMPANY_PROFILE} 
+                  <Link
+                    to={ROUTES.COMPANY_PROFILE}
                     className="flex items-center gap-2 px-4 py-3 hover:bg-surface-container-low transition-colors text-on-surface font-body-md"
                     onClick={() => setIsProfileOpen(false)}
                   >
                     <span className="material-symbols-outlined text-[20px]">domain</span>
                     Company Profile
                   </Link>
-                  <Link 
-                    to={ROUTES.COMPANY_SETTINGS} 
+                  <Link
+                    to={ROUTES.COMPANY_SETTINGS}
                     className="flex items-center gap-2 px-4 py-3 hover:bg-surface-container-low transition-colors text-on-surface font-body-md"
                     onClick={() => setIsProfileOpen(false)}
                   >
                     <span className="material-symbols-outlined text-[20px]">manage_accounts</span>
                     Account Settings
                   </Link>
-                  <Link 
-                    to={ROUTES.HOME} 
+                  <Link
+                    to={ROUTES.HOME}
                     className="flex items-center gap-2 px-4 py-3 hover:bg-surface-container-low transition-colors text-on-surface font-body-md"
                     onClick={() => setIsProfileOpen(false)}
                   >
@@ -381,7 +382,7 @@ export default function CompanyLayout() {
                     View Public Site
                   </Link>
                   <div className="border-t border-outline-variant">
-                    <button 
+                    <button
                       onClick={() => { setIsProfileOpen(false); handleLogout(); }}
                       className="w-full flex items-center gap-2 px-4 py-3 hover:bg-error-container hover:text-error transition-colors text-error font-body-md"
                     >

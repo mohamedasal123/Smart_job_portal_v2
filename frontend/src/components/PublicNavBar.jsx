@@ -19,7 +19,7 @@ export default function PublicNavBar({ showAuthActions = true }) {
   const { pathname } = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
-  
+
   const isAdmin = user?.role === 'admin';
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [recentActivities, setRecentActivities] = useState([]);
@@ -33,7 +33,7 @@ export default function PublicNavBar({ showAuthActions = true }) {
           const dismissed = JSON.parse(localStorage.getItem('dismissed_notifications') || '[]');
           setRecentActivities(res.filter(act => !dismissed.includes(act.id)).slice(0, 5));
         }
-      }).catch(() => {});
+      }).catch(() => { });
       return () => { isMounted = false; };
     }
   }, [isAdmin]);
@@ -92,10 +92,10 @@ export default function PublicNavBar({ showAuthActions = true }) {
 
         <div className="flex items-center gap-stack-sm">
           <ThemeToggle compact />
-          
+
           {isAdmin && (
             <div className="relative hidden md:block" ref={notifRef}>
-              <button 
+              <button
                 onClick={() => setIsNotifOpen(!isNotifOpen)}
                 className="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors relative"
               >
@@ -106,7 +106,7 @@ export default function PublicNavBar({ showAuthActions = true }) {
                   </span>
                 )}
               </button>
-              
+
               {isNotifOpen && (
                 <div className="absolute right-0 mt-2 w-80 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-md overflow-hidden z-50">
                   <div className="px-4 py-3 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
@@ -133,7 +133,7 @@ export default function PublicNavBar({ showAuthActions = true }) {
           )}
 
           {/* Mobile Menu Toggle */}
-          <button 
+          <button
             className="md:hidden w-9 h-9 flex items-center justify-center text-on-surface hover:bg-surface-container-low rounded-full transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >

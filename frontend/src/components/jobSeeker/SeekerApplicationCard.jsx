@@ -5,7 +5,7 @@ import MatchScoreBadge from './MatchScoreBadge';
 export default function SeekerApplicationCard({ application }) {
   const { job } = application;
   const matchScore = Number(application.matchScore || 0);
-  
+
   return (
     <div className="bg-surface-container-lowest rounded-xl p-stack-lg border border-outline-variant shadow-ambient hover:shadow-hover transition-all">
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
@@ -26,7 +26,7 @@ export default function SeekerApplicationCard({ application }) {
           <SeekerStatusBadge status={application.status} />
         </div>
       </div>
-      
+
       <div className="flex flex-wrap items-center justify-between gap-3 mt-6 pt-4 border-t border-outline-variant">
         <div className="flex flex-wrap items-center gap-4 text-sm text-on-surface-variant">
           <span className="flex items-center gap-2">
@@ -37,7 +37,7 @@ export default function SeekerApplicationCard({ application }) {
             <MatchScoreBadge score={matchScore} size="sm" showLabel={true} />
           )}
         </div>
-        
+
         <Link
           to={`/seeker/applications/${application.id}`}
           className="group inline-flex items-center gap-unit text-secondary font-label-md text-label-md hover:text-primary transition-colors whitespace-nowrap"

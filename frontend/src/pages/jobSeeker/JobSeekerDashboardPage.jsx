@@ -26,7 +26,7 @@ export default function JobSeekerDashboardPage() {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, []);
 
@@ -52,9 +52,9 @@ export default function JobSeekerDashboardPage() {
 
   return (
     <div className="px-4 sm:px-6 lg:px-margin-desktop py-6 lg:py-margin-desktop space-y-gutter pb-stack-lg max-w-7xl mx-auto">
-      <SeekerPageHeader 
-        title="Welcome back!" 
-        subtitle={`Your profile is ${data.profileCompletion}% complete. Let's find your next opportunity.`} 
+      <SeekerPageHeader
+        title="Welcome back!"
+        subtitle={`Your profile is ${data.profileCompletion}% complete. Let's find your next opportunity.`}
         icon="waving_hand"
       />
 
@@ -151,11 +151,11 @@ export default function JobSeekerDashboardPage() {
               View all
             </Link>
           </div>
-          
+
           <Stagger className="grid grid-cols-1 md:grid-cols-2 gap-gutter" delayChildren={0.05} staggerChildren={0.06}>
             {data.topRecommendedJobs.map((rec) => (
               <Stagger.Item key={rec.jobId}>
-                <SeekerJobCard job={{...rec.job, recommendation: rec}} />
+                <SeekerJobCard job={{ ...rec.job, recommendation: rec }} />
               </Stagger.Item>
             ))}
             {data.topRecommendedJobs.length === 0 && (
@@ -166,7 +166,7 @@ export default function JobSeekerDashboardPage() {
             )}
           </Stagger>
         </section>
-        
+
         <section className="space-y-stack-md min-w-0">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <h2 className="font-h2 text-h2 text-primary truncate">Recent Applications</h2>
@@ -174,7 +174,7 @@ export default function JobSeekerDashboardPage() {
               View all
             </Link>
           </div>
-          
+
           <Stagger className="flex flex-col gap-gutter" delayChildren={0.05} staggerChildren={0.06}>
             {data.recentApplications.map((app) => (
               <Stagger.Item key={app.id}>
@@ -188,7 +188,7 @@ export default function JobSeekerDashboardPage() {
               </Reveal>
             )}
           </Stagger>
-          
+
         </section>
       </div>
     </div>

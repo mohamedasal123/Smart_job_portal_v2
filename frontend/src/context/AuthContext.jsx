@@ -38,6 +38,10 @@ export function AuthProvider({ children }) {
     return persistUser(response.data);
   }, [persistUser]);
 
+  const patchUser = useCallback((patch) => {
+    setUser((prev) => prev ? { ...prev, ...patch } : prev);
+  }, []);
+
   // On every mount, validate the session against the server.
   useEffect(() => {
     let isMounted = true;
@@ -128,10 +132,11 @@ export function AuthProvider({ children }) {
       error,
       login,
       logout,
+      patchUser,
       refreshUser,
       register,
     }),
-    [error, isLoading, login, logout, refreshUser, register, user],
+    [error, isLoading, login, logout, patchUser, refreshUser, register, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

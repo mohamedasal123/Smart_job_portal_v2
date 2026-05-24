@@ -4,7 +4,7 @@ import CompanySkillTag from './CompanySkillTag';
 import CompanyStatusBadge from './CompanyStatusBadge';
 import ApplicantStatusActions from './ApplicantStatusActions';
 
-export default function CompanyApplicantCard({ applicant, onShortlist, onReject }) {
+export default function CompanyApplicantCard({ applicant, onShortlist, onReject, onApprove }) {
   return (
     <article className="bg-surface-container-lowest rounded-xl p-stack-lg border border-outline-variant shadow-ambient">
       <div className="flex items-start gap-stack-md">
@@ -22,7 +22,7 @@ export default function CompanyApplicantCard({ applicant, onShortlist, onReject 
       <div className="flex flex-wrap gap-unit mt-stack-md">
         {applicant.matchedSkills.slice(0, 4).map((skill) => <CompanySkillTag tone="matched" key={skill}>{skill}</CompanySkillTag>)}
       </div>
-      <ApplicantStatusActions applicant={applicant} onReject={onReject} onShortlist={onShortlist} />
+      <ApplicantStatusActions applicant={applicant} onReject={onReject} onShortlist={onShortlist} onApprove={onApprove} />
     </article>
   );
 }

@@ -57,9 +57,9 @@ function TextArea(props) {
 function SelectInput(props) {
   return (
     <div className="relative">
-      <select 
-        className="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-4 pr-10 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary disabled:opacity-50 appearance-none cursor-pointer" 
-        {...props} 
+      <select
+        className="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-4 pr-10 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary disabled:opacity-50 appearance-none cursor-pointer"
+        {...props}
       />
       <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
         expand_more
@@ -175,6 +175,7 @@ function ApplicantActionModals({ shortlistTarget, rejectTarget, setShortlistTarg
 }
 
 function useApplicantActions(refresh) {
+  const { addToast } = useToast();
   const [shortlistTarget, setShortlistTarget] = useState(null);
   const [rejectTarget, setRejectTarget] = useState(null);
   const [approveTarget, setApproveTarget] = useState(null);
@@ -193,9 +194,17 @@ function useApplicantActions(refresh) {
         message={approveTarget ? `Approve ${approveTarget.name} for this role?` : ''}
         onCancel={() => setApproveTarget(null)}
         onConfirm={async () => {
-          await companyDataService.updateApplicantStatus(approveTarget.applicationId, 'approved');
-          setApproveTarget(null);
-          refresh?.();
+          try {
+            await companyDataService.updateApplicantStatus(approveTarget.applicationId, 'approved');
+            addToast({
+              title: 'Candidate approved',
+              message: `${approveTarget.name} was approved for this role.`,
+            });
+            setApproveTarget(null);
+            refresh?.();
+          } catch (e) {
+            addToast({ title: 'Error', message: 'Failed to approve applicant.', type: 'error' });
+          }
         }}
         open={Boolean(approveTarget)}
         title="Approve candidate"
@@ -216,32 +225,32 @@ function JobForm({ initialJob, mode }) {
   const { errors, serverError, handleApiError, clearErrors, setErrors } = useValidationErrors();
   const [savingStatus, setSavingStatus] = useState(null); // 'draft', 'active', 'preview', etc
   const [form, setForm] = useState({
-      title: initialJob?.title || '',
-      category: initialJob?.category || '',
-      location: initialJob?.location || '',
-      workMode: initialJob?.workMode || 'Hybrid',
-      type: initialJob?.type || '',
-      salaryMin: initialJob?.salaryMin || 90000,
-      salaryMax: initialJob?.salaryMax || 130000,
-      description: initialJob?.description || '',
-      responsibilities: toText(initialJob?.responsibilities),
-      requiredSkills: toText(initialJob?.requiredSkills),
-      experienceLevel: initialJob?.experienceLevel || '',
-      education: initialJob?.education || '',
-    });
+    title: initialJob?.title || '',
+    category: initialJob?.category || '',
+    location: initialJob?.location || '',
+    workMode: initialJob?.workMode || 'Hybrid',
+    type: initialJob?.type || '',
+    salaryMin: initialJob?.salaryMin || 90000,
+    salaryMax: initialJob?.salaryMax || 130000,
+    description: initialJob?.description || '',
+    responsibilities: toText(initialJob?.responsibilities),
+    requiredSkills: toText(initialJob?.requiredSkills),
+    experienceLevel: initialJob?.experienceLevel || '',
+    education: initialJob?.education || '',
+  });
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
-    const validate = () => {
-      clearErrors();
-      const nextErrors = {};
-      if (!form.title.trim()) nextErrors.title = 'Job title is required.';
-      if (!form.category.trim()) nextErrors.category = 'Category is required.';
-      if (!form.location.trim()) nextErrors.location = 'Location is required.';
-      if (!form.type.trim()) nextErrors.type = 'Job type is required.';
-      if (!form.description.trim()) nextErrors.description = 'Description is required.';
-      if (!toList(form.requiredSkills).length) nextErrors.requiredSkills = 'Add at least one required skill.';
-    
+  const validate = () => {
+    clearErrors();
+    const nextErrors = {};
+    if (!form.title.trim()) nextErrors.title = 'Job title is required.';
+    if (!form.category.trim()) nextErrors.category = 'Category is required.';
+    if (!form.location.trim()) nextErrors.location = 'Location is required.';
+    if (!form.type.trim()) nextErrors.type = 'Job type is required.';
+    if (!form.description.trim()) nextErrors.description = 'Description is required.';
+    if (!toList(form.requiredSkills).length) nextErrors.requiredSkills = 'Add at least one required skill.';
+
     if (Object.keys(nextErrors).length) {
       setErrors(nextErrors);
       const firstError = Object.values(nextErrors)[0];
@@ -268,9 +277,9 @@ function JobForm({ initialJob, mode }) {
         const updated = await companyDataService.updateCompanyJob(initialJob.id, payload(status === 'preview' ? 'draft' : status));
         addToast({ title: 'Job updated', message: `${updated.title} was saved.` });
         if (status === 'preview') {
-            navigate(`/company/jobs/${updated.id}/preview`);
+          navigate(`/company/jobs/${updated.id}/preview`);
         } else {
-            navigate(status === 'draft' ? ROUTES.COMPANY_JOBS : `/company/jobs/${updated.id}`);
+          navigate(status === 'draft' ? ROUTES.COMPANY_JOBS : `/company/jobs/${updated.id}`);
         }
       } else {
         const created = await companyDataService.createCompanyJob(payload(status === 'preview' ? 'draft' : status));
@@ -293,25 +302,25 @@ function JobForm({ initialJob, mode }) {
           <p>{serverError}</p>
         </div>
       )}
-        <Section title="Basic info">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-            <Field error={errors.title} label="Job title"><TextInput disabled={isSaving} onChange={(event) => 
-update('title', event.target.value)} value={form.title} /></Field>
-            <Field error={errors.category} label="Category">
-              <SelectInput disabled={isSaving} onChange={(event) => update('category', event.target.value)} value={form.category}>
-                <option value="">Select category</option>
-                <option value="Engineering">Engineering</option>
-                <option value="Design">Design</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Data Science">Data Science</option>
-                <option value="Finance">Finance</option>
-                <option value="Customer Success">Customer Success</option>
-                <option value="Operations">Operations</option>
-                <option value="Human Resources">Human Resources</option>
-                <option value="Other">Other</option>
-              </SelectInput>
-            </Field>
-            <Field error={errors.type} label="Job type">
+      <Section title="Basic info">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+          <Field error={errors.title} label="Job title"><TextInput disabled={isSaving} onChange={(event) =>
+            update('title', event.target.value)} value={form.title} /></Field>
+          <Field error={errors.category} label="Category">
+            <SelectInput disabled={isSaving} onChange={(event) => update('category', event.target.value)} value={form.category}>
+              <option value="">Select category</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Design">Design</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Data Science">Data Science</option>
+              <option value="Finance">Finance</option>
+              <option value="Customer Success">Customer Success</option>
+              <option value="Operations">Operations</option>
+              <option value="Human Resources">Human Resources</option>
+              <option value="Other">Other</option>
+            </SelectInput>
+          </Field>
+          <Field error={errors.type} label="Job type">
             <SelectInput disabled={isSaving} onChange={(event) => update('type', event.target.value)} value={form.type}>
               <option value="">Select type</option>
               <option value="full_time">Full time</option>
@@ -349,18 +358,18 @@ update('title', event.target.value)} value={form.title} /></Field>
       <Section title="Salary, experience, and education">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
           <Field error={errors.salaryMin} label="Salary min">
-            <TextInput 
-              disabled={isSaving} 
-              onChange={(event) => update('salaryMin', event.target.value.replace(/\D/g, '').slice(0, 7))} 
-              value={form.salaryMin ? Number(form.salaryMin).toLocaleString() : ''} 
+            <TextInput
+              disabled={isSaving}
+              onChange={(event) => update('salaryMin', event.target.value.replace(/\D/g, '').slice(0, 7))}
+              value={form.salaryMin ? Number(form.salaryMin).toLocaleString() : ''}
               placeholder="e.g. 90,000"
             />
           </Field>
           <Field error={errors.salaryMax} label="Salary max">
-            <TextInput 
-              disabled={isSaving} 
-              onChange={(event) => update('salaryMax', event.target.value.replace(/\D/g, '').slice(0, 7))} 
-              value={form.salaryMax ? Number(form.salaryMax).toLocaleString() : ''} 
+            <TextInput
+              disabled={isSaving}
+              onChange={(event) => update('salaryMax', event.target.value.replace(/\D/g, '').slice(0, 7))}
+              value={form.salaryMax ? Number(form.salaryMax).toLocaleString() : ''}
               placeholder="e.g. 130,000"
             />
           </Field>
@@ -381,15 +390,15 @@ update('title', event.target.value)} value={form.title} /></Field>
 
       <div className="flex flex-wrap justify-end gap-stack-sm">
         <button type="button" disabled={isSaving} className={buttonSecondary} onClick={() => navigate(mode === 'edit' ? `/company/jobs/${initialJob.id}` : ROUTES.COMPANY_JOBS)}>Cancel</button>
-        
+
         <button type="button" disabled={isSaving} className={buttonSecondary} onClick={() => save('draft')}>
-            {savingStatus === 'draft' ? 'Saving...' : 'Save Draft'}
+          {savingStatus === 'draft' ? 'Saving...' : 'Save Draft'}
         </button>
-        
+
         <button type="button" disabled={isSaving} className={buttonSecondary} onClick={() => save('preview')}>
-            {savingStatus === 'preview' ? 'Loading...' : 'Preview'}
+          {savingStatus === 'preview' ? 'Loading...' : 'Preview'}
         </button>
-        
+
         <button type="button" disabled={isSaving} className={buttonPrimary} onClick={() => save('active')}>
           {savingStatus === 'active' ? 'Publishing...' : (mode === 'edit' ? 'Publish Changes' : 'Publish Job')}
         </button>
@@ -422,7 +431,7 @@ function UndoToast({ target, onClear }) {
       <p className="font-body-sm truncate flex-1">Chat with {target.conv.candidate} deleted.</p>
       <div className="flex items-center gap-3 shrink-0">
         <span className="font-label-sm w-4 text-center">{timeLeft}s</span>
-        <button 
+        <button
           onClick={() => {
             target.restore();
             onClear();
@@ -470,14 +479,14 @@ export function CompanyDashboard() {
   };
 
   const modals = (
-      <AdminConfirmModal
-        confirmLabel="Shortlist Candidate"
-        message={shortlistTarget ? `Move ${shortlistTarget.applicant_name} to the shortlist for recruiter follow-up?` : ''}
-        onCancel={() => setShortlistTarget(null)}
-        onConfirm={() => updateStatus(shortlistTarget, 'shortlisted')}
-        open={Boolean(shortlistTarget)}
-        title="Shortlist candidate"
-      />
+    <AdminConfirmModal
+      confirmLabel="Shortlist Candidate"
+      message={shortlistTarget ? `Move ${shortlistTarget.applicant_name} to the shortlist for recruiter follow-up?` : ''}
+      onCancel={() => setShortlistTarget(null)}
+      onConfirm={() => updateStatus(shortlistTarget, 'shortlisted')}
+      open={Boolean(shortlistTarget)}
+      title="Shortlist candidate"
+    />
   );
 
   if (loading) return <FullPageSpinner />;
@@ -492,7 +501,7 @@ export function CompanyDashboard() {
         title="Welcome back"
         description="Track job performance, applicant quality, and recruiter actions from one connected workspace."
       />
-      
+
       {/* Overview Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
         <CompanyStatsCard icon="work" label="Total jobs" to={ROUTES.COMPANY_JOBS} value={stats.total_jobs} />
@@ -509,24 +518,25 @@ export function CompanyDashboard() {
               {stats.recent_applicants?.map((applicant) => {
                 const isShortlisted = String(applicant.status || '').toLowerCase() === 'shortlisted';
                 return (
-                <div key={applicant.applicationId} className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm hover:shadow-hover transition-shadow flex flex-col justify-between gap-4">
-                  <div>
-                    <div className="flex justify-between items-start mb-2">
-                      <p className="font-h3 text-primary truncate pr-2">{applicant.name}</p>
-                      <span className="bg-secondary/10 text-secondary text-xs font-bold px-2 py-1 rounded-full shrink-0">
-                        {applicant.matchScore}% Match
-                      </span>
+                  <div key={applicant.applicationId} className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm hover:shadow-hover transition-shadow flex flex-col justify-between gap-4">
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <p className="font-h3 text-primary truncate pr-2">{applicant.name}</p>
+                        <span className="bg-secondary/10 text-secondary text-xs font-bold px-2 py-1 rounded-full shrink-0">
+                          {applicant.matchScore}% Match
+                        </span>
+                      </div>
+                      <p className="text-sm text-on-surface-variant flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-[16px]">work</span>
+                        <span className="truncate">{applicant.job_title || applicant.title || 'Job Application'}</span>
+                      </p>
                     </div>
-                    <p className="text-sm text-on-surface-variant flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-[16px]">work</span>
-                      <span className="truncate">{applicant.job_title || applicant.title || 'Job Application'}</span>
-                    </p>
+                    <button onClick={() => setShortlistTarget({ ...applicant, nextStatus: isShortlisted ? 'under_review' : 'shortlisted' })} className={`w-full mt-2 text-center py-2 font-label-md rounded-lg transition-colors border ${isShortlisted ? 'border-outline-variant text-primary hover:bg-surface-container-high' : 'border-secondary/30 bg-surface-container-highest hover:bg-secondary/10 text-secondary'}`}>
+                      {isShortlisted ? 'Unshortlist' : 'Shortlist Candidate'}
+                    </button>
                   </div>
-                  <button onClick={() => setShortlistTarget({ ...applicant, nextStatus: isShortlisted ? 'under_review' : 'shortlisted' })} className={`w-full mt-2 text-center py-2 font-label-md rounded-lg transition-colors border ${isShortlisted ? 'border-outline-variant text-primary hover:bg-surface-container-high' : 'border-secondary/30 bg-surface-container-highest hover:bg-secondary/10 text-secondary'}`}>
-                    {isShortlisted ? 'Unshortlist' : 'Shortlist Candidate'}
-                  </button>
-                </div>
-              )})}
+                )
+              })}
               {!stats.recent_applicants?.length && <p className="text-on-surface-variant p-4">No recent applicants.</p>}
             </div>
           </Section>
@@ -563,7 +573,7 @@ export function CompanyDashboard() {
                 </span>
                 <span className="font-h2 text-primary">{stats.under_review}</span>
               </Link>
-              
+
               <Link to={ROUTES.COMPANY_APPLICANTS} className="bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-xl p-4 border border-outline-variant flex justify-between items-center group">
                 <span className="text-on-surface-variant group-hover:text-primary transition-colors flex items-center gap-3 font-medium">
                   <div className="w-8 h-8 rounded-full bg-success/10 text-success flex items-center justify-center">
@@ -573,7 +583,7 @@ export function CompanyDashboard() {
                 </span>
                 <span className="font-h2 text-primary">{stats.shortlisted}</span>
               </Link>
-              
+
               <Link to={ROUTES.COMPANY_APPLICANTS} className="bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-xl p-4 border border-outline-variant flex justify-between items-center group">
                 <span className="text-on-surface-variant group-hover:text-primary transition-colors flex items-center gap-3 font-medium">
                   <div className="w-8 h-8 rounded-full bg-error/10 text-error flex items-center justify-center">
@@ -617,9 +627,9 @@ export function CompanyProfile() {
           <span className="material-symbols-outlined text-[18px]">open_in_new</span>
           Public Preview
         </Link><Link className={buttonPrimary} to={ROUTES.COMPANY_PROFILE + '/edit'}>
-          <span className="material-symbols-outlined text-[18px]">edit</span>
-          Edit Profile
-        </Link></>}
+            <span className="material-symbols-outlined text-[18px]">edit</span>
+            Edit Profile
+          </Link></>}
         eyebrow="Company Profile"
         title={profile.name}
         description={profile.description}
@@ -660,7 +670,8 @@ export function CompanyEditProfile() {
   const navigate = useNavigate();
   const { addToast } = useToast();
   const { errors, serverError, handleApiError, clearErrors, setErrors } = useValidationErrors();
-  
+  const { patchUser, refreshUser } = useAuth();
+
   const [form, setForm] = useState(null);
   const [logoFile, setLogoFile] = useState('');
   const [loading, setLoading] = useState(true);
@@ -680,7 +691,7 @@ export function CompanyEditProfile() {
     if (!form.name?.trim()) nextErrors.name = 'Company name is required.';
     if (!form.industry?.trim()) nextErrors.industry = 'Industry is required.';
     if (!form.location?.trim()) nextErrors.location = 'Location is required.';
-    
+
     if (Object.keys(nextErrors).length) {
       setErrors(nextErrors);
       return false;
@@ -734,9 +745,14 @@ export function CompanyEditProfile() {
               setLogoFile(file?.name || '');
               if (file) {
                 try {
-                  await companyDataService.uploadCompanyLogo(file);
+                  const uploadResult = await companyDataService.uploadCompanyLogo(file);
+                  const newLogoUrl = uploadResult?.logo_url || uploadResult?.data?.logo_url || null;
+                  if (newLogoUrl) {
+                    patchUser({ profile_image: newLogoUrl, avatar: newLogoUrl });
+                  }
                   addToast({ title: 'Logo uploaded', message: 'Logo was updated successfully.' });
-                } catch(e) {
+                  await refreshUser();
+                } catch (e) {
                   addToast({ title: 'Error', message: 'Failed to upload logo.', type: 'error' });
                 }
               }
@@ -779,9 +795,9 @@ export function CompanyProfilePreview() {
           <span className="material-symbols-outlined text-[18px]">arrow_back</span>
           Back to Profile
         </Link><Link className={buttonPrimary} to={ROUTES.COMPANY_PROFILE + '/edit'}>
-          <span className="material-symbols-outlined text-[18px]">edit</span>
-          Edit Profile
-        </Link></>}
+            <span className="material-symbols-outlined text-[18px]">edit</span>
+            Edit Profile
+          </Link></>}
         eyebrow="Public Preview"
         title={profile.name}
         description={profile.description}
@@ -825,7 +841,7 @@ export function CompanyManageJobs() {
     try {
       const res = await companyDataService.getCompanyJobs({ ...filters, page });
       setJobs(res);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
@@ -856,7 +872,7 @@ export function CompanyManageJobs() {
           <option value="newest">Newest</option><option value="applicants">Most applicants</option><option value="views">Most views</option>
         </SelectInput>
       </div>
-      
+
       {loading ? <FullPageSpinner /> : (
         <>
           <CompanyJobTable
@@ -887,7 +903,7 @@ export function CompanyManageJobs() {
             addToast({ title: 'Job deleted', message: `${deleteTarget.title} was removed.` });
             setDeleteTarget(null);
             refresh();
-          } catch(e) {
+          } catch (e) {
             addToast({ title: 'Error', message: 'Failed to delete job.', type: 'error' });
           } finally {
             setSaving(false);
@@ -951,7 +967,7 @@ export function CompanyJobPostPreview() {
       const updated = await companyDataService.toggleJobStatus(job.id);
       setJob(updated);
       addToast({ title: 'Job status updated', message: `${updated.title} is now ${updated.status}.` });
-    } catch(e) {
+    } catch (e) {
       addToast({ title: 'Error', message: 'Failed to update status.', type: 'error' });
     }
   };
@@ -981,7 +997,7 @@ export function CompanyJobDetails() {
   const params = useParams();
   const navigate = useNavigate();
   const { addToast } = useToast();
-  
+
   const [job, setJob] = useState(null);
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -1000,7 +1016,7 @@ export function CompanyJobDetails() {
         console.error(applicantsError);
         setApplicants([]);
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
       setJob(null);
     } finally {
@@ -1010,7 +1026,7 @@ export function CompanyJobDetails() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const { setShortlistTarget, setRejectTarget, modals } = useApplicantActions(fetchData);
+  const { setShortlistTarget, setRejectTarget, setApproveTarget, modals } = useApplicantActions(fetchData);
 
   if (loading) return <FullPageSpinner />;
   if (!job) return <NotFoundState title="Job not found" message="This job post is unavailable." />;
@@ -1039,7 +1055,7 @@ export function CompanyJobDetails() {
       </Section>
       <Section title="Recent applicants">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-stack-md">
-          {applicants.slice(0, 4).map((applicant) => <CompanyApplicantCard applicant={applicant} key={applicant.id} onReject={setRejectTarget} onShortlist={setShortlistTarget} />)}
+          {applicants.slice(0, 4).map((applicant) => <CompanyApplicantCard applicant={applicant} key={applicant.id} onReject={setRejectTarget} onShortlist={setShortlistTarget} onApprove={setApproveTarget} />)}
           {!applicants.length && <p className="text-on-surface-variant">No applicants yet.</p>}
         </div>
       </Section>
@@ -1064,7 +1080,7 @@ export function CompanyJobDetails() {
 export function CompanyApplicants() {
   const params = useParams();
   const jobId = jobParam(params);
-  
+
   const [filters, setFilters] = useState({ query: '', status: 'all', sort: 'match' });
   const [page, setPage] = useState(1);
   const [applicants, setApplicants] = useState([]);
@@ -1074,19 +1090,19 @@ export function CompanyApplicants() {
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-        if (jobId) {
-          const [j, a] = await Promise.all([
-            companyDataService.getCompanyJobById(jobId),
-            companyDataService.getApplicantsByJob(jobId, { ...filters, page })
-          ]);
-          setJob(j);
-          setApplicants(a);
-        } else {
-          const a = await companyDataService.getApplicants({ ...filters, page });
-          setJob({ title: 'All Jobs' });
-          setApplicants(a);
-        }
-    } catch(e) {
+      if (jobId) {
+        const [j, a] = await Promise.all([
+          companyDataService.getCompanyJobById(jobId),
+          companyDataService.getApplicantsByJob(jobId, { ...filters, page })
+        ]);
+        setJob(j);
+        setApplicants(a);
+      } else {
+        const a = await companyDataService.getApplicants({ ...filters, page });
+        setJob({ title: 'All Jobs' });
+        setApplicants(a);
+      }
+    } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
@@ -1116,14 +1132,14 @@ export function CompanyApplicants() {
           <option value="match">Match score</option><option value="newest">Newest</option><option value="experience">Years experience</option>
         </SelectInput>
       </div>
-      
+
       {loading ? <FullPageSpinner /> : (
         <>
           <CompanyApplicantTable applicants={applicants} onApprove={setApproveTarget} onReject={setRejectTarget} onShortlist={setShortlistTarget} />
           <PaginationControls page={page} setPage={setPage} itemsCount={applicants.length} />
         </>
       )}
-      
+
       {modals}
     </>
   );
@@ -1142,7 +1158,7 @@ export function CompanyApplicantProfile() {
       if (a) {
         setJob(await companyDataService.getCompanyJobById(a.jobId));
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
@@ -1282,7 +1298,7 @@ export function CompanyApplicantMatchingDetails() {
       if (a) {
         setJob(await companyDataService.getCompanyJobById(a.jobId));
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
@@ -1359,7 +1375,7 @@ export function CompanyNotifications() {
     setLoading(true);
     companyDataService.getCompanyNotifications()
       .then((items) => {
-         setNotifications(items);
+        setNotifications(items);
       })
       .catch((error) => {
         console.error(error);
@@ -1616,15 +1632,15 @@ export function CompanyMessages() {
     try {
       const sent = await companyDataService.sendCompanyMessage(conv.other_user_id, text, conv.job_id, { interview_at: cleanTime });
       setMessages(prev => [...prev, { id: sent.id, from: 'You', text: sent.content, created_at: sent.created_at }]);
-      
+
       const payload = {
-         time: cleanTime,
-         candidate: conv.candidate,
-         job_id: conv.job_id,
-         other_user_id: conv.other_user_id,
+        time: cleanTime,
+        candidate: conv.candidate,
+        job_id: conv.job_id,
+        other_user_id: conv.other_user_id,
       };
       saveInterviews({ ...interviews, [conversationKey(conv)]: payload });
-      
+
       const delay = new Date(cleanTime).getTime() - Date.now();
       if (delay <= 0) {
         // immediately mark as passed if scheduling in the past
@@ -1648,13 +1664,13 @@ export function CompanyMessages() {
     const prevConversations = [...conversations];
     const prevMessages = [...messages];
     const prevActiveId = activeId;
-    
+
     setConversations((prev) => prev.filter((item) => item.id !== conv.id));
     if (activeId === conv.id) {
       setMessages([]);
       setActiveId(null);
     }
-    
+
     setContextMenu(null);
 
     const target = {
@@ -1710,159 +1726,159 @@ export function CompanyMessages() {
             {muteAllMessages ? 'Unmute all messages' : 'Mute all messages'}
           </button>
         </div>
-      <div className="grid grid-cols-1 xl:grid-cols-[360px_1fr] gap-5 flex-1 min-h-0 overflow-hidden">
-        <section className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient overflow-hidden flex flex-col min-h-0">
-          <div className="px-5 py-4 border-b border-outline-variant flex items-center justify-between">
-            <h2 className="font-h2 text-h2 text-primary">Inbox</h2>
-            <span className="text-sm text-on-surface-variant">{filteredConversations.length} chats</span>
-          </div>
-          <div className="px-4 pb-4 border-b border-outline-variant">
-            <label className="relative block">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
-              <input
-                className="w-full rounded-full border border-outline-variant bg-surface-container-low py-2 pl-10 pr-3 text-on-surface outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
-                onChange={(event) => setMessageQuery(event.target.value)}
-                placeholder="Search candidates, roles, messages"
-                value={messageQuery}
-              />
-            </label>
-          </div>
-          <div className="divide-y divide-outline-variant overflow-y-auto flex-1 p-2">
-            {loading ? <FullPageSpinner /> : (
-              filteredConversations.length === 0 ? <CompanyEmptyState title="No messages" message={messageQuery ? 'No conversations match your search.' : 'You have no messages yet.'} /> :
-              filteredConversations.map((item) => (
-                <div
-                  key={item.id}
-                  className={`w-full py-4 transition-colors hover:bg-surface-container-low rounded-lg px-4 cursor-pointer select-none ${active?.id === item.id ? 'bg-secondary-container/15' : ''}`}
-                  onClick={() => setActiveId(item.id)}
-                  onContextMenu={(e) => handleContextMenu(e, item)}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="w-11 h-11 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-bold shrink-0">
-                      {item.candidate?.charAt(0)?.toUpperCase() || 'C'}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-3">
-                    <Link className="font-h3 text-h3 text-primary hover:text-secondary truncate block" to={item.application_id ? `/company/applicants/${item.application_id}` : '#'}>{item.candidate}</Link>
-                        <span className="flex shrink-0 items-center gap-2 mt-1">
-                          {mutedConversations.includes(conversationKey(item)) && <span className="material-symbols-outlined text-[16px] text-on-surface-variant" title="Muted conversation">notifications_off</span>}
-                          {item.unread && <span className="h-2.5 w-2.5 rounded-full bg-secondary" aria-hidden="true" />}
-                        </span>
+        <div className="grid grid-cols-1 xl:grid-cols-[360px_1fr] gap-5 flex-1 min-h-0 overflow-hidden">
+          <section className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient overflow-hidden flex flex-col min-h-0">
+            <div className="px-5 py-4 border-b border-outline-variant flex items-center justify-between">
+              <h2 className="font-h2 text-h2 text-primary">Inbox</h2>
+              <span className="text-sm text-on-surface-variant">{filteredConversations.length} chats</span>
+            </div>
+            <div className="px-4 pb-4 border-b border-outline-variant">
+              <label className="relative block">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+                <input
+                  className="w-full rounded-full border border-outline-variant bg-surface-container-low py-2 pl-10 pr-3 text-on-surface outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                  onChange={(event) => setMessageQuery(event.target.value)}
+                  placeholder="Search candidates, roles, messages"
+                  value={messageQuery}
+                />
+              </label>
+            </div>
+            <div className="divide-y divide-outline-variant overflow-y-auto flex-1 p-2">
+              {loading ? <FullPageSpinner /> : (
+                filteredConversations.length === 0 ? <CompanyEmptyState title="No messages" message={messageQuery ? 'No conversations match your search.' : 'You have no messages yet.'} /> :
+                  filteredConversations.map((item) => (
+                    <div
+                      key={item.id}
+                      className={`w-full py-4 transition-colors hover:bg-surface-container-low rounded-lg px-4 cursor-pointer select-none ${active?.id === item.id ? 'bg-secondary-container/15' : ''}`}
+                      onClick={() => setActiveId(item.id)}
+                      onContextMenu={(e) => handleContextMenu(e, item)}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="w-11 h-11 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-bold shrink-0">
+                          {item.candidate?.charAt(0)?.toUpperCase() || 'C'}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-start justify-between gap-3">
+                            <Link className="font-h3 text-h3 text-primary hover:text-secondary truncate block" to={item.application_id ? `/company/applicants/${item.application_id}` : '#'}>{item.candidate}</Link>
+                            <span className="flex shrink-0 items-center gap-2 mt-1">
+                              {mutedConversations.includes(conversationKey(item)) && <span className="material-symbols-outlined text-[16px] text-on-surface-variant" title="Muted conversation">notifications_off</span>}
+                              {item.unread && <span className="h-2.5 w-2.5 rounded-full bg-secondary" aria-hidden="true" />}
+                            </span>
+                          </div>
+                          <p className="text-on-surface-variant text-sm truncate">{item.role}</p>
+                          <p className="mt-2 text-body-sm text-on-surface-variant truncate">{item.last_message || 'No messages yet'}</p>
+                          <div className="mt-2 flex items-center justify-between gap-3">
+                            <span className="text-body-sm text-secondary font-medium">{item.status}</span>
+                            <span className="text-xs text-outline">{item.time}</span>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-on-surface-variant text-sm truncate">{item.role}</p>
-                      <p className="mt-2 text-body-sm text-on-surface-variant truncate">{item.last_message || 'No messages yet'}</p>
-                      <div className="mt-2 flex items-center justify-between gap-3">
-                        <span className="text-body-sm text-secondary font-medium">{item.status}</span>
-                        <span className="text-xs text-outline">{item.time}</span>
-                      </div>
                     </div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </section>
+                  ))
+              )}
+            </div>
+          </section>
 
-        <section className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient overflow-hidden flex flex-col min-h-0">
-          {active ? (
-            <div className="flex flex-col h-full min-h-0">
-              <div className="flex items-center justify-between gap-4 bg-surface-container-lowest border-b border-outline-variant px-4 py-2 shrink-0">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-bold shrink-0">
-                    {active.candidate?.charAt(0)?.toUpperCase() || 'C'}
+          <section className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient overflow-hidden flex flex-col min-h-0">
+            {active ? (
+              <div className="flex flex-col h-full min-h-0">
+                <div className="flex items-center justify-between gap-4 bg-surface-container-lowest border-b border-outline-variant px-4 py-2 shrink-0">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-bold shrink-0">
+                      {active.candidate?.charAt(0)?.toUpperCase() || 'C'}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-h3 text-primary truncate">{active.candidate}</p>
+                      <p className="text-on-surface-variant text-sm truncate">{active.role}</p>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-h3 text-primary truncate">{active.candidate}</p>
-                    <p className="text-on-surface-variant text-sm truncate">{active.role}</p>
+                  <div className="flex flex-col sm:flex-row gap-2 shrink-0">
+                    <button className={`inline-flex items-center justify-center gap-2 rounded-full px-3 py-1.5 font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 ${mutedConversations.includes(conversationKey(active)) ? 'border border-outline-variant bg-surface-container-high text-on-surface-variant' : 'bg-secondary text-on-secondary'} ${mutePulse === conversationKey(active) ? 'animate-scale-in' : ''}`} onClick={() => toggleMuteConversation(active)}>
+                      <span className="material-symbols-outlined text-[18px]">{mutedConversations.includes(conversationKey(active)) ? 'notifications_off' : 'notifications_active'}</span>
+                      {mutedConversations.includes(conversationKey(active)) ? 'Unmute Chat' : 'Mute Chat'}
+                    </button>
                   </div>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2 shrink-0">
-                  <button className={`inline-flex items-center justify-center gap-2 rounded-full px-3 py-1.5 font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 ${mutedConversations.includes(conversationKey(active)) ? 'border border-outline-variant bg-surface-container-high text-on-surface-variant' : 'bg-secondary text-on-secondary'} ${mutePulse === conversationKey(active) ? 'animate-scale-in' : ''}`} onClick={() => toggleMuteConversation(active)}>
-                    <span className="material-symbols-outlined text-[18px]">{mutedConversations.includes(conversationKey(active)) ? 'notifications_off' : 'notifications_active'}</span>
-                    {mutedConversations.includes(conversationKey(active)) ? 'Unmute Chat' : 'Mute Chat'}
+                <div className="border-b border-outline-variant bg-surface-container-lowest px-4 py-1.5 shrink-0">
+                  {scheduledInterview ? (
+                    <div className={`flex flex-col lg:flex-row lg:items-center justify-between gap-2 rounded-lg border px-3 py-1.5 ${scheduledInterview.includes('_passed') ? 'border-outline-variant bg-surface-container-low text-on-surface-variant' : 'border-secondary/30 bg-secondary/10'}`}>
+                      <div className={`flex items-center gap-3 ${scheduledInterview.includes('_passed') ? 'text-on-surface-variant' : 'text-secondary'}`}>
+                        <span className="material-symbols-outlined">{scheduledInterview.includes('_passed') ? 'history' : 'event_available'}</span>
+                        <div>
+                          <p className="font-semibold text-sm">{scheduledInterview.includes('_passed') ? 'Interview passed' : 'Interview scheduled'}</p>
+                          <p className="text-sm">{new Date(scheduledInterview.replace('_passed', '')).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
+                        </div>
+                      </div>
+                      <button className={`${scheduledInterview.includes('_passed') ? 'text-primary' : 'text-secondary'} font-semibold underline`} onClick={() => { setInterviewTime(scheduledInterview.includes('_passed') ? '' : scheduledInterview); setEditingInterview(true); }}>{scheduledInterview.includes('_passed') ? 'Re-interview' : 'Edit interview time'}</button>
+                    </div>
+                  ) : (
+                    <div className="rounded-lg border border-dashed border-outline-variant px-3 py-1.5 text-on-surface-variant text-sm flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[18px]">event_busy</span>
+                      No interview scheduled yet.
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center justify-end gap-2 bg-surface-container-lowest px-4 py-1.5 border-b border-outline-variant shrink-0 min-h-[52px]">
+                  {(!scheduledInterview || editingInterview) && (
+                    <>
+                      {scheduledInterview && !editingInterview ? null : (
+                        <>
+                          <div className="flex items-center gap-2 rounded-full border border-outline-variant bg-surface-container-low px-3 py-1.5 shadow-sm">
+                            <span className="material-symbols-outlined text-[18px] text-secondary">event</span>
+                            <input
+                              className="bg-transparent text-sm outline-none text-primary min-w-[190px]"
+                              type="datetime-local"
+                              value={interviewTime}
+                              onChange={(event) => setInterviewTime(event.target.value)}
+                            />
+                          </div>
+                          <button className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-1.5 font-semibold text-sm transition-all duration-200 shadow-sm ${interviewTime ? 'bg-secondary text-on-secondary hover:-translate-y-0.5 hover:opacity-90' : 'bg-surface-container text-on-surface-variant cursor-not-allowed opacity-50'}`} disabled={!interviewTime} onClick={handleScheduleInterview}>
+                            <span className="material-symbols-outlined text-[18px]">calendar_add_on</span>
+                            {scheduledInterview ? 'Reschedule' : 'Schedule'}
+                          </button>
+                          <button className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-1.5 font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 border border-outline-variant text-on-surface-variant hover:bg-surface-container-high" onClick={() => { setEditingInterview(false); setInterviewTime(''); }}>
+                            Cancel
+                          </button>
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+                <div className="space-y-4 bg-surface-container-low px-6 py-5 flex-1 overflow-y-auto min-h-0">
+                  {messages.length === 0 ? <p className="text-on-surface-variant text-center font-body-sm italic mt-10">No messages yet.</p> :
+                    messages.map((message, index) => {
+                      const mine = message.from === 'You';
+                      return (
+                        <div className={`flex ${mine ? 'justify-end' : 'justify-start'}`} key={`${active.id}-${message.id || index}`}>
+                          <div className={`max-w-[75%] rounded-2xl px-5 py-3 shadow-sm ${mine ? 'bg-secondary text-on-secondary rounded-tr-none' : 'bg-surface-container-lowest border border-outline-variant rounded-tl-none'}`}>
+                            <p className={`font-label-sm text-xs mb-1 ${mine ? 'opacity-80' : 'text-on-surface-variant'}`}>{message.from}</p>
+                            <p className="font-body-md leading-relaxed">{message.text}</p>
+                          </div>
+                        </div>
+                      );
+                    })
+                  }
+                  <div ref={messagesEndRef} />
+                </div>
+                <div className="flex gap-3 p-2.5 border-t border-outline-variant bg-surface-container-lowest shrink-0">
+                  <input
+                    className="flex-1 rounded-full border border-outline-variant bg-surface-container-low px-5 py-2.5 outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/30 transition-all"
+                    placeholder="Type your message..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                  />
+                  <button className={`${buttonPrimary} rounded-full px-5`} onClick={handleSend} disabled={!newMessage.trim()}>
+                    <span className="material-symbols-outlined text-[20px]">send</span>
+                    Send
                   </button>
                 </div>
               </div>
-              <div className="border-b border-outline-variant bg-surface-container-lowest px-4 py-1.5 shrink-0">
-                {scheduledInterview ? (
-                  <div className={`flex flex-col lg:flex-row lg:items-center justify-between gap-2 rounded-lg border px-3 py-1.5 ${scheduledInterview.includes('_passed') ? 'border-outline-variant bg-surface-container-low text-on-surface-variant' : 'border-secondary/30 bg-secondary/10'}`}>
-                    <div className={`flex items-center gap-3 ${scheduledInterview.includes('_passed') ? 'text-on-surface-variant' : 'text-secondary'}`}>
-                      <span className="material-symbols-outlined">{scheduledInterview.includes('_passed') ? 'history' : 'event_available'}</span>
-                      <div>
-                        <p className="font-semibold text-sm">{scheduledInterview.includes('_passed') ? 'Interview passed' : 'Interview scheduled'}</p>
-                        <p className="text-sm">{new Date(scheduledInterview.replace('_passed', '')).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
-                      </div>
-                    </div>
-                    <button className={`${scheduledInterview.includes('_passed') ? 'text-primary' : 'text-secondary'} font-semibold underline`} onClick={() => { setInterviewTime(scheduledInterview.includes('_passed') ? '' : scheduledInterview); setEditingInterview(true); }}>{scheduledInterview.includes('_passed') ? 'Re-interview' : 'Edit interview time'}</button>
-                  </div>
-                ) : (
-                  <div className="rounded-lg border border-dashed border-outline-variant px-3 py-1.5 text-on-surface-variant text-sm flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[18px]">event_busy</span>
-                    No interview scheduled yet.
-                  </div>
-                )}
-              </div>
-              <div className="flex items-center justify-end gap-2 bg-surface-container-lowest px-4 py-1.5 border-b border-outline-variant shrink-0 min-h-[52px]">
-                {(!scheduledInterview || editingInterview) && (
-                  <>
-                  {scheduledInterview && !editingInterview ? null : (
-                    <>
-                      <div className="flex items-center gap-2 rounded-full border border-outline-variant bg-surface-container-low px-3 py-1.5 shadow-sm">
-                        <span className="material-symbols-outlined text-[18px] text-secondary">event</span>
-                        <input
-                          className="bg-transparent text-sm outline-none text-primary min-w-[190px]"
-                          type="datetime-local"
-                          value={interviewTime}
-                          onChange={(event) => setInterviewTime(event.target.value)}
-                        />
-                      </div>
-                      <button className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-1.5 font-semibold text-sm transition-all duration-200 shadow-sm ${interviewTime ? 'bg-secondary text-on-secondary hover:-translate-y-0.5 hover:opacity-90' : 'bg-surface-container text-on-surface-variant cursor-not-allowed opacity-50'}`} disabled={!interviewTime} onClick={handleScheduleInterview}>
-                        <span className="material-symbols-outlined text-[18px]">calendar_add_on</span>
-                        {scheduledInterview ? 'Reschedule' : 'Schedule'}
-                      </button>
-                      <button className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-1.5 font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 border border-outline-variant text-on-surface-variant hover:bg-surface-container-high" onClick={() => { setEditingInterview(false); setInterviewTime(''); }}>
-                        Cancel
-                      </button>
-                    </>
-                  )}
-                  </>
-                )}
-                </div>
-              <div className="space-y-4 bg-surface-container-low px-6 py-5 flex-1 overflow-y-auto min-h-0">
-                {messages.length === 0 ? <p className="text-on-surface-variant text-center font-body-sm italic mt-10">No messages yet.</p> :
-                  messages.map((message, index) => {
-                    const mine = message.from === 'You';
-                    return (
-                      <div className={`flex ${mine ? 'justify-end' : 'justify-start'}`} key={`${active.id}-${message.id || index}`}>
-                        <div className={`max-w-[75%] rounded-2xl px-5 py-3 shadow-sm ${mine ? 'bg-secondary text-on-secondary rounded-tr-none' : 'bg-surface-container-lowest border border-outline-variant rounded-tl-none'}`}>
-                          <p className={`font-label-sm text-xs mb-1 ${mine ? 'opacity-80' : 'text-on-surface-variant'}`}>{message.from}</p>
-                          <p className="font-body-md leading-relaxed">{message.text}</p>
-                        </div>
-                      </div>
-                    );
-                  })
-                }
-                <div ref={messagesEndRef} />
-              </div>
-              <div className="flex gap-3 p-2.5 border-t border-outline-variant bg-surface-container-lowest shrink-0">
-                <input 
-                  className="flex-1 rounded-full border border-outline-variant bg-surface-container-low px-5 py-2.5 outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/30 transition-all" 
-                  placeholder="Type your message..." 
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                />
-                <button className={`${buttonPrimary} rounded-full px-5`} onClick={handleSend} disabled={!newMessage.trim()}>
-                  <span className="material-symbols-outlined text-[20px]">send</span>
-                  Send
-                </button>
-              </div>
-            </div>
-          ) : (
-             <div className="flex flex-1 items-center justify-center p-12 text-on-surface-variant border-2 border-dashed border-outline-variant rounded-xl m-6">Select a conversation from the left to start messaging.</div>
-          )}
-        </section>
-      </div>
+            ) : (
+              <div className="flex flex-1 items-center justify-center p-12 text-on-surface-variant border-2 border-dashed border-outline-variant rounded-xl m-6">Select a conversation from the left to start messaging.</div>
+            )}
+          </section>
+        </div>
       </div>
       {contextMenu && (
         <div
@@ -1887,7 +1903,7 @@ export function CompanyMessages() {
 export function CompanySettings() {
   const { addToast } = useToast();
   const { user, refreshUser } = useAuth();
-  
+
   const [settings, setSettings] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -1948,12 +1964,12 @@ export function CompanySettings() {
     const next = {};
     if (!settings.name.trim()) next.name = 'Name is required.';
     if (unlockState.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(settings.email)) next.email = 'Enter a valid email.';
-    
+
     if (unlockState.password) {
       if (!settings.newPassword || settings.newPassword.length < 8) next.newPassword = 'Password must be at least 8 characters.';
       if (settings.newPassword !== settings.confirmPassword) next.confirmPassword = 'Passwords must match.';
     }
-    
+
     setErrors(next);
     return !Object.keys(next).length;
   };
@@ -1968,11 +1984,11 @@ export function CompanySettings() {
         currentPassword: settings.currentPassword || undefined,
         newPassword: unlockState.password ? settings.newPassword : undefined,
       });
-      
+
       addToast({ title: 'Settings saved', message: 'Account settings were updated successfully.', type: 'success' });
-      
+
       refreshUser();
-      
+
       setSettings(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }));
       setUnlockState({ email: false, password: false });
     } catch (e) {
@@ -1990,9 +2006,9 @@ export function CompanySettings() {
       </p>
       <p className="font-body-sm text-on-surface-variant mb-4">Please enter your current password to unlock {targetName} changes.</p>
       <div className="flex flex-col sm:flex-row gap-3">
-        <input 
-          type="password" 
-          className="flex-1 bg-surface border border-outline-variant rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary" 
+        <input
+          type="password"
+          className="flex-1 bg-surface border border-outline-variant rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
           placeholder="Current password"
           value={verifyInput}
           onChange={(e) => setVerifyInput(e.target.value)}
@@ -2022,7 +2038,7 @@ export function CompanySettings() {
             <Field error={errors.name} label="Account Name">
               <TextInput onChange={(e) => update('name', e.target.value)} value={settings.name} disabled={saving} />
             </Field>
-            
+
             <div>
               <span className="font-label-md text-label-md text-primary block mb-1">Email Address</span>
               {!unlockState.email ? (
@@ -2040,7 +2056,7 @@ export function CompanySettings() {
                 </Field>
               )}
             </div>
-            
+
             <div>
               <span className="font-label-md text-label-md text-primary block mb-1">Password</span>
               {!unlockState.password ? (
@@ -2065,7 +2081,7 @@ export function CompanySettings() {
               )}
             </div>
           </div>
-          
+
           <div className="flex justify-end pt-6 border-t border-outline-variant mt-2">
             <button className={buttonPrimary} onClick={save} disabled={saving}>
               <span className="material-symbols-outlined text-[20px]">save</span>

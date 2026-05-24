@@ -35,7 +35,7 @@ export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: de
       onSaveUnavailable?.(job);
       return;
     }
-    
+
     setIsSaving(true);
     try {
       const result = await toggleSavedJob(job.id);

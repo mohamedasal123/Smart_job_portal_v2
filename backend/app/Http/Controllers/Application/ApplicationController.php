@@ -11,6 +11,7 @@ use App\Services\MatchingService;
 use App\Services\GapAnalyzerService;
 use App\Jobs\RefineApplicationScoreJob;
 use App\Jobs\SendRejectionEmailJob;
+use App\Jobs\SendApprovedEmailJob;
 use App\Events\ApplicationStatusChanged;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -120,9 +121,34 @@ class ApplicationController extends Controller
 
         DB::transaction(function () use ($application, $newStatus, $request) {
             if ($newStatus === 'rejected') {
-                $missingSkills = $this->gapAnalyzerService->analyze($application);
-                $application->missing_skills_json = $missingSkills;
-                SendRejectionEmailJob::dispatch($application);
+                try {
+                    $missingSkills = $this->gapAnalyzerService->analyze($application);
+                    $application->missing_skills_json = $missingSkills;
+                    SendRejectionEmailJob::dispatch($application);
+                } catch (\Exception $e) {
+                    \Log::error($e->getMessage());
+                }
+            }
+
+            if ($newStatus === 'approved') {
+                try {
+                    Notification::create([
+                        'user_id' => $application->jobSeekerProfile->user_id,
+                        'type' => 'application_approved',
+                        'data' => [
+                            'title' => 'Application Approved',
+                            'message' => 'Your application for ' . $application->jobPost->title . ' has been approved.',
+                            'application_id' => $application->id,
+                            'job_id' => $application->jobPost->id,
+                            'job_title' => $application->jobPost->title,
+                            'company_name' => $application->jobPost->companyProfile->company_name,
+                        ],
+                        'created_at' => now(),
+                    ]);
+                    SendApprovedEmailJob::dispatch($application);
+                } catch (\Exception $e) {
+                    \Log::error($e->getMessage());
+                }
             }
 
             $application->status = $newStatus;
@@ -134,7 +160,11 @@ class ApplicationController extends Controller
                 'created_at' => now(),
             ]);
 
-            event(new ApplicationStatusChanged($application));
+            try {
+                event(new ApplicationStatusChanged($application));
+            } catch (\Exception $e) {
+                \Log::error($e->getMessage());
+            }
         });
 
         return $this->success(new ApplicationResource($application), 'Status updated successfully');

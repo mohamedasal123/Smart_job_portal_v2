@@ -8,14 +8,14 @@ import { cvService } from '../../api/cvService';
 
 const ALLOWED_TYPES = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
-const POLL_INTERVAL_MS  = 3000;   // poll every 3 seconds
-const POLL_TIMEOUT_MS   = 180000; // give up after 3 minutes
+const POLL_INTERVAL_MS = 3000;   // poll every 3 seconds
+const POLL_TIMEOUT_MS = 180000; // give up after 3 minutes
 
 export default function JobSeekerCvUploadPage() {
   const { addToast } = useToast();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
-  
+
   // Upload State
   const [file, setFile] = useState(null);
   const [fileError, setFileError] = useState('');
@@ -28,8 +28,8 @@ export default function JobSeekerCvUploadPage() {
   const [profileData, setProfileData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(true);
-  const pollingRef  = useRef(null);
-  const timeoutRef  = useRef(null);
+  const pollingRef = useRef(null);
+  const timeoutRef = useRef(null);
   const completionTimeoutRef = useRef(null);
   const isMountedRef = useRef(true);
 
@@ -52,8 +52,8 @@ export default function JobSeekerCvUploadPage() {
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
   const stopPolling = useCallback(() => {
-    if (pollingRef.current)  { clearInterval(pollingRef.current);  pollingRef.current  = null; }
-    if (timeoutRef.current)  { clearTimeout(timeoutRef.current);   timeoutRef.current  = null; }
+    if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
+    if (timeoutRef.current) { clearTimeout(timeoutRef.current); timeoutRef.current = null; }
     if (completionTimeoutRef.current) {
       clearTimeout(completionTimeoutRef.current);
       completionTimeoutRef.current = null;
@@ -92,7 +92,7 @@ export default function JobSeekerCvUploadPage() {
         setLoadingProfile(false);
       }
     };
-    
+
     checkStatusAndFetch();
 
     return () => stopPolling();
@@ -159,12 +159,12 @@ export default function JobSeekerCvUploadPage() {
 
           if (status === 'completed') {
             stopPolling();
-            
+
             try {
               // Fetch the structured parsed data
               const parsedData = await getParsedProfile();
               setProfileData(parsedData);
-              
+
               // Ensure progress reaches 100% visibly before unmounting
               setUploadProgress(100);
 
@@ -174,7 +174,7 @@ export default function JobSeekerCvUploadPage() {
                 setParsed(true);
                 setUploading(false);
               }, 600); // 600ms delay to let the user see 100%
-              
+
             } catch (fetchErr) {
               console.error('Error fetching parsed data after completion:', fetchErr);
               setUploading(false);
@@ -184,7 +184,7 @@ export default function JobSeekerCvUploadPage() {
                 type: 'error',
               });
             }
-            
+
           } else if (status === 'failed') {
             stopPolling();
             setUploading(false);
@@ -245,7 +245,7 @@ export default function JobSeekerCvUploadPage() {
       tools: Array.isArray(profileData.skills?.tools) ? [...profileData.skills.tools] : [],
     });
     setNewSkillText({ hard: '', soft: '', tools: '' });
-    
+
     setEditModes(prev => ({ ...prev, [section]: true }));
   };
 
@@ -267,16 +267,16 @@ export default function JobSeekerCvUploadPage() {
     if (section === 'experience') {
       const invalid = editExperience.some(e => !e.title?.trim() || !e.company?.trim());
       if (invalid && editExperience.length > 0) {
-         addToast({ title: 'Validation Error', message: 'Job title and company are required for all experience entries.', type: 'error' });
-         return;
+        addToast({ title: 'Validation Error', message: 'Job title and company are required for all experience entries.', type: 'error' });
+        return;
       }
       setProfileData(prev => ({ ...prev, experience: editExperience }));
     }
     if (section === 'education') {
       const invalid = editEducation.some(e => !e.degree?.trim() || !e.institution?.trim());
       if (invalid && editEducation.length > 0) {
-         addToast({ title: 'Validation Error', message: 'Degree and institution are required for all education entries.', type: 'error' });
-         return;
+        addToast({ title: 'Validation Error', message: 'Degree and institution are required for all education entries.', type: 'error' });
+        return;
       }
       setProfileData(prev => ({ ...prev, education: editEducation }));
     }
@@ -305,12 +305,12 @@ export default function JobSeekerCvUploadPage() {
 
   return (
     <div className="px-4 sm:px-6 lg:px-margin-desktop py-6 lg:py-margin-desktop max-w-7xl mx-auto flex flex-col h-full space-y-stack-lg pb-12">
-      <SeekerPageHeader 
-        title="Upload Resume" 
-        subtitle="Upload your CV and let our AI instantly extract your skills, experience, and education to build your profile." 
+      <SeekerPageHeader
+        title="Upload Resume"
+        subtitle="Upload your CV and let our AI instantly extract your skills, experience, and education to build your profile."
         icon="upload_file"
       />
-      
+
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-gutter items-start">
         {/* Left Column: Upload */}
         <div className="xl:col-span-4 flex flex-col gap-stack-lg sticky top-24">
@@ -361,7 +361,7 @@ export default function JobSeekerCvUploadPage() {
                 </>
               )}
             </div>
-            
+
             {/* File Error */}
             {fileError && !parsed && (
               <div className="mt-stack-sm flex items-start gap-2 p-stack-sm bg-error-container rounded-lg border border-error/20">
@@ -369,7 +369,7 @@ export default function JobSeekerCvUploadPage() {
                 <p className="font-body-md text-body-md text-on-error-container text-sm">{fileError}</p>
               </div>
             )}
-            
+
             {/* Active Parsing State */}
             {uploading && (
               <div className="mt-stack-lg bg-surface-container-low border border-outline-variant rounded-lg p-stack-md relative overflow-hidden">
@@ -387,7 +387,7 @@ export default function JobSeekerCvUploadPage() {
                 </div>
               </div>
             )}
-            
+
             {/* Parsed Success */}
             {parsed && !uploading && (
               <div className="mt-stack-lg bg-green-50 border border-green-200 rounded-lg p-stack-md flex items-start gap-stack-md">
@@ -398,7 +398,7 @@ export default function JobSeekerCvUploadPage() {
                 </div>
               </div>
             )}
-            
+
             {/* Actions */}
             <div className="mt-stack-lg pt-stack-md border-t border-outline-variant">
               {!parsed ? (
@@ -427,7 +427,7 @@ export default function JobSeekerCvUploadPage() {
             </div>
           </div>
         </div>
-        
+
         {/* Right Column: Profile Preview / Editor */}
         <div className="xl:col-span-8">
           <div className={`bg-surface-container-lowest rounded-xl p-stack-lg shadow-sm border border-outline-variant transition-opacity ${parsed ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
@@ -447,7 +447,7 @@ export default function JobSeekerCvUploadPage() {
                 <section className="border border-outline-variant rounded-lg p-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 border-b border-outline-variant pb-2 gap-2">
                     <h3 className="font-h3 text-h3 text-primary flex items-center gap-2 min-w-0">
-                      <span className="material-symbols-outlined text-secondary text-[20px] shrink-0">person</span> 
+                      <span className="material-symbols-outlined text-secondary text-[20px] shrink-0">person</span>
                       <span className="truncate">Personal Information</span>
                       <span className="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider shrink-0 ml-2">AI Extracted</span>
                     </h3>
@@ -462,27 +462,27 @@ export default function JobSeekerCvUploadPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block font-label-md text-on-surface-variant mb-1">First Name *</label>
-                          <input type="text" value={editPersonal.firstName || ''} onChange={e => setEditPersonal({...editPersonal, firstName: e.target.value})} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
+                          <input type="text" value={editPersonal.firstName || ''} onChange={e => setEditPersonal({ ...editPersonal, firstName: e.target.value })} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
                         </div>
                         <div>
                           <label className="block font-label-md text-on-surface-variant mb-1">Last Name *</label>
-                          <input type="text" value={editPersonal.lastName || ''} onChange={e => setEditPersonal({...editPersonal, lastName: e.target.value})} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
+                          <input type="text" value={editPersonal.lastName || ''} onChange={e => setEditPersonal({ ...editPersonal, lastName: e.target.value })} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
                         </div>
                         <div>
                           <label className="block font-label-md text-on-surface-variant mb-1">Professional Title *</label>
-                          <input type="text" value={editPersonal.title || ''} onChange={e => setEditPersonal({...editPersonal, title: e.target.value})} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
+                          <input type="text" value={editPersonal.title || ''} onChange={e => setEditPersonal({ ...editPersonal, title: e.target.value })} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
                         </div>
                         <div>
                           <label className="block font-label-md text-on-surface-variant mb-1">Email *</label>
-                          <input type="email" value={editPersonal.email || ''} onChange={e => setEditPersonal({...editPersonal, email: e.target.value})} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
+                          <input type="email" value={editPersonal.email || ''} onChange={e => setEditPersonal({ ...editPersonal, email: e.target.value })} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
                         </div>
                         <div>
                           <label className="block font-label-md text-on-surface-variant mb-1">Phone</label>
-                          <input type="text" value={editPersonal.phone || ''} onChange={e => setEditPersonal({...editPersonal, phone: e.target.value})} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
+                          <input type="text" value={editPersonal.phone || ''} onChange={e => setEditPersonal({ ...editPersonal, phone: e.target.value })} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
                         </div>
                         <div>
                           <label className="block font-label-md text-on-surface-variant mb-1">Location</label>
-                          <input type="text" value={editPersonal.location || ''} onChange={e => setEditPersonal({...editPersonal, location: e.target.value})} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
+                          <input type="text" value={editPersonal.location || ''} onChange={e => setEditPersonal({ ...editPersonal, location: e.target.value })} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" />
                         </div>
                       </div>
                       <div className="flex justify-end gap-2 pt-2 border-t border-outline-variant">
@@ -505,7 +505,7 @@ export default function JobSeekerCvUploadPage() {
                 <section className="border border-outline-variant rounded-lg p-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 border-b border-outline-variant pb-2 gap-2">
                     <h3 className="font-h3 text-h3 text-primary flex items-center gap-2 min-w-0">
-                      <span className="material-symbols-outlined text-secondary text-[20px] shrink-0">notes</span> 
+                      <span className="material-symbols-outlined text-secondary text-[20px] shrink-0">notes</span>
                       <span className="truncate">Summary</span>
                       <span className="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider shrink-0 ml-2">AI Extracted</span>
                     </h3>
@@ -532,7 +532,7 @@ export default function JobSeekerCvUploadPage() {
                 <section className="border border-outline-variant rounded-lg p-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 border-b border-outline-variant pb-2 gap-2">
                     <h3 className="font-h3 text-h3 text-primary flex items-center gap-2 min-w-0">
-                      <span className="material-symbols-outlined text-secondary text-[20px] shrink-0">work_history</span> 
+                      <span className="material-symbols-outlined text-secondary text-[20px] shrink-0">work_history</span>
                       <span className="truncate">Experience History</span>
                       <span className="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider shrink-0 ml-2">AI Extracted</span>
                     </h3>
@@ -548,11 +548,11 @@ export default function JobSeekerCvUploadPage() {
                         <div key={index} className="bg-surface-variant/20 p-4 rounded-lg border border-outline-variant relative group">
                           <button onClick={() => setEditExperience(editExperience.filter((_, i) => i !== index))} className="absolute top-2 right-2 p-1 text-on-surface-variant hover:text-error rounded-full transition-colors"><span className="material-symbols-outlined text-[18px]">delete</span></button>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                            <div><label className="block font-label-md text-on-surface-variant mb-1">Job Title *</label><input type="text" value={exp.title || ''} onChange={e => {const newE=[...editExperience]; newE[index].title=e.target.value; setEditExperience(newE);}} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
-                            <div><label className="block font-label-md text-on-surface-variant mb-1">Company *</label><input type="text" value={exp.company || ''} onChange={e => {const newE=[...editExperience]; newE[index].company=e.target.value; setEditExperience(newE);}} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
-                            <div><label className="block font-label-md text-on-surface-variant mb-1">Start Year</label><input type="text" value={exp.startYear || ''} onChange={e => {const newE=[...editExperience]; newE[index].startYear=e.target.value; setEditExperience(newE);}} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
-                            <div><label className="block font-label-md text-on-surface-variant mb-1">End Year</label><input type="text" value={exp.endYear || ''} onChange={e => {const newE=[...editExperience]; newE[index].endYear=e.target.value; setEditExperience(newE);}} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
-                            <div className="md:col-span-2"><label className="block font-label-md text-on-surface-variant mb-1">Description</label><textarea rows="3" value={exp.description || ''} onChange={e => {const newE=[...editExperience]; newE[index].description=e.target.value; setEditExperience(newE);}} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary resize-y" /></div>
+                            <div><label className="block font-label-md text-on-surface-variant mb-1">Job Title *</label><input type="text" value={exp.title || ''} onChange={e => { const newE = [...editExperience]; newE[index].title = e.target.value; setEditExperience(newE); }} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
+                            <div><label className="block font-label-md text-on-surface-variant mb-1">Company *</label><input type="text" value={exp.company || ''} onChange={e => { const newE = [...editExperience]; newE[index].company = e.target.value; setEditExperience(newE); }} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
+                            <div><label className="block font-label-md text-on-surface-variant mb-1">Start Year</label><input type="text" value={exp.startYear || ''} onChange={e => { const newE = [...editExperience]; newE[index].startYear = e.target.value; setEditExperience(newE); }} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
+                            <div><label className="block font-label-md text-on-surface-variant mb-1">End Year</label><input type="text" value={exp.endYear || ''} onChange={e => { const newE = [...editExperience]; newE[index].endYear = e.target.value; setEditExperience(newE); }} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
+                            <div className="md:col-span-2"><label className="block font-label-md text-on-surface-variant mb-1">Description</label><textarea rows="3" value={exp.description || ''} onChange={e => { const newE = [...editExperience]; newE[index].description = e.target.value; setEditExperience(newE); }} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary resize-y" /></div>
                           </div>
                         </div>
                       ))}
@@ -583,7 +583,7 @@ export default function JobSeekerCvUploadPage() {
                 <section className="border border-outline-variant rounded-lg p-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 border-b border-outline-variant pb-2 gap-2">
                     <h3 className="font-h3 text-h3 text-primary flex items-center gap-2 min-w-0">
-                      <span className="material-symbols-outlined text-secondary text-[20px] shrink-0">school</span> 
+                      <span className="material-symbols-outlined text-secondary text-[20px] shrink-0">school</span>
                       <span className="truncate">Education</span>
                       <span className="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider shrink-0 ml-2">AI Extracted</span>
                     </h3>
@@ -599,10 +599,10 @@ export default function JobSeekerCvUploadPage() {
                         <div key={index} className="bg-surface-variant/20 p-4 rounded-lg border border-outline-variant relative group">
                           <button onClick={() => setEditEducation(editEducation.filter((_, i) => i !== index))} className="absolute top-2 right-2 p-1 text-on-surface-variant hover:text-error rounded-full transition-colors"><span className="material-symbols-outlined text-[18px]">delete</span></button>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                            <div><label className="block font-label-md text-on-surface-variant mb-1">Degree *</label><input type="text" value={edu.degree || ''} onChange={e => {const newE=[...editEducation]; newE[index].degree=e.target.value; setEditEducation(newE);}} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
-                            <div><label className="block font-label-md text-on-surface-variant mb-1">Institution *</label><input type="text" value={edu.institution || ''} onChange={e => {const newE=[...editEducation]; newE[index].institution=e.target.value; setEditEducation(newE);}} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
-                            <div><label className="block font-label-md text-on-surface-variant mb-1">Start Year</label><input type="text" value={edu.startYear || ''} onChange={e => {const newE=[...editEducation]; newE[index].startYear=e.target.value; setEditEducation(newE);}} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
-                            <div><label className="block font-label-md text-on-surface-variant mb-1">End Year</label><input type="text" value={edu.endYear || ''} onChange={e => {const newE=[...editEducation]; newE[index].endYear=e.target.value; setEditEducation(newE);}} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
+                            <div><label className="block font-label-md text-on-surface-variant mb-1">Degree *</label><input type="text" value={edu.degree || ''} onChange={e => { const newE = [...editEducation]; newE[index].degree = e.target.value; setEditEducation(newE); }} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
+                            <div><label className="block font-label-md text-on-surface-variant mb-1">Institution *</label><input type="text" value={edu.institution || ''} onChange={e => { const newE = [...editEducation]; newE[index].institution = e.target.value; setEditEducation(newE); }} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
+                            <div><label className="block font-label-md text-on-surface-variant mb-1">Start Year</label><input type="text" value={edu.startYear || ''} onChange={e => { const newE = [...editEducation]; newE[index].startYear = e.target.value; setEditEducation(newE); }} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
+                            <div><label className="block font-label-md text-on-surface-variant mb-1">End Year</label><input type="text" value={edu.endYear || ''} onChange={e => { const newE = [...editEducation]; newE[index].endYear = e.target.value; setEditEducation(newE); }} className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 outline-none focus:border-secondary" /></div>
                           </div>
                         </div>
                       ))}
@@ -632,7 +632,7 @@ export default function JobSeekerCvUploadPage() {
                 <section className="border border-outline-variant rounded-lg p-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 border-b border-outline-variant pb-2 gap-2">
                     <h3 className="font-h3 text-h3 text-primary flex items-center gap-2 min-w-0">
-                      <span className="material-symbols-outlined text-secondary text-[20px] shrink-0">psychology</span> 
+                      <span className="material-symbols-outlined text-secondary text-[20px] shrink-0">psychology</span>
                       <span className="truncate">Skills</span>
                       <span className="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider shrink-0 ml-2">AI Extracted</span>
                     </h3>
@@ -651,24 +651,24 @@ export default function JobSeekerCvUploadPage() {
                             {editSkills[cat].map((skill, idx) => (
                               <span key={idx} className="bg-secondary-container/30 text-on-secondary-container px-3 py-1 rounded-full font-label-sm border border-secondary/20 flex items-center gap-1">
                                 {skill}
-                                <button onClick={() => setEditSkills({...editSkills, [cat]: editSkills[cat].filter((_, i) => i !== idx)})} className="hover:text-error transition-colors"><span className="material-symbols-outlined text-[14px]">close</span></button>
+                                <button onClick={() => setEditSkills({ ...editSkills, [cat]: editSkills[cat].filter((_, i) => i !== idx) })} className="hover:text-error transition-colors"><span className="material-symbols-outlined text-[14px]">close</span></button>
                               </span>
                             ))}
                           </div>
                           <div className="flex gap-2">
-                            <input type="text" value={newSkillText[cat]} onChange={e => setNewSkillText({...newSkillText, [cat]: e.target.value})} onKeyDown={(e) => {
-                              if(e.key === 'Enter') {
+                            <input type="text" value={newSkillText[cat]} onChange={e => setNewSkillText({ ...newSkillText, [cat]: e.target.value })} onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
                                 e.preventDefault();
                                 if (newSkillText[cat].trim()) {
-                                  setEditSkills({...editSkills, [cat]: [...editSkills[cat], newSkillText[cat].trim()]});
-                                  setNewSkillText({...newSkillText, [cat]: ''});
+                                  setEditSkills({ ...editSkills, [cat]: [...editSkills[cat], newSkillText[cat].trim()] });
+                                  setNewSkillText({ ...newSkillText, [cat]: '' });
                                 }
                               }
                             }} placeholder={`Add new ${cat} skill...`} className="flex-1 bg-surface border border-outline-variant rounded-lg px-3 py-1.5 outline-none focus:border-secondary text-sm" />
                             <button type="button" onClick={() => {
                               if (newSkillText[cat].trim()) {
-                                setEditSkills({...editSkills, [cat]: [...editSkills[cat], newSkillText[cat].trim()]});
-                                setNewSkillText({...newSkillText, [cat]: ''});
+                                setEditSkills({ ...editSkills, [cat]: [...editSkills[cat], newSkillText[cat].trim()] });
+                                setNewSkillText({ ...newSkillText, [cat]: '' });
                               }
                             }} className="px-3 py-1.5 border border-outline-variant rounded text-on-surface font-label-sm hover:bg-surface-container-low">Add</button>
                           </div>
@@ -682,28 +682,28 @@ export default function JobSeekerCvUploadPage() {
                   ) : (
                     <div className="space-y-4">
                       {['hard', 'soft', 'tools'].map((cat) => {
-                         if (Array.isArray(profileData.skills?.[cat])) {
-                           return profileData.skills[cat].length > 0 && (
-                             <div key={cat}>
-                               <p className="font-label-sm text-on-surface-variant mb-2 capitalize">{cat} Skills</p>
-                               <div className="flex flex-wrap gap-2">
-                                 {profileData.skills[cat].map((skill, idx) => (
-                                   <span key={idx} className="bg-surface-container-low border border-outline-variant px-3 py-1 rounded-full text-sm text-on-surface">
-                                     {skill}
-                                   </span>
-                                 ))}
-                               </div>
-                             </div>
-                           );
-                         } else if (profileData.skills?.[cat]) {
-                           return (
-                             <div key={cat}>
-                               <p className="font-label-sm text-on-surface-variant mb-2 capitalize">{cat} Skills</p>
-                               <p className="font-body-md text-on-surface">{profileData.skills[cat]}</p>
-                             </div>
-                           );
-                         }
-                         return null;
+                        if (Array.isArray(profileData.skills?.[cat])) {
+                          return profileData.skills[cat].length > 0 && (
+                            <div key={cat}>
+                              <p className="font-label-sm text-on-surface-variant mb-2 capitalize">{cat} Skills</p>
+                              <div className="flex flex-wrap gap-2">
+                                {profileData.skills[cat].map((skill, idx) => (
+                                  <span key={idx} className="bg-surface-container-low border border-outline-variant px-3 py-1 rounded-full text-sm text-on-surface">
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        } else if (profileData.skills?.[cat]) {
+                          return (
+                            <div key={cat}>
+                              <p className="font-label-sm text-on-surface-variant mb-2 capitalize">{cat} Skills</p>
+                              <p className="font-body-md text-on-surface">{profileData.skills[cat]}</p>
+                            </div>
+                          );
+                        }
+                        return null;
                       })}
                       {(!profileData.skills || (!profileData.skills.hard?.length && !profileData.skills.soft?.length && !profileData.skills.tools?.length)) && (
                         <p className="text-on-surface-variant text-sm">No skills extracted.</p>
@@ -714,7 +714,7 @@ export default function JobSeekerCvUploadPage() {
 
                 {/* Final Actions */}
                 <div className="flex justify-end gap-4 mt-4 pt-6 border-t border-outline-variant">
-                  <button 
+                  <button
                     onClick={handleFinalSave}
                     disabled={isSubmitting}
                     className="px-8 py-2.5 rounded-lg bg-secondary text-on-secondary hover:bg-secondary-container transition-colors disabled:opacity-50 font-label-md flex items-center gap-2 shadow-sm"

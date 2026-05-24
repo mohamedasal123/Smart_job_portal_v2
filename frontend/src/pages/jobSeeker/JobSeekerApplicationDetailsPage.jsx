@@ -74,7 +74,7 @@ export default function JobSeekerApplicationDetailsPage() {
         setLoading(false);
       }
     };
-    
+
     fetchApplication();
   }, [applicationId, navigate]);
 
@@ -103,9 +103,9 @@ export default function JobSeekerApplicationDetailsPage() {
           <span className="material-symbols-outlined mr-1 text-[18px]">arrow_back</span>
           Back to profile applications
         </Link>
-        <SeekerPageHeader 
-          title="Application Details" 
-          subtitle="Review the status and details of your application." 
+        <SeekerPageHeader
+          title="Application Details"
+          subtitle="Review the status and details of your application."
           icon="assignment"
         />
       </div>
