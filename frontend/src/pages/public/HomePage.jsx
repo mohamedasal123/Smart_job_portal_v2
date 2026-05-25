@@ -17,6 +17,16 @@ const HOW_IT_WORKS = [
   { step: '03', icon: 'handshake', key: 'apply' },
 ];
 
+const CATEGORY_CARD_HOVER = {
+  rest: { y: 0 },
+  hover: { y: -8, transition: { duration: 0.28, ease: EASE } },
+};
+
+const CATEGORY_ICON_HOVER = {
+  rest: { scale: 1, rotate: 0 },
+  hover: { scale: 1.08, rotate: -3, transition: { duration: 0.32, ease: EASE } },
+};
+
 export default function HomePage() {
   const { t } = useTranslation();
   const [jobQuery, setJobQuery] = useState('');
@@ -108,6 +118,7 @@ export default function HomePage() {
       .map(([label, count]) => ({
         icon: iconMap[label] || 'work',
         label,
+        displayLabel: t(`categories.${label}`, { defaultValue: label }),
         count: t('home.categories.jobCount', { count }),
       }));
 
@@ -154,7 +165,7 @@ export default function HomePage() {
 
         <main className="flex-grow flex flex-col items-center w-full">
           {/* Hero Section */}
-          <section className="w-full bg-surface-container-lowest py-[100px] px-margin-desktop flex flex-col items-center justify-center border-b border-surface-container-high relative overflow-hidden">
+          <section className="w-full bg-surface-container-lowest py-[100px] px-4 sm:px-gutter lg:px-margin-desktop flex flex-col items-center justify-center border-b border-surface-container-high relative overflow-hidden">
             <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #131b2e 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
             {/* Decorative gradient blobs — gently float so the hero feels alive. */}
             <motion.div
@@ -193,7 +204,7 @@ export default function HomePage() {
               </Stagger.Item>
 
               <Stagger.Item>
-                <form onSubmit={handleSearch} className="w-full max-w-[760px] mx-auto bg-surface-container-lowest border border-outline-variant rounded-2xl md:rounded-full shadow-md flex flex-col md:flex-row items-stretch p-2 focus-within:border-secondary transition-all gap-2 md:gap-0">
+                <form onSubmit={handleSearch} className="w-full max-w-[760px] mx-auto bg-surface-container-lowest/90 border border-outline-variant/80 rounded-2xl md:rounded-full shadow-md backdrop-blur-xl flex flex-col md:flex-row items-stretch p-2 focus-within:border-secondary focus-within:shadow-hover transition-all duration-300 ease-out gap-2 md:gap-0">
                   <div className="flex-1 flex items-center gap-2 px-4 relative bg-surface-container-lowest md:bg-transparent rounded-xl md:rounded-none py-2 md:py-0" ref={jobInputRef}>
                     <span className="material-symbols-outlined text-outline text-[20px]" aria-hidden="true">search</span>
                     <input
@@ -259,8 +270,9 @@ export default function HomePage() {
                   </div>
                   <motion.button
                     type="submit"
+                    whileHover={reduce ? undefined : { y: -2, transition: { duration: 0.2, ease: EASE } }}
                     whileTap={reduce ? undefined : { scale: 0.96, transition: SPRING_PRESS }}
-                    className="w-full md:w-auto px-8 py-3 bg-secondary text-on-secondary font-body-md font-bold rounded-xl md:rounded-full hover:bg-secondary-container transition-colors whitespace-nowrap mt-2 md:mt-0"
+                    className="w-full md:w-auto px-8 py-3 bg-secondary text-on-secondary font-body-md font-bold rounded-xl md:rounded-full shadow-sm hover:bg-secondary-container hover:shadow-hover transition-all duration-300 ease-out whitespace-nowrap mt-2 md:mt-0"
                   >
                     {t('home.searchSubmit')}
                   </motion.button>
@@ -271,7 +283,7 @@ export default function HomePage() {
                 <div className="mt-6 flex items-center justify-center gap-2 flex-wrap text-on-surface-variant font-body-md">
                   <span className="text-outline dark:text-white">{t('home.popular')}</span>
                   {popularSearches.map((term) => (
-                    <Link key={term} to={`${ROUTES.JOBS}?search=${encodeURIComponent(term)}`} className="px-3 py-1 rounded-full border border-outline-variant hover:border-secondary hover:text-secondary dark:hover:text-secondary-fixed dark:hover:border-secondary-fixed transition-colors text-sm">
+                    <Link key={term} to={`${ROUTES.JOBS}?search=${encodeURIComponent(term)}`} className="px-3 py-1 rounded-full border border-outline-variant hover:border-secondary hover:text-secondary dark:hover:text-secondary-fixed dark:hover:border-secondary-fixed transition-all duration-200 ease-out text-sm">
                       {term}
                     </Link>
                   ))}
@@ -336,36 +348,74 @@ export default function HomePage() {
           </section>
 
           {/* Featured Categories Section */}
-          <section className="w-full py-[80px] px-margin-desktop">
-            <div className="max-w-container-max-width mx-auto">
-              <Reveal whenInView className="text-center mb-12">
-                <p className="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-2">{t('home.categories.eyebrow')}</p>
+          <Reveal whenInView as="section" className="relative w-full overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface-container-low/50 to-surface-container-lowest px-4 py-16 sm:px-gutter lg:px-margin-desktop lg:py-[96px]">
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-[8%] top-10 h-72 w-72 rounded-full bg-secondary/10 blur-3xl"
+              animate={reduce ? undefined : { y: [0, -14, 0], opacity: [0.75, 1, 0.75] }}
+              transition={reduce ? undefined : { duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-[-140px] right-[6%] h-[360px] w-[360px] rounded-full bg-tertiary/10 blur-3xl"
+              animate={reduce ? undefined : { y: [0, 16, 0], opacity: [0.65, 0.95, 0.65] }}
+              transition={reduce ? undefined : { duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-outline-variant to-transparent" />
+
+            <div className="relative max-w-container-max-width mx-auto">
+              <Reveal whenInView className="text-center mb-12 md:mb-14">
+                <div aria-hidden="true" className="mx-auto mb-4 h-px w-24 bg-gradient-to-r from-transparent via-secondary/60 to-transparent" />
+                <p className="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-3">{t('home.categories.eyebrow')}</p>
                 <h2 className="font-h1 text-h1 text-primary mb-stack-sm">{t('home.categories.title')}</h2>
-                <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[560px] mx-auto">{t('home.categories.description')}</p>
+                <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[600px] mx-auto leading-relaxed">{t('home.categories.description')}</p>
               </Reveal>
-              <Stagger className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-[1000px] mx-auto" delayChildren={0.05} staggerChildren={0.05}>
+
+              <Stagger whenInView className="home-category-grid" delayChildren={0.1} staggerChildren={0.07}>
                 {loading ? (
-                  Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="bg-surface-container-lowest rounded-xl h-40 border border-surface-container-high shadow-sm animate-pulse flex flex-col items-center justify-center p-6">
-                      <div className="w-12 h-12 rounded-full bg-surface-container-high mb-3"></div>
-                      <div className="h-4 bg-surface-container-high rounded w-2/3 mb-2"></div>
-                      <div className="h-3 bg-surface-container-high rounded w-1/2"></div>
-                    </div>
+                  Array.from({ length: 8 }).map((_, i) => (
+                    <Stagger.Item key={i}>
+                      <div className="relative flex min-h-[220px] overflow-hidden rounded-[1.75rem] border border-outline-variant/70 bg-surface-container-lowest/80 p-7 text-center shadow-ambient backdrop-blur-xl motion-safe:animate-pulse flex-col items-center justify-center">
+                        <div className="mb-5 h-16 w-16 rounded-2xl bg-surface-container-high" />
+                        <div className="mb-3 h-4 w-2/3 rounded-full bg-surface-container-high" />
+                        <div className="h-3 w-1/2 rounded-full bg-surface-container-high" />
+                      </div>
+                    </Stagger.Item>
                   ))
                 ) : dynamicCategories.length === 0 ? (
-                  <div className="col-span-full text-center py-8 text-on-surface-variant">
-                    {t('home.categories.empty')}
-                  </div>
+                  <Stagger.Item className="home-category-empty">
+                    <div className="rounded-[1.75rem] border border-dashed border-outline-variant bg-surface-container-lowest/80 px-6 py-10 text-center text-on-surface-variant shadow-ambient backdrop-blur-xl">
+                      <span className="material-symbols-outlined mb-3 text-[32px] text-secondary" aria-hidden="true">category</span>
+                      <p className="font-body-lg text-body-lg">{t('home.categories.empty')}</p>
+                    </div>
+                  </Stagger.Item>
                 ) : (
                   dynamicCategories.map((cat) => (
                     <Stagger.Item key={cat.label}>
-                      <motion.div whileHover={reduce ? undefined : { y: -4, transition: { duration: 0.2, ease: EASE } }}>
-                        <Link to={`${ROUTES.JOBS}?category=${encodeURIComponent(cat.label)}`} className="flex flex-col items-center justify-center p-6 bg-surface-container-lowest rounded-xl border border-surface-container-high hover:border-secondary hover:shadow-hover transition-all group cursor-pointer">
-                        <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-3 group-hover:bg-secondary transition-colors">
-                          <span className="material-symbols-outlined text-secondary text-[24px] group-hover:text-on-secondary transition-colors" aria-hidden="true">{cat.icon}</span>
-                        </div>
-                          <h3 className="font-h3 text-h3 text-primary mb-1 text-center">{cat.label}</h3>
-                          <p className="font-label-sm text-label-sm text-on-surface-variant">{cat.count}</p>
+                      <motion.div
+                        className="h-full rounded-[1.75rem]"
+                        initial="rest"
+                        animate="rest"
+                        whileHover={reduce ? undefined : 'hover'}
+                        variants={reduce ? undefined : CATEGORY_CARD_HOVER}
+                      >
+                        <Link
+                          to={`${ROUTES.JOBS}?category=${encodeURIComponent(cat.label)}`}
+                          className="group relative flex h-full min-h-[220px] overflow-hidden rounded-[1.75rem] border border-outline-variant/70 bg-surface-container-lowest/85 p-7 text-center shadow-ambient backdrop-blur-xl outline-none transition-all duration-300 ease-out hover:border-secondary/70 hover:shadow-hover focus-visible:border-secondary focus-visible:ring-2 focus-visible:ring-secondary/30 flex-col items-center justify-center"
+                        >
+                          <span aria-hidden="true" className="pointer-events-none absolute inset-px rounded-[1.65rem] bg-gradient-to-br from-white/70 via-transparent to-secondary/10 opacity-70 transition-opacity duration-300 group-hover:opacity-100 dark:from-white/5 dark:to-secondary/15" />
+                          <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-4 h-24 w-24 -translate-x-1/2 rounded-full bg-secondary/10 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
+
+                          <motion.div
+                            className="relative mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/10 ring-1 ring-secondary/15 shadow-sm transition-colors duration-300 group-hover:bg-secondary group-hover:ring-secondary/30 group-hover:shadow-hover"
+                            variants={reduce ? undefined : CATEGORY_ICON_HOVER}
+                          >
+                            <span className="material-symbols-outlined text-secondary text-[30px] transition-colors duration-300 group-hover:text-on-secondary" aria-hidden="true">{cat.icon}</span>
+                          </motion.div>
+
+                          <h3 className="relative font-h3 text-h3 text-primary mb-2 line-clamp-2">{cat.displayLabel}</h3>
+                          <p className="relative font-label-sm text-label-sm text-on-surface-variant">{cat.count}</p>
+                          <span aria-hidden="true" className="relative mt-5 h-1 w-10 rounded-full bg-secondary/20 transition-all duration-300 group-hover:w-16 group-hover:bg-secondary/50" />
                         </Link>
                       </motion.div>
                     </Stagger.Item>
@@ -373,7 +423,7 @@ export default function HomePage() {
                 )}
               </Stagger>
             </div>
-          </section>
+          </Reveal>
 
           {/* CTA Section */}
           <Reveal whenInView as="section" className="w-full bg-primary-container py-[80px] px-margin-desktop">

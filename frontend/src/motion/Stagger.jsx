@@ -12,6 +12,8 @@ export default function Stagger({
   className,
   delayChildren = 0.05,
   staggerChildren = 0.06,
+  whenInView = false,
+  viewport = { once: true, margin: '-60px' },
   as = 'div',
   ...rest
 }) {
@@ -32,7 +34,9 @@ export default function Stagger({
       className={className}
       variants={staggerVariants(delayChildren, staggerChildren)}
       initial="hidden"
-      animate="visible"
+      {...(whenInView
+        ? { whileInView: 'visible', viewport }
+        : { animate: 'visible' })}
       {...rest}
     >
       {children}
