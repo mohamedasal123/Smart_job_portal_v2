@@ -1,4 +1,5 @@
 import axios from 'axios';
+import i18n from '../i18n';
 
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
@@ -23,6 +24,8 @@ const attachXsrfToken = (config) => {
   if (token) {
     config.headers['X-XSRF-TOKEN'] = token;
   }
+
+  config.headers['X-Locale'] = i18n.language || 'en';
 
   return config;
 };

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { ROUTES, getRoleRedirect, normalizeRole } from '../../utils/constants';
 import PublicNavBar from '../../components/PublicNavBar';
 import { useToast } from '../../components/useToast';
@@ -32,6 +33,7 @@ export default function LoginPage() {
   const location = useLocation();
   const { addToast } = useToast();
   const reduce = useReducedMotion();
+  const { t } = useTranslation();
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
@@ -62,9 +64,9 @@ export default function LoginPage() {
 
   const validate = () => {
     const e = {};
-    if (!form.email.trim()) e.email = 'Email is required.';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Enter a valid email.';
-    if (!form.password) e.password = 'Password is required.';
+    if (!form.email.trim()) e.email = t('auth.login.errors.emailRequired');
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = t('auth.login.errors.emailInvalid');
+    if (!form.password) e.password = t('auth.login.errors.passwordRequired');
     return e;
   };
 
@@ -89,7 +91,7 @@ export default function LoginPage() {
     try {
       // 2. بننده دالة اللوجين من الكونتكست، والمفروض الدالة دي بتعمل setUser
       await login(form);
-      addToast({ title: 'Welcome back!', message: 'Login successful.', type: 'success' });
+      addToast({ title: t('auth.login.toastTitle'), message: t('auth.login.toastMessage'), type: 'success' });
 
       // شيلنا الـ navigate من هنا عشان ميعملش تضارب مع الـ useEffect
       // شيلنا الـ flushSync لأن ملهاش لازمة هنا وكانت ممكن تعمل مشاكل
@@ -123,13 +125,13 @@ export default function LoginPage() {
           />
           <Stagger className="relative z-10 text-center max-w-lg" delayChildren={0.1} staggerChildren={0.1}>
             <Stagger.Item className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-stack-lg">
-              <img src={icon} alt="Smart Job Portal" className="w-full h-full object-contain" />
+              <img src={icon} alt={t('app.productName')} className="w-full h-full object-contain" />
             </Stagger.Item>
             <Stagger.Item as="h1" className="font-h1 text-h1 text-primary mb-stack-md">
-              <span>Your next career move awaits.</span>
+              <span>{t('auth.login.heroTitle')}</span>
             </Stagger.Item>
             <Stagger.Item as="p" className="font-body-lg text-body-lg text-on-surface-variant">
-              <span>Log in to access personalized job matches, track your applications, and connect with top employers.</span>
+              <span>{t('auth.login.heroDescription')}</span>
             </Stagger.Item>
           </Stagger>
         </Reveal>
@@ -148,11 +150,11 @@ export default function LoginPage() {
                 animate={{ rotate: 0, opacity: 1 }}
                 transition={{ duration: 0.6, ease: EASE }}
               >
-                <img src={icon} alt="Logo" className="w-10 h-10 object-contain" />
+                <img src={icon} alt={t('app.productName')} className="w-10 h-10 object-contain" />
               </motion.div>
-              <h2 className="font-h1 text-h1 text-primary">Welcome Back!</h2>
+              <h2 className="font-h1 text-h1 text-primary">{t('auth.login.welcomeBack')}</h2>
               <p className="font-body-lg text-body-lg text-on-surface-variant mt-2">
-                Log in to Smart Job Portal.
+                {t('auth.login.subtitle')}
               </p>
             </div>
 
@@ -170,12 +172,12 @@ export default function LoginPage() {
             <form className="flex flex-col gap-stack-md" onSubmit={handleSubmit}>
               <Stagger delayChildren={0.2} staggerChildren={0.05}>
                 <Stagger.Item>
-                  <label className="font-label-sm text-label-sm text-on-surface" htmlFor="email">Email Address</label>
+                  <label className="font-label-sm text-label-sm text-on-surface" htmlFor="email">{t('auth.login.emailLabel')}</label>
                   <input
                     className={`mt-unit w-full rounded-lg border ${errors.email ? 'border-error bg-error-container/20' : 'border-outline-variant bg-surface-container-lowest'} px-stack-md py-stack-sm text-on-surface focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all`}
                     id="email"
                     name="email"
-                    placeholder="you@example.com"
+                    placeholder={t('auth.login.emailPlaceholder')}
                     type="email"
                     value={form.email}
                     onChange={handleChange}
@@ -185,14 +187,14 @@ export default function LoginPage() {
 
                 <Stagger.Item className="mt-4">
                   <div className="flex items-center justify-between">
-                    <label className="font-label-sm text-label-sm text-on-surface" htmlFor="password">Password</label>
-                    <Link className="font-label-sm text-label-sm text-secondary hover:underline" to="/forgot-password">Forgot password?</Link>
+                    <label className="font-label-sm text-label-sm text-on-surface" htmlFor="password">{t('auth.login.passwordLabel')}</label>
+                    <Link className="font-label-sm text-label-sm text-secondary hover:underline" to="/forgot-password">{t('auth.login.forgotPassword')}</Link>
                   </div>
                   <input
                     className={`mt-unit w-full rounded-lg border ${errors.password ? 'border-error bg-error-container/20' : 'border-outline-variant bg-surface-container-lowest'} px-stack-md py-stack-sm text-on-surface focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all`}
                     id="password"
                     name="password"
-                    placeholder="Enter your password"
+                    placeholder={t('auth.login.passwordPlaceholder')}
                     type="password"
                     value={form.password}
                     onChange={handleChange}
@@ -208,7 +210,7 @@ export default function LoginPage() {
                     whileTap={reduce || loading ? undefined : { scale: 0.97, transition: SPRING_PRESS }}
                   >
                     {loading && <span className="material-symbols-outlined animate-spin text-[18px]" aria-hidden="true">progress_activity</span>}
-                    {loading ? 'Signing in...' : 'Log In'}
+                    {loading ? t('auth.login.signingIn') : t('auth.login.submit')}
                   </motion.button>
                 </Stagger.Item>
               </Stagger>
@@ -221,8 +223,8 @@ export default function LoginPage() {
               className="mt-stack-lg text-center pt-6 border-t border-outline-variant"
             >
               <p className="font-body-md text-body-md text-on-surface-variant">
-                New to Smart Job Portal?{' '}
-                <Link className="text-secondary font-semibold hover:underline" to={ROUTES.REGISTER}>Create an account</Link>
+                {t('auth.login.newHere')}{' '}
+                <Link className="text-secondary font-semibold hover:underline" to={ROUTES.REGISTER}>{t('auth.login.createAccount')}</Link>
               </p>
             </motion.div>
           </motion.div>

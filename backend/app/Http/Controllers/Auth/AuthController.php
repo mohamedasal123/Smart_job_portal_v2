@@ -21,7 +21,7 @@ class AuthController extends Controller
     {
         $this->authService->registerUser($request->validated());
 
-        return $this->success(null, 'Registration successful. Please verify your email.', 201);
+        return $this->success(null, __('auth.register_success'), 201);
     }
 
     public function login(LoginRequest $request)
@@ -29,19 +29,19 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials)) {
-            return $this->error('Invalid credentials.', 401);
+            return $this->error(__('auth.invalid_credentials'), 401);
         }
 
         $user = Auth::user();
 
         if ($user->is_banned) {
             Auth::guard('web')->logout();
-            return $this->error('Your account has been suspended.', 403);
+            return $this->error(__('auth.account_suspended'), 403);
         }
 
         if (!$user->email_verified_at) {
             Auth::guard('web')->logout();
-            return $this->error('Please verify your email first.', 401);
+            return $this->error(__('auth.verify_email_first'), 401);
         }
 
         $request->session()->regenerate();
@@ -52,7 +52,7 @@ class AuthController extends Controller
             $user->load('companyProfile');
         }
 
-        return $this->success(new UserResource($user), 'Login successful.', 200);
+        return $this->success(new UserResource($user), __('auth.login_success'), 200);
     }
 
     public function logout(Request $request)
@@ -61,7 +61,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return $this->success(null, 'Logged out successfully.');
+        return $this->success(null, __('auth.logout_success'));
     }
 
     public function verifyEmail(Request $request)
@@ -69,10 +69,10 @@ class AuthController extends Controller
         $request->validate(['token' => 'required|string']);
 
         if (!$this->authService->verifyEmail($request->token)) {
-            return $this->error('Invalid or expired token.', 400);
+            return $this->error(__('auth.invalid_or_expired_token'), 400);
         }
 
-        return $this->success(null, 'Email verified successfully.');
+        return $this->success(null, __('auth.email_verified'));
     }
 
     public function me(Request $request)
@@ -85,7 +85,7 @@ class AuthController extends Controller
             $user->load('companyProfile');
         }
 
-        return $this->success(new UserResource($user), 'OK', 200);
+        return $this->success(new UserResource($user), __('messages.ok'), 200);
     }
 
     public function resendVerification(Request $request)
@@ -95,6 +95,6 @@ class AuthController extends Controller
         $this->authService->resendVerificationEmail($request->email);
 
         // Always return 200 to prevent user enumeration
-        return $this->success(null, 'If your email is registered and unverified, a new link was sent.', 200);
+        return $this->success(null, __('auth.verification_link_sent'), 200);
     }
 }

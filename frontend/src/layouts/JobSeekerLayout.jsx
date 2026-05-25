@@ -1,22 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/useAuth';
 import { ROUTES } from '../utils/constants';
 import { addLocalNotification, getNotifications, markNotificationRead } from '../services/jobSeekerDataService';
 import PageTransition from '../motion/PageTransition';
 import ThemeToggle from '../components/ThemeToggle';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import { useToast } from '../components/useToast';
 import icon from '../assets/icon.png';
 
 const navItems = [
-  { key: 'dashboard', to: ROUTES.SEEKER_DASHBOARD, label: 'Dashboard', icon: 'dashboard' },
-  { key: 'jobs', to: ROUTES.SEEKER_JOBS, label: 'Browse Jobs', icon: 'search' },
-  { key: 'profile', to: ROUTES.SEEKER_PROFILE, label: 'Profile', icon: 'person' },
-  { key: 'interviews', to: ROUTES.SEEKER_INTERVIEWS, label: 'Interviews', icon: 'event_available' },
-  { key: 'messages', to: ROUTES.SEEKER_MESSAGES, label: 'Messages', icon: 'mail' },
-  { key: 'notifications', to: ROUTES.SEEKER_NOTIFICATIONS, label: 'Notifications', icon: 'notifications' },
-  { key: 'settings', to: ROUTES.SEEKER_SETTINGS, label: 'Settings', icon: 'settings' },
-  { key: 'public-site', to: ROUTES.HOME, label: 'View Public Site', icon: 'public' },
+  { key: 'dashboard', to: ROUTES.SEEKER_DASHBOARD, labelKey: 'seekerNav.dashboard', icon: 'dashboard' },
+  { key: 'jobs', to: ROUTES.SEEKER_JOBS, labelKey: 'seekerNav.browseJobs', icon: 'search' },
+  { key: 'profile', to: ROUTES.SEEKER_PROFILE, labelKey: 'seekerNav.profile', icon: 'person' },
+  { key: 'interviews', to: ROUTES.SEEKER_INTERVIEWS, labelKey: 'seekerNav.interviews', icon: 'event_available' },
+  { key: 'messages', to: ROUTES.SEEKER_MESSAGES, labelKey: 'seekerNav.messages', icon: 'mail' },
+  { key: 'notifications', to: ROUTES.SEEKER_NOTIFICATIONS, labelKey: 'seekerNav.notifications', icon: 'notifications' },
+  { key: 'settings', to: ROUTES.SEEKER_SETTINGS, labelKey: 'seekerNav.settings', icon: 'settings' },
+  { key: 'public-site', to: ROUTES.HOME, labelKey: 'seekerNav.publicSite', icon: 'public' },
 ];
 
 const navClass = (isActive) =>
@@ -90,25 +92,26 @@ const isRecentNotification = (notification) => {
 };
 
 function SidebarContent({ currentPath, onNavigate, onLogout }) {
+  const { t } = useTranslation();
   return (
     <>
       <Link to={ROUTES.SEEKER_DASHBOARD} className="mb-stack-lg flex items-center gap-stack-sm px-stack-sm shrink-0 hover:opacity-80 transition-opacity" onClick={onNavigate}>
         <div className="w-10 h-10 flex items-center justify-center shrink-0">
-          <img src={icon} alt="Smart Job Portal" className="w-full h-full object-contain" />
+          <img src={icon} alt={t('app.productName')} className="w-full h-full object-contain" />
         </div>
         <div>
-          <h1 className="font-h3 text-h3 font-bold text-primary">Smart Job Portal</h1>
-          <p className="font-label-sm text-label-sm text-on-surface-variant">Candidate Workspace</p>
+          <h1 className="font-h3 text-h3 font-bold text-primary">{t('app.productName')}</h1>
+          <p className="font-label-sm text-label-sm text-on-surface-variant">{t('seekerNav.workspaceLabel')}</p>
         </div>
       </Link>
 
-      <nav className="flex-1 min-h-0 flex flex-col gap-unit overflow-y-auto pr-unit">
+      <nav className="flex-1 min-h-0 flex flex-col gap-unit overflow-y-auto pe-unit">
         {navItems.map((item) => {
           const isActive = isSeekerNavActive(item, currentPath);
           return (
             <NavLink className={() => navClass(isActive)} key={item.to} to={item.to} onClick={onNavigate}>
               <span className="material-symbols-outlined">{item.icon}</span>
-              <span>{item.label}</span>
+              <span>{t(item.labelKey)}</span>
             </NavLink>
           );
         })}
@@ -117,11 +120,11 @@ function SidebarContent({ currentPath, onNavigate, onLogout }) {
       <div className="mt-auto pt-stack-md border-t border-outline-variant flex flex-col gap-unit shrink-0 bg-surface-container-low">
         <NavLink className="flex items-center gap-stack-md text-on-surface-variant hover:bg-surface-container-highest rounded-lg px-stack-md py-stack-sm transition-colors" to={ROUTES.CONTACT} onClick={onNavigate}>
           <span className="material-symbols-outlined">help</span>
-          <span>Help</span>
+          <span>{t('seekerNav.help')}</span>
         </NavLink>
-        <button className="flex items-center gap-stack-md text-on-surface-variant hover:bg-surface-container-highest rounded-lg px-stack-md py-stack-sm transition-colors text-left" onClick={onLogout}>
+        <button className="flex items-center gap-stack-md text-on-surface-variant hover:bg-surface-container-highest rounded-lg px-stack-md py-stack-sm transition-colors text-start" onClick={onLogout}>
           <span className="material-symbols-outlined">logout</span>
-          <span>Logout</span>
+          <span>{t('seekerNav.logout')}</span>
         </button>
       </div>
     </>
@@ -129,6 +132,7 @@ function SidebarContent({ currentPath, onNavigate, onLogout }) {
 }
 
 export default function JobSeekerLayout({ children }) {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
@@ -292,7 +296,7 @@ export default function JobSeekerLayout({ children }) {
     }
   };
 
-  const displayName = user?.profile?.name || user?.name || 'Job Seeker';
+  const displayName = user?.profile?.name || user?.name || t('roles.jobSeeker');
   const displayEmail = user?.email || '';
   const initials = getInitials(displayName);
   const profileImage = user?.profile_image || user?.avatar || null;
@@ -320,7 +324,7 @@ export default function JobSeekerLayout({ children }) {
             <button
               onClick={() => setIsSidebarOpen((prev) => !prev)}
               className="hidden md:flex w-10 h-10 rounded-lg items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"
-              title="Toggle sidebar"
+              title={t('a11y.toggleSidebar')}
               type="button"
             >
               <span className="material-symbols-outlined">menu</span>
@@ -328,18 +332,19 @@ export default function JobSeekerLayout({ children }) {
             <button
               onClick={() => setIsMobileMenuOpen(true)}
               className="md:hidden w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"
-              title="Open menu"
+              title={t('a11y.openMenu')}
               type="button"
             >
               <span className="material-symbols-outlined">menu</span>
             </button>
             <Link to={ROUTES.SEEKER_DASHBOARD} className="md:hidden flex items-center gap-stack-sm hover:opacity-80 transition-opacity">
-              <img src={icon} alt="Smart Job Portal" className="w-8 h-8 object-contain" />
-              <span className="hidden sm:inline font-h3 text-h3 font-bold text-primary">Smart Job Portal</span>
+              <img src={icon} alt={t('app.productName')} className="w-8 h-8 object-contain" />
+              <span className="hidden sm:inline font-h3 text-h3 font-bold text-primary">{t('app.productName')}</span>
             </Link>
           </div>
 
           <div className="flex items-center gap-stack-md">
+            <LanguageSwitcher compact />
             <ThemeToggle compact />
 
             <div className="relative" ref={notifRef}>
@@ -359,8 +364,8 @@ export default function JobSeekerLayout({ children }) {
               {isNotifOpen && (
                 <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-80 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-md overflow-hidden z-50">
                   <div className="px-4 py-3 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
-                    <h3 className="font-h3 text-primary">Notifications</h3>
-                    <Link to={ROUTES.SEEKER_NOTIFICATIONS} className="text-xs text-secondary hover:underline" onClick={() => setIsNotifOpen(false)}>View all</Link>
+                    <h3 className="font-h3 text-primary">{t('seekerNav.notifications')}</h3>
+                    <Link to={ROUTES.SEEKER_NOTIFICATIONS} className="text-xs text-secondary hover:underline" onClick={() => setIsNotifOpen(false)}>{t('buttons.viewAll')}</Link>
                   </div>
                   <div className="max-h-[300px] overflow-y-auto">
                     {recentNotifications.length > 0 ? recentNotifications.map((notification, index) => (
@@ -377,7 +382,7 @@ export default function JobSeekerLayout({ children }) {
                         <p className="text-outline text-xs mt-1">{new Date(notification.created_at || Date.now()).toLocaleString()}</p>
                       </div>
                     )) : (
-                      <p className="p-4 text-center text-on-surface-variant text-sm">No new notifications.</p>
+                      <p className="p-4 text-center text-on-surface-variant text-sm">{t('emptyStatesShort.notifications')}</p>
                     )}
                   </div>
                 </div>
@@ -422,7 +427,7 @@ export default function JobSeekerLayout({ children }) {
                     onClick={() => setIsProfileOpen(false)}
                   >
                     <span className="material-symbols-outlined text-[20px]">person</span>
-                    Profile
+                    {t('seekerNav.profile')}
                   </Link>
                   <Link
                     to={ROUTES.SEEKER_SETTINGS}
@@ -430,7 +435,7 @@ export default function JobSeekerLayout({ children }) {
                     onClick={() => setIsProfileOpen(false)}
                   >
                     <span className="material-symbols-outlined text-[20px]">manage_accounts</span>
-                    Account Settings
+                    {t('seekerNav.accountSettings')}
                   </Link>
                   <Link
                     to={ROUTES.HOME}
@@ -438,7 +443,7 @@ export default function JobSeekerLayout({ children }) {
                     onClick={() => setIsProfileOpen(false)}
                   >
                     <span className="material-symbols-outlined text-[20px]">public</span>
-                    View Public Site
+                    {t('seekerNav.publicSite')}
                   </Link>
                   <div className="border-t border-outline-variant">
                     <button
@@ -447,7 +452,7 @@ export default function JobSeekerLayout({ children }) {
                       type="button"
                     >
                       <span className="material-symbols-outlined text-[20px]">logout</span>
-                      Logout
+                      {t('seekerNav.logout')}
                     </button>
                   </div>
                 </div>

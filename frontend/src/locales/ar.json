@@ -1,0 +1,1836 @@
+{
+  "app": {
+    "productName": "بوابة الوظائف الذكية"
+  },
+  "nav": {
+    "findJobs": "ابحث عن وظيفة",
+    "companies": "الشركات",
+    "salaryGuide": "دليل الرواتب"
+  },
+  "sidebar": {
+    "dashboard": "لوحة التحكم",
+    "applications": "الطلبات",
+    "recommendedJobs": "الوظائف الموصى بها",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "manageJobs": "إدارة الوظائف",
+    "createJob": "إنشاء وظيفة",
+    "applicants": "المتقدمون",
+    "companyProfile": "ملف الشركة",
+    "skills": "المهارات",
+    "messages": "الرسائل",
+    "notifications": "الإشعارات",
+    "users": "المستخدمون",
+    "jobs": "الوظائف",
+    "activityLog": "سجل النشاط"
+  },
+  "buttons": {
+    "apply": "تقديم",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "postJob": "نشر وظيفة",
+    "reset": "إعادة تعيين",
+    "save": "حفظ",
+    "searchJobs": "ابحث عن وظائف",
+    "submit": "إرسال",
+    "upload": "رفع",
+    "signIn": "تسجيل الدخول",
+    "dashboard": "لوحة التحكم",
+    "viewAll": "عرض الكل",
+    "help": "مساعدة"
+  },
+  "a11y": {
+    "primaryNav": "التنقل الرئيسي",
+    "toggleSidebar": "تبديل الشريط الجانبي",
+    "openMenu": "فتح القائمة"
+  },
+  "footer": {
+    "about": "من نحن",
+    "privacy": "الخصوصية",
+    "terms": "الشروط",
+    "support": "الدعم",
+    "help": "مركز المساعدة",
+    "security": "الأمان",
+    "api": "واجهة برمجة التطبيقات",
+    "faq": "الأسئلة الشائعة",
+    "copyrightShort": "© 2024 بوابة الوظائف الذكية.",
+    "copyrightLong": "© 2024 بوابة الوظائف الذكية. الذكاء في التوظيف."
+  },
+  "companiesPage": {
+    "eyebrow": "دليل الشركات",
+    "title": "استكشف الشركات التي توظّف الآن",
+    "description": "ابحث عن المنظمات حسب الصناعة والموقع والوظائف المفتوحة للعثور على فِرَق تناسب أهدافك المهنية.",
+    "searchPlaceholder": "ابحث بالشركة أو الصناعة أو المدينة",
+    "searchButton": "ابحث عن الشركات",
+    "emptyTitle": "لا توجد شركات تطابق بحثك",
+    "defaultIndustry": "تقنية",
+    "defaultLocation": "عن بُعد",
+    "openJobs_zero": "لا توجد وظائف",
+    "openJobs_one": "وظيفة واحدة",
+    "openJobs_two": "وظيفتان",
+    "openJobs_few": "{{count}} وظائف",
+    "openJobs_many": "{{count}} وظيفة",
+    "openJobs_other": "{{count}} وظيفة",
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي",
+      "page": "صفحة {{current}} من {{total}}"
+    }
+  },
+  "salariesPage": {
+    "eyebrow": "دليل الرواتب",
+    "title": "قارن الأجور حسب الوظيفة والسوق",
+    "description": "استكشف معايير التعويضات بناءً على إعلانات الوظائف النشطة.",
+    "searchJobPlaceholder": "المسمى الوظيفي أو المهارة",
+    "searchLocationPlaceholder": "الموقع",
+    "emptyTitle": "لا توجد بيانات رواتب",
+    "emptyHelp": "حاول تعديل معايير البحث أو عُد لاحقًا.",
+    "trends": {
+      "highDemand": "طلب مرتفع",
+      "stable": "مستقر",
+      "new": "جديد"
+    },
+    "basedOn_zero": "لا توجد وظائف",
+    "basedOn_one": "بناءً على وظيفة واحدة",
+    "basedOn_two": "بناءً على وظيفتين",
+    "basedOn_few": "بناءً على {{count}} وظائف",
+    "basedOn_many": "بناءً على {{count}} وظيفة",
+    "basedOn_other": "بناءً على {{count}} وظيفة"
+  },
+  "seekerCv": {
+    "uploadTitle": "رفع السيرة الذاتية",
+    "uploadSubtitle": "ارفع سيرتك الذاتية ودع الذكاء الاصطناعي يستخرج مهاراتك وخبرتك وتعليمك فورًا لبناء ملفك.",
+    "documentUpload": "رفع المستند",
+    "dragDrop": "اسحب وأفلت سيرتك الذاتية هنا",
+    "orClickBrowse": "أو انقر للتصفّح من جهازك",
+    "uploadAria": "ارفع سيرتك الذاتية — PDF أو DOCX، حتى 5 ميجابايت",
+    "chooseFileAria": "اختر ملف السيرة الذاتية للرفع",
+    "parsingTitle": "الذكاء الاصطناعي يحلّل سيرتك الذاتية...",
+    "parsingExtracting": "جارٍ استخراج البيانات المنظّمة من \"{{name}}\"",
+    "identifyingCompetencies": "تحديد الكفاءات الأساسية ({{percent}}%)",
+    "parsingCompleteTitle": "اكتمل التحليل!",
+    "parsingCompleteMessage": "تم تحليل سيرتك الذاتية بنجاح. راجع معاينة ملفك الشخصي.",
+    "uploadAnalyze": "ارفع وحلّل السيرة الذاتية",
+    "parsing": "جارٍ التحليل...",
+    "reupload": "إعادة رفع السيرة",
+    "livePreviewTitle": "معاينة الملف الشخصي",
+    "livePreviewSubtitle": "راجع وحرّر بيانات السيرة المستخرجة بالذكاء الاصطناعي قبل حفظها في ملفك.",
+    "reviewTitle": "مراجعة بيانات السيرة الذاتية",
+    "reviewSubtitle": "استخرجنا المعلومات التالية من سيرتك الذاتية. راجع وحرّر البيانات قبل استخدامها في مطابقة الوظائف.",
+    "uploadedOn": "رُفعت في {{date}}",
+    "noCv": "لم يتم رفع سيرة ذاتية بعد.",
+    "uploadCv": "رفع السيرة الذاتية",
+    "aiExtractedBadge": "مستخرج بالذكاء الاصطناعي",
+    "edit": "تعديل",
+    "cancel": "إلغاء",
+    "saveSection": "حفظ القسم",
+    "discard": "تجاهل والبدء من جديد",
+    "confirm": "تأكيد وحفظ الملف",
+    "confirming": "جارٍ التأكيد...",
+    "sections": {
+      "personal": "المعلومات الشخصية",
+      "summary": "الملخّص",
+      "experience": "سجل الخبرة",
+      "education": "التعليم",
+      "skills": "المهارات"
+    },
+    "fields": {
+      "firstName": "الاسم الأول *",
+      "lastName": "اسم العائلة *",
+      "title": "العنوان المهني *",
+      "email": "البريد الإلكتروني *",
+      "phone": "الهاتف",
+      "location": "الموقع",
+      "fullName": "الاسم الكامل",
+      "jobTitle": "المسمى الوظيفي *",
+      "company": "الشركة *",
+      "startYear": "سنة البداية",
+      "endYear": "سنة النهاية",
+      "description": "الوصف",
+      "degree": "الدرجة *",
+      "institution": "المؤسسة *"
+    },
+    "addExperience": "إضافة خبرة",
+    "addEducation": "إضافة تعليم",
+    "noExperience": "لم يتم استخراج خبرة.",
+    "noEducation": "لم يتم استخراج تعليم.",
+    "noSkills": "لم يتم استخراج مهارات.",
+    "noSummary": "لا يوجد ملخّص.",
+    "skillCategories": {
+      "hard": "المهارات التقنية",
+      "soft": "المهارات الشخصية",
+      "tools": "الأدوات"
+    },
+    "addSkillPlaceholder": "أضف مهارة {{category}} جديدة...",
+    "addSkill": "إضافة",
+    "errors": {
+      "invalidFileType": "نوع الملف غير صالح. يرجى رفع ملف PDF أو DOCX.",
+      "fileTooLarge": "حجم الملف يتجاوز 5 ميجابايت ({{size}} ميجابايت).",
+      "uploadFailedTitle": "فشل الرفع",
+      "uploadFailedMessage": "تعذّر رفع سيرتك الذاتية. حاول مرة أخرى.",
+      "rateLimitTitle": "طلبات كثيرة جدًا",
+      "rateLimitMessage": "يرجى الانتظار دقيقة قبل المحاولة مرة أخرى.",
+      "parsingFailedTitle": "فشل التحليل",
+      "parsingFailedMessage": "تعذّر على الذكاء الاصطناعي تحليل سيرتك. تأكّد من أن الملف يحتوي على نص صالح.",
+      "parsingTimeoutTitle": "انتهت مهلة التحليل",
+      "parsingTimeoutMessage": "تحليل السيرة الذاتية يستغرق وقتًا طويلاً. حدّث الصفحة وحاول مرة أخرى.",
+      "dataFetchTitle": "خطأ في جلب البيانات",
+      "dataFetchMessage": "تم تحليل السيرة الذاتية لكن تعذّر تحميل البيانات. يرجى التحديث.",
+      "validationTitle": "خطأ في التحقّق",
+      "personalValidation": "الاسم الأول واسم العائلة والعنوان والبريد الإلكتروني مطلوبة.",
+      "experienceValidation": "المسمى الوظيفي والشركة مطلوبان لكل إدخال خبرة.",
+      "educationValidation": "الدرجة والمؤسسة مطلوبتان لكل إدخال تعليم.",
+      "unsavedTitle": "تغييرات غير محفوظة",
+      "unsavedMessage": "يرجى حفظ أو إلغاء تعديلات الأقسام قبل التأكيد."
+    },
+    "toasts": {
+      "profileSavedTitle": "تم إنشاء الملف",
+      "profileSavedMessage": "تم تأكيد وحفظ سيرتك الذاتية المحلَّلة بالذكاء الاصطناعي.",
+      "saveFailedTitle": "خطأ",
+      "saveFailedMessage": "فشل حفظ الملف."
+    }
+  },
+  "seekerCvParsing": {
+    "title": "تحليل سيرتك الذاتية بالذكاء الاصطناعي",
+    "subtitle": "يقوم الذكاء الاصطناعي باستخراج مهاراتك وخبرتك لمطابقتك مع الفرص المثالية. عادةً تستغرق العملية أقل من 30 ثانية.",
+    "steps": {
+      "uploading": "رفع الملف",
+      "extracting": "استخراج النص",
+      "detecting": "اكتشاف المهارات",
+      "building": "بناء الملف",
+      "generating": "إنشاء ترشيحات الوظائف"
+    },
+    "estimated": "الوقت المتبقّي المقدّر: {{seconds}} ثانية",
+    "completed": "اكتمل"
+  },
+  "seekerApplicationDetails": {
+    "loading": "جارٍ تحميل الطلب…",
+    "back": "العودة إلى طلبات الملف الشخصي",
+    "title": "تفاصيل الطلب",
+    "subtitle": "راجع حالة وتفاصيل طلبك.",
+    "unknownRole": "وظيفة غير معروفة",
+    "unknownCompany": "شركة غير معروفة",
+    "remote": "عن بُعد",
+    "fullTime": "دوام كامل",
+    "appliedOn": "قُدِّم في {{date}}",
+    "interviewScheduledTitle": "المقابلة مجدولة من قِبل الشركة",
+    "openConversation": "فتح المحادثة",
+    "statusTitle": "حالة الطلب",
+    "matchTitle": "تحليل المطابقة الذكية",
+    "matchScore": "درجة المطابقة {{score}}%",
+    "matchDescription": "تعكس هذه الدرجة مدى توافق مهاراتك وخبرتك مع متطلّبات هذه الوظيفة.",
+    "requiredSkills": "المهارات المطلوبة",
+    "notSpecified": "غير محدّد",
+    "actions": "الإجراءات",
+    "viewOriginal": "عرض إعلان الوظيفة الأصلي",
+    "viewRejection": "عرض ملاحظات الرفض",
+    "statusMessages": {
+      "interview": "حدّدت الشركة موعد مقابلتك في {{date}}.",
+      "under_review": "طلبك قيد المراجعة من فريق التوظيف. سنُعلمك عند وجود تحديث.",
+      "shortlisted": "تهانينا! تم إدراجك في القائمة المختصرة لهذه الوظيفة. ستتواصل معك الشركة عند جدولة الخطوة التالية.",
+      "approved": "تم قبول طلبك. تابع رسائلك لمعرفة موعد المقابلة.",
+      "interview_scheduled": "ستشارك الشركة وقت المقابلة هنا بمجرد جدولته.",
+      "waiting_interview": "ستشارك الشركة وقت المقابلة هنا بمجرد جدولته.",
+      "rejected": "للأسف، قرّرت الشركة المضي قدمًا مع مرشحين آخرين في الوقت الحالي.",
+      "hired": "تهانينا! تم توظيفك في هذه الوظيفة.",
+      "default": "تم استلام طلبك."
+    }
+  },
+  "seekerMessages": {
+    "title": "الرسائل",
+    "subtitle": "تواصل مباشرة مع مسؤولي التوظيف ومدراء التعيين.",
+    "loadingMessages": "جارٍ تحميل الرسائل...",
+    "muteAll": "كتم جميع الرسائل",
+    "unmuteAll": "إلغاء كتم جميع الرسائل",
+    "muteChat": "كتم المحادثة",
+    "unmuteChat": "إلغاء كتم المحادثة",
+    "inbox": "صندوق الوارد",
+    "chatsCount": "{{count}} محادثة",
+    "searchPlaceholder": "ابحث في الشركات والوظائف والرسائل",
+    "emptyTitle": "لا توجد رسائل",
+    "emptyDescription": "ستظهر محادثات مسؤولي التوظيف هنا.",
+    "emptySearchDescription": "لا توجد محادثات تطابق بحثك.",
+    "noMessagesYet": "لا توجد رسائل بعد",
+    "noMessagesInChat": "لا توجد رسائل بعد.",
+    "messagePlaceholder": "اكتب رسالتك...",
+    "sending": "جارٍ الإرسال...",
+    "send": "إرسال",
+    "selectChat": "اختر محادثة.",
+    "fallbackCompany": "محادثة شركة",
+    "fallbackContact": "مسؤول التوظيف",
+    "jobConversation": "محادثة وظيفة",
+    "generalConversation": "محادثة عامة",
+    "newLabel": "جديد",
+    "nowLabel": "الآن",
+    "youLabel": "أنت",
+    "aboutRole": "{{contact}} بشأن {{role}}",
+    "deleteChat": "حذف المحادثة",
+    "deletedToast": "تم حذف محادثة {{name}}.",
+    "undo": "تراجع",
+    "errors": {
+      "loadConversationsTitle": "الرسائل غير متاحة",
+      "loadConversationsMessage": "تعذّر تحميل المحادثات.",
+      "loadConversationTitle": "المحادثة غير متاحة",
+      "loadConversationMessage": "تعذّر تحميل هذه المحادثة.",
+      "sendFailedTitle": "لم يتم إرسال الرسالة",
+      "sendFailedMessage": "حاول مرة أخرى.",
+      "deleteFailedTitle": "خطأ",
+      "deleteFailedMessage": "فشل حذف المحادثة."
+    }
+  },
+  "seekerJobDetails": {
+    "loading": "جارٍ تحميل الوظيفة…",
+    "notFound": "الوظيفة غير موجودة أو لم تعد متاحة.",
+    "backToJobs": "العودة إلى الوظائف",
+    "browseJobs": "تصفّح الوظائف",
+    "breadcrumb": "الوظائف",
+    "applyNow": "تقديم الآن",
+    "oneClickApply": "قدّم بنقرة واحدة",
+    "applying": "جارٍ التقديم...",
+    "alreadyApplied": "تم التقديم مسبقًا",
+    "appliedBanner": "لقد تقدّمت لهذه الوظيفة. طلبك قيد المراجعة.",
+    "saved": "محفوظة",
+    "saveJob": "حفظ الوظيفة",
+    "jobDescription": "وصف الوظيفة",
+    "responsibilities": "المسؤوليات",
+    "requirements": "المتطلّبات",
+    "skillsNeeded": "المهارات المطلوبة",
+    "yourSkillsMatch": "تطابق مهاراتك",
+    "aboutCompany": "عن {{name}}",
+    "employees": "{{count}} موظف",
+    "noCompanyInfo": "لا توجد معلومات عن الشركة.",
+    "viewCompanyProfile": "عرض ملف الشركة",
+    "aiMatchAnalysis": "تحليل المطابقة بالذكاء الاصطناعي",
+    "percentMatch": "تطابق {{score}}%",
+    "basedOnSkills": "بناءً على مهاراتك",
+    "aiMatchDisclaimer": "درجة التطابق بالذكاء الاصطناعي تعتمد على مهاراتك ومتطلّبات الوظيفة.",
+    "toasts": {
+      "appliedTitle": "تم تقديم الطلب",
+      "appliedMessageWithCompany": "تم إرسال طلبك إلى {{company}}.",
+      "applyFailedTitle": "فشل التقديم",
+      "applyFailedMessage": "تعذّر تقديم طلبك.",
+      "cvRequiredTitle": "السيرة الذاتية مطلوبة",
+      "cvRequiredMessage": "يجب رفع سيرتك الذاتية وتحليلها قبل التقديم.",
+      "alreadyAppliedTitle": "تم التقديم مسبقًا",
+      "alreadyAppliedMessage": "لقد تقدّمت بالفعل لهذه الوظيفة.",
+      "savedTitle": "تم حفظ الوظيفة",
+      "savedMessage": "تمت الإضافة إلى المحفوظات.",
+      "unsavedTitle": "تم إلغاء الحفظ",
+      "unsavedMessage": "تمت الإزالة من المحفوظات.",
+      "saveErrorTitle": "خطأ",
+      "saveErrorMessage": "تعذّر تحديث حالة الحفظ."
+    }
+  },
+  "seekerProfile": {
+    "title": "ملفي الشخصي",
+    "subtitle": "ملفك المهني وطلباتك ووظائفك المحفوظة ومهاراتك في مكان واحد.",
+    "loading": "جارٍ تحميل الملف...",
+    "fallbackName": "باحث عن عمل",
+    "errorLoadTitle": "خطأ",
+    "errorLoadMessage": "فشل تحميل ملفك الشخصي.",
+    "savedToastTitle": "تم تحديث الملف",
+    "savedToastMessage": "تم حفظ التغييرات.",
+    "saveErrorTitle": "خطأ",
+    "saveErrorMessage": "فشل حفظ الملف.",
+    "uploadingCover": "جارٍ الرفع...",
+    "changeCover": "تغيير الغلاف",
+    "changePhoto": "تغيير صورة الملف",
+    "imageUpdatedTitle": "تم تحديث الصورة",
+    "coverUpdated": "تم تحديث صورة الغلاف.",
+    "photoUpdated": "تم تحديث صورة الملف.",
+    "uploadFailedTitle": "فشل الرفع",
+    "uploadFailedMessage": "يرجى رفع صورة صالحة أقل من 2 ميجابايت.",
+    "headlineLabel": "العنوان المهني",
+    "headlinePlaceholder": "أضف عنوانك المهني",
+    "noEmail": "لا يوجد بريد إلكتروني",
+    "stats": {
+      "completion": "اكتمال الملف",
+      "applications": "الطلبات",
+      "interviews": "المقابلات",
+      "saved": "الوظائف المحفوظة",
+      "skills": "المهارات"
+    },
+    "topSkills": "أبرز المهارات",
+    "noSkills": "لا توجد مهارات بعد.",
+    "healthTitle": "حالة الملف",
+    "healthHint": "أكمل الملخّص والمهارات والسيرة الذاتية وبيانات التواصل لتحسين المطابقة بالذكاء الاصطناعي.",
+    "tabs": {
+      "overview": "نظرة عامة",
+      "saved": "الوظائف المحفوظة",
+      "applications": "الطلبات",
+      "skills": "المهارات"
+    },
+    "applicationTabs": {
+      "all": "كل الطلبات",
+      "under_review": "قيد المراجعة",
+      "shortlisted": "ضمن القائمة المختصرة",
+      "approved": "مقبول",
+      "interview": "مقابلة",
+      "rejected": "مرفوض"
+    },
+    "skillCategoryFilters": {
+      "all": "الكل",
+      "technical": "تقنية",
+      "soft_skill": "شخصية",
+      "tool": "أدوات"
+    },
+    "skillCategoryOptions": {
+      "technical": "مهارة تقنية",
+      "soft_skill": "مهارة شخصية",
+      "tool": "أداة / منصّة"
+    },
+    "name": {
+      "firstPlaceholder": "الاسم الأول",
+      "lastPlaceholder": "اسم العائلة",
+      "cancel": "إلغاء",
+      "save": "حفظ الاسم",
+      "saving": "جارٍ الحفظ..."
+    },
+    "inline": {
+      "cancel": "إلغاء",
+      "save": "حفظ",
+      "saving": "جارٍ الحفظ...",
+      "addInformation": "أضف معلومات"
+    },
+    "skillChip": {
+      "fromCv": "مستخرجة من السيرة الذاتية",
+      "manual": "تمت إضافتها يدويًا"
+    },
+    "skills": {
+      "addPlaceholder": "أضف مهارة جديدة...",
+      "cancelEdit": "إلغاء",
+      "save": "حفظ",
+      "add": "إضافة",
+      "duplicateTitle": "مهارة مكرّرة",
+      "duplicateMessage": "هذه المهارة مدرجة بالفعل.",
+      "updatedTitle": "تم تحديث المهارة",
+      "updatedMessage": "تم حفظ {{name}}.",
+      "addedTitle": "تمت إضافة المهارة",
+      "addedMessage": "تمت إضافة {{name}} إلى ملفك.",
+      "errorTitle": "خطأ",
+      "errorMessage": "تعذّر حفظ هذه المهارة.",
+      "couldNotAdd": "تعذّر إضافة هذه المهارة.",
+      "removedTitle": "تمت إزالة المهارة",
+      "removedMessage": "تمت إزالة {{name}}.",
+      "removeError": "تعذّر إزالة هذه المهارة.",
+      "sections": {
+        "technical": "المهارات التقنية",
+        "soft": "المهارات الشخصية",
+        "tools": "الأدوات والمنصات"
+      },
+      "emptySection": "لم تتم إضافة {{section}} بعد.",
+      "suggestedTitle": "مقترح لك",
+      "suggestedHelp": "استخدم الفلاتر لإضافة مهارات تقنية أو شخصية أو أدوات إلى قسم المطابقة.",
+      "allSuggestedAdded": "لقد أضفت كل المهارات المقترحة.",
+      "suggestedCategory": {
+        "soft": "مهارة شخصية",
+        "tool": "أداة",
+        "technical": "تقنية"
+      }
+    },
+    "savedSection": {
+      "emptyTitle": "قائمة الرغبات فارغة",
+      "emptyDescription": "تصفّح الوظائف واستخدم العلامة المرجعية للاحتفاظ بها هنا."
+    },
+    "applicationsSection": {
+      "emptyTitle": "لا توجد طلبات",
+      "emptyAll": "لم تتقدّم لأي وظائف بعد.",
+      "emptyFiltered": "لا توجد طلبات بحالة {{status}}."
+    },
+    "fields": {
+      "summaryLabel": "الملخّص المهني",
+      "summaryPlaceholder": "أخبر مسؤولي التوظيف عن نفسك",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "أضف البريد الإلكتروني",
+      "phoneLabel": "الهاتف",
+      "phonePlaceholder": "أضف رقم الهاتف",
+      "locationLabel": "الموقع",
+      "locationPlaceholder": "أضف الموقع",
+      "expectedSalaryLabel": "الراتب المتوقّع",
+      "expectedSalaryPlaceholder": "أضف الراتب المتوقّع",
+      "portfolioLabel": "المعرض",
+      "linkedinLabel": "لينكدإن",
+      "yearsLabel": "سنوات الخبرة",
+      "yearsPlaceholder": "أضف سنوات الخبرة",
+      "educationLabel": "المستوى التعليمي",
+      "educationPlaceholder": "أضف المستوى التعليمي"
+    },
+    "sections": {
+      "aboutContact": "نبذة وبيانات تواصل",
+      "experienceEducation": "الخبرة والتعليم",
+      "skills": "المهارات",
+      "savedJobs": "الوظائف المحفوظة",
+      "applications": "الطلبات"
+    },
+    "confirmRemove": {
+      "title": "إزالة المهارة؟",
+      "message": "إزالة \"{{name}}\" من مهاراتك؟ قد يؤثّر ذلك على ترشيحات الذكاء الاصطناعي.",
+      "confirm": "إزالة",
+      "cancel": "احتفظ بها"
+    }
+  },
+  "seekerSkills": {
+    "title": "مهاراتي",
+    "subtitle": "أدِر مهاراتك لتحسين ترشيحات الوظائف بالذكاء الاصطناعي.",
+    "loading": "جارٍ تحميل مهاراتك…",
+    "searchPlaceholder": "أضف مهارة جديدة (مثل GraphQL أو Agile)...",
+    "addButton": "إضافة",
+    "sections": {
+      "technical": "المهارات التقنية",
+      "soft": "المهارات الشخصية",
+      "tools": "الأدوات والمنصات"
+    },
+    "emptySection": "لم تتم إضافة {{section}} بعد.",
+    "suggestedTitle": "مقترح لك",
+    "suggestedDescription": "بناءً على المهارات المطلوبة بكثرة في وظائفك المستهدفة والترشيحات.",
+    "suggestedCategory": {
+      "soft": "مهارة شخصية",
+      "tool": "أداة",
+      "technical": "تقنية"
+    },
+    "allAdded": "لقد أضفت كل المهارات المقترحة!",
+    "tooltips": {
+      "fromCv": "مستخرجة من السيرة الذاتية",
+      "manual": "تمت إضافتها يدويًا",
+      "removeAria": "إزالة {{name}} من مهاراتك"
+    },
+    "toasts": {
+      "removedTitle": "تمت إزالة المهارة",
+      "removedMessage": "تمت إزالة {{name}}.",
+      "removeFailedTitle": "خطأ",
+      "removeFailedMessage": "تعذّر إزالة هذه المهارة.",
+      "duplicateTitle": "مكرر",
+      "duplicateMessage": "هذه المهارة موجودة بالفعل في قائمتك.",
+      "notFoundTitle": "المهارة غير موجودة",
+      "notFoundMessage": "اختر مهارة من قائمة المقترحات.",
+      "addedTitle": "تمت إضافة المهارة",
+      "addedMessage": "تمت إضافة {{name}}.",
+      "addFailedTitle": "خطأ",
+      "addFailedMessage": "تعذّر إضافة هذه المهارة."
+    },
+    "confirm": {
+      "title": "إزالة المهارة؟",
+      "message": "إزالة \"{{name}}\" من مهاراتك؟ قد يؤثّر ذلك على ترشيحات الوظائف.",
+      "confirm": "إزالة",
+      "cancel": "احتفظ بها"
+    }
+  },
+  "seekerSettings": {
+    "title": "الإعدادات",
+    "subtitle": "أدِر اسم حسابك وبريدك الإلكتروني وأمان كلمة المرور.",
+    "accountTitle": "تفاصيل الحساب",
+    "accountSubtitle": "تغييرات البريد الإلكتروني وكلمة المرور تتطلّب كلمة المرور الحالية قبل الحفظ.",
+    "fields": {
+      "name": "اسم الحساب",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirm": "تأكيد كلمة المرور"
+    },
+    "newPasswordSection": "كلمة المرور الجديدة",
+    "passwordMask": "••••••••",
+    "change": "تغيير",
+    "save": "حفظ الإعدادات",
+    "saving": "جارٍ الحفظ...",
+    "security": {
+      "title": "مطلوب تحقّق أمني",
+      "subtitle": "أدخل كلمة المرور الحالية لإلغاء قفل تغييرات {{target}}.",
+      "targetEmail": "البريد الإلكتروني",
+      "targetPassword": "كلمة المرور",
+      "placeholder": "كلمة المرور الحالية",
+      "cancel": "إلغاء",
+      "unlock": "إلغاء القفل",
+      "verifying": "جارٍ التحقّق...",
+      "incorrect": "كلمة مرور غير صحيحة. حاول مرة أخرى."
+    },
+    "errors": {
+      "nameRequired": "الاسم مطلوب.",
+      "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا.",
+      "passwordMin": "يجب أن تتكوّن كلمة المرور من 8 أحرف على الأقل.",
+      "passwordMatch": "يجب أن تتطابق كلمتا المرور."
+    },
+    "toasts": {
+      "savedTitle": "تم حفظ الإعدادات",
+      "savedMessage": "تم تحديث إعدادات حسابك بنجاح.",
+      "failedTitle": "فشل التحديث",
+      "failedMessage": "تعذّر تحديث الإعدادات."
+    }
+  },
+  "seekerNotifications": {
+    "title": "الإشعارات",
+    "subtitle": "تابع آخر مستجدّات طلباتك ورسائلك ومقابلاتك.",
+    "loading": "جارٍ تحميل الإشعارات...",
+    "markAll": "تعليم الكل كمقروء",
+    "filters": {
+      "all": "الكل",
+      "unread": "غير مقروء",
+      "interviews": "المقابلات",
+      "messages": "الرسائل",
+      "applications": "الطلبات"
+    },
+    "unreadCount_zero": "لا توجد إشعارات غير مقروءة",
+    "unreadCount_one": "إشعار واحد غير مقروء",
+    "unreadCount_two": "إشعاران غير مقروءَين",
+    "unreadCount_few": "{{count}} إشعارات غير مقروءة",
+    "unreadCount_many": "{{count}} إشعارًا غير مقروء",
+    "unreadCount_other": "{{count}} إشعار غير مقروء",
+    "emptyTitle": "لا توجد إشعارات",
+    "emptyDescription": "لا توجد إشعارات تطابق هذا الفلتر.",
+    "errors": {
+      "loadTitle": "الإشعارات غير متاحة",
+      "loadMessage": "تعذّر تحميل الإشعارات.",
+      "markAllFailedTitle": "فشل التحديث",
+      "markAllFailedMessage": "تعذّر تعليم الإشعارات كمقروءة.",
+      "markFailedMessage": "تعذّر تعليم هذا الإشعار كمقروء."
+    }
+  },
+  "seekerInterviews": {
+    "title": "المقابلات",
+    "subtitle": "تابع مواعيد المقابلات من جميع الشركات في مكان واحد.",
+    "loading": "جارٍ تحميل المقابلات...",
+    "stats": {
+      "total": "إجمالي المقابلات",
+      "upcoming": "القادمة",
+      "past": "السابقة"
+    },
+    "fallbackCompany": "شركة",
+    "fallbackRole": "مقابلة",
+    "pastTag": "مقابلة سابقة",
+    "upcomingTag": "مقابلة قادمة",
+    "openConversation": "فتح المحادثة",
+    "viewApplication": "عرض الطلب",
+    "emptyTitle": "لا توجد مقابلات مجدولة",
+    "emptyDescription": "عند جدولة مقابلة من قِبل شركة، ستظهر هنا مع الوظيفة والشركة والوقت."
+  },
+  "seekerSavedJobs": {
+    "title": "الوظائف المحفوظة",
+    "subtitle": "احتفظ بالوظائف التي تهمّك للتقديم لاحقًا.",
+    "searchPlaceholder": "ابحث في الوظائف المحفوظة...",
+    "searchButton": "بحث",
+    "showingPrefix": "عرض",
+    "showingSuffix": "وظائف محفوظة",
+    "sortLabel": "ترتيب حسب:",
+    "sortNewest": "الأحدث",
+    "sortSalary": "الراتب من الأعلى للأقل",
+    "loading": "جارٍ تحميل الوظائف المحفوظة…",
+    "fallbackCompany": "شركة",
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي",
+      "page": "صفحة {{current}} من {{total}}"
+    },
+    "emptyNoMatchesTitle": "لا توجد وظائف محفوظة",
+    "emptyNoMatchesDescription": "لا توجد وظائف محفوظة تطابق معايير البحث.",
+    "emptyTitle": "قائمة الرغبات فارغة",
+    "emptyDescription": "لم تحفظ أي وظائف بعد. تصفّح الوظائف وانقر أيقونة العلامة المرجعية لحفظها هنا.",
+    "clearFilters": "مسح الفلاتر"
+  },
+  "seekerEditProfile": {
+    "title": "تعديل الملف الشخصي",
+    "subtitle": "حدّث بياناتك الشخصية وملخّصك المهني.",
+    "personalTitle": "المعلومات الشخصية",
+    "additionalTitle": "تفاصيل إضافية",
+    "fields": {
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "title": "العنوان المهني",
+      "titlePlaceholder": "مثال: مطوّر أول",
+      "bio": "الملخّص المهني",
+      "bioPlaceholder": "أخبر مسؤولي التوظيف عن نفسك...",
+      "location": "الموقع",
+      "locationPlaceholder": "المدينة، البلد",
+      "expectedSalary": "الراتب المتوقّع",
+      "expectedSalaryPlaceholder": "مثال: $30k - $45k",
+      "portfolio": "رابط معرض الأعمال",
+      "portfolioPlaceholder": "https://",
+      "linkedin": "رابط لينكدإن",
+      "linkedinPlaceholder": "https://linkedin.com/in/..."
+    },
+    "cancel": "إلغاء",
+    "save": "حفظ الملف",
+    "saving": "جارٍ الحفظ...",
+    "toasts": {
+      "validationTitle": "خطأ في التحقّق",
+      "validationMessage": "الاسم الأول واسم العائلة مطلوبان.",
+      "successTitle": "تم تحديث الملف",
+      "successMessage": "تم حفظ ملفك الشخصي بنجاح.",
+      "errorTitle": "خطأ",
+      "errorMessage": "فشل الحفظ."
+    }
+  },
+  "seekerRejectionFeedback": {
+    "back": "العودة إلى الطلبات",
+    "title": "ملاحظات الطلب",
+    "subtitleWithRole": "ملاحظات على {{role}}",
+    "noFeedback": "لا توجد ملاحظات رفض متاحة.",
+    "assessmentTitle": "التقييم العام",
+    "assessmentDescription": "بناءً على تحليل الذكاء الاصطناعي لطلبك مقابل متطلّبات الوظيفة، إليك التفاصيل.",
+    "missingSkillsTitle": "المهارات المفقودة",
+    "noMissingSkills": "لم يتم تحديد مهارات مفقودة بشكل صريح.",
+    "findSimilar": "ابحث عن وظائف مماثلة"
+  },
+  "seekerDashboard": {
+    "welcome": "مرحبًا بعودتك!",
+    "subtitle": "ملفك الشخصي مكتمل بنسبة {{percent}}%. لنعثر على فرصتك القادمة.",
+    "loading": "جارٍ تحميل لوحة التحكم…",
+    "cv": {
+      "uploadedTitle": "تم رفع السيرة الذاتية بنجاح",
+      "uploadedAt": "رُفعت في {{date}}",
+      "parsedBadge": "تم التحليل",
+      "extractedSkills": "تم استخراج {{count}} مهارة",
+      "reupload": "إعادة رفع السيرة",
+      "review": "مراجعة البيانات المستخرجة",
+      "missingTitle": "ارفع سيرتك الذاتية",
+      "missingDescription": "ارفع سيرتك الذاتية لفتح المطابقة بالذكاء الاصطناعي وترشيحات الوظائف المخصّصة.",
+      "uploadButton": "رفع السيرة الذاتية"
+    },
+    "stats": {
+      "applied": "المُقدَّم عليها",
+      "underReview": "قيد المراجعة",
+      "shortlisted": "ضمن القائمة المختصرة",
+      "profileSkills": "مهارات الملف"
+    },
+    "topMatches": "أفضل الترشيحات لك",
+    "recentApplications": "أحدث الطلبات",
+    "viewAll": "عرض الكل",
+    "emptyMatches": "لا توجد ترشيحات وظائف. حاول إضافة مزيد من المهارات.",
+    "updateSkills": "تحديث المهارات",
+    "emptyApplications": "لم تتقدّم لأي وظائف بعد.",
+    "browseJobs": "تصفّح الوظائف"
+  },
+  "seekerNav": {
+    "dashboard": "لوحة التحكم",
+    "browseJobs": "تصفّح الوظائف",
+    "profile": "الملف الشخصي",
+    "interviews": "المقابلات",
+    "messages": "الرسائل",
+    "notifications": "الإشعارات",
+    "settings": "الإعدادات",
+    "publicSite": "عرض الموقع العام",
+    "workspaceLabel": "مساحة عمل المرشح",
+    "help": "المساعدة",
+    "logout": "تسجيل الخروج",
+    "accountSettings": "إعدادات الحساب"
+  },
+  "companyFlow": {
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة {{page}}",
+    "cancel": "إلغاء",
+    "saving": "جارٍ الحفظ...",
+    "errorTitle": "خطأ",
+    "missingInfoTitle": "معلومات ناقصة",
+    "shortlistTargetTitle": "إدراج المرشّح",
+    "unshortlistTargetTitle": "إلغاء إدراج المرشّح",
+    "shortlistConfirm": "إدراج المرشّح",
+    "unshortlistConfirm": "إلغاء إدراج المرشّح",
+    "shortlistMessage": "نقل {{name}} إلى القائمة المختصرة لمتابعة المسؤول؟",
+    "unshortlistMessage": "نقل {{name}} إلى قيد المراجعة مجددًا؟",
+    "shortlistedToastTitle": "تم إدراج المرشّح",
+    "unshortlistedToastTitle": "تمّت إعادة المرشّح",
+    "rejectedToastTitle": "تم رفض المرشّح",
+    "statusMovedMessage": "تم نقل {{name}} إلى {{status}}.",
+    "updateStatusError": "فشل تحديث حالة المتقدّم.",
+    "rejectTitle": "رفض المرشّح",
+    "rejectReviewText": "راجع تفاصيل الرفض لـ {{name}} على {{job}}.",
+    "thisJob": "هذه الوظيفة",
+    "noMissingSkills": "لا توجد مهارات مفقودة",
+    "sendRejectionEmail": "إرسال بريد رفض تلقائي",
+    "emailPreview": "معاينة البريد",
+    "rejectEmailBody": "مرحبًا {{name}}، شكرًا لتقدّمك إلى {{job}}. بعد المراجعة، لن نتمكن من المضي قُدمًا في هذا الوقت. كنا نبحث تحديدًا عن تغطية أقوى في {{skills}}.",
+    "ourRole": "وظيفتنا",
+    "roleCriteria": "معايير الوظيفة المطلوبة",
+    "addRecruiterNote": "أضف ملاحظة اختيارية من المسؤول",
+    "rejecting": "جارٍ الرفض...",
+    "confirmReject": "تأكيد الرفض",
+    "approveConfirm": "الموافقة على المرشّح",
+    "approveMessage": "الموافقة على {{name}} لهذه الوظيفة؟",
+    "approvedToastTitle": "تمّت الموافقة على المرشّح",
+    "approvedToastMessage": "تمّت الموافقة على {{name}} لهذه الوظيفة.",
+    "approveError": "فشل قبول المتقدّم.",
+    "approveTitle": "الموافقة على المرشّح",
+    "itemNotFound": "العنصر غير موجود",
+    "itemNotFoundMessage": "قد يكون السجل قد تمت إزالته أو غير متاح.",
+    "form": {
+      "basicInfo": "المعلومات الأساسية",
+      "jobTitle": "المسمى الوظيفي",
+      "category": "الفئة",
+      "selectCategory": "اختر الفئة",
+      "jobType": "نوع الوظيفة",
+      "selectType": "اختر النوع",
+      "location": "الموقع",
+      "workMode": "نمط العمل",
+      "description": "الوصف",
+      "jobDescription": "وصف الوظيفة",
+      "responsibilities": "المسؤوليات",
+      "responsibilitiesHint": "مسؤولية واحدة في كل سطر",
+      "requiredSkills": "المهارات المطلوبة",
+      "skillsHint": "أدخل المهارات مفصولة بفواصل أو أسطر جديدة",
+      "salaryExpEdu": "الراتب والخبرة والتعليم",
+      "salaryMin": "الحد الأدنى للراتب",
+      "salaryMax": "الحد الأعلى للراتب",
+      "experienceLevel": "مستوى الخبرة",
+      "selectLevel": "اختر المستوى",
+      "education": "التعليم",
+      "salaryMinPlaceholder": "مثال: 90,000",
+      "salaryMaxPlaceholder": "مثال: 130,000",
+      "errors": {
+        "titleRequired": "المسمى الوظيفي مطلوب.",
+        "categoryRequired": "الفئة مطلوبة.",
+        "locationRequired": "الموقع مطلوب.",
+        "typeRequired": "نوع الوظيفة مطلوب.",
+        "descriptionRequired": "الوصف مطلوب.",
+        "skillsRequired": "أضف مهارة مطلوبة واحدة على الأقل."
+      },
+      "jobUpdatedTitle": "تم تحديث الوظيفة",
+      "jobUpdatedMessage": "تم حفظ {{title}}.",
+      "draftSavedTitle": "تم حفظ المسودة",
+      "jobPublishedTitle": "تم نشر الوظيفة",
+      "jobSavedMessage": "{{title}} محفوظة الآن.",
+      "saveDraft": "حفظ المسودة",
+      "loading": "جارٍ التحميل...",
+      "preview": "معاينة",
+      "publishing": "جارٍ النشر...",
+      "publishChanges": "نشر التغييرات",
+      "publishJob": "نشر الوظيفة"
+    },
+    "workModes": {
+      "Remote": "عن بُعد",
+      "Hybrid": "هجين",
+      "On-site": "في الموقع"
+    },
+    "jobTypeOptions": {
+      "full_time": "دوام كامل",
+      "part_time": "دوام جزئي",
+      "contract": "عقد",
+      "internship": "تدريب"
+    },
+    "undoChatDeleted": "تم حذف محادثة {{name}}.",
+    "undo": "تراجع",
+    "dashboard": {
+      "createJob": "إنشاء وظيفة",
+      "eyebrow": "لوحة تحكم الشركة",
+      "title": "مرحبًا بعودتك",
+      "description": "تتبّع أداء الوظائف وجودة المتقدّمين وإجراءات المسؤولين من مساحة عمل موحّدة.",
+      "totalJobs": "إجمالي الوظائف",
+      "activeJobs": "الوظائف النشطة",
+      "totalApplicants": "إجمالي المتقدّمين",
+      "newThisWeek": "جديد هذا الأسبوع",
+      "recentApplicants": "آخر المتقدّمين",
+      "percentMatch": "تطابق {{percent}}%",
+      "jobApplication": "طلب وظيفة",
+      "shortlistButton": "إدراج المرشّح",
+      "unshortlistButton": "إلغاء الإدراج",
+      "noRecentApplicants": "لا يوجد متقدّمون جدد.",
+      "topPerformingJobs": "أفضل الوظائف أداءً",
+      "applicantsCount": "{{count}} متقدّم",
+      "noTopJobs": "لا توجد وظائف بارزة.",
+      "hiringPipeline": "خط أنابيب التوظيف",
+      "underReview": "قيد المراجعة",
+      "shortlisted": "ضمن القائمة المختصرة",
+      "rejected": "مرفوض",
+      "errorTitle": "خطأ في تحميل لوحة التحكم"
+    },
+    "profile": {
+      "publicPreview": "معاينة عامة",
+      "editProfile": "تعديل الملف",
+      "eyebrow": "ملف الشركة",
+      "details": "تفاصيل الشركة",
+      "industry": "الصناعة",
+      "website": "الموقع الإلكتروني",
+      "location": "الموقع",
+      "contactEmail": "بريد التواصل",
+      "phone": "الهاتف",
+      "founded": "سنة التأسيس",
+      "companySize": "حجم الشركة",
+      "activeJobs": "الوظائف النشطة",
+      "profileNotFound": "الملف غير موجود",
+      "editEyebrow": "ملف الشركة",
+      "editTitle": "تعديل ملف الشركة",
+      "editDescription": "حافظ على تحديث علامتك التجارية كصاحب عمل وبيانات التواصل.",
+      "profileSavedTitle": "تم حفظ الملف",
+      "profileSavedMessage": "تم حفظ تغييرات ملف الشركة.",
+      "profileInformation": "معلومات الملف",
+      "fields": {
+        "companyName": "اسم الشركة",
+        "industry": "الصناعة",
+        "website": "الموقع الإلكتروني",
+        "location": "الموقع",
+        "contactEmail": "بريد التواصل",
+        "phone": "الهاتف",
+        "foundedYear": "سنة التأسيس",
+        "companySize": "حجم الشركة",
+        "description": "الوصف",
+        "logoUpload": "رفع الشعار"
+      },
+      "logoUploadedTitle": "تم رفع الشعار",
+      "logoUploadedMessage": "تم تحديث الشعار بنجاح.",
+      "logoUploadError": "فشل رفع الشعار.",
+      "selectedFile": "محدّد: {{name}}",
+      "saveChanges": "حفظ التغييرات",
+      "errors": {
+        "nameRequired": "اسم الشركة مطلوب.",
+        "industryRequired": "الصناعة مطلوبة.",
+        "locationRequired": "الموقع مطلوب."
+      },
+      "preview": {
+        "backToProfile": "العودة إلى الملف",
+        "eyebrow": "معاينة عامة",
+        "employerProfile": "ملف صاحب العمل",
+        "foundedPrefix": "تأسست",
+        "openJobs": "الوظائف المفتوحة"
+      }
+    },
+    "manageJobs": {
+      "eyebrow": "إدارة الوظائف",
+      "title": "لوحة الوظائف",
+      "description": "ابحث وفلتر وانشر وأوقف وعدّل وعاين واحذف الوظائف.",
+      "searchPlaceholder": "ابحث عن وظائف بالعنوان أو الموقع أو المهارة أو نمط العمل أو الحالة...",
+      "statusOptions": {
+        "all": "كل الحالات",
+        "active": "نشطة",
+        "draft": "مسودة",
+        "paused": "متوقفة",
+        "closed": "مغلقة"
+      },
+      "sortOptions": {
+        "newest": "الأحدث",
+        "applicants": "الأكثر متقدّمين",
+        "views": "الأكثر مشاهدة"
+      },
+      "statusUpdatedTitle": "تم تحديث حالة الوظيفة",
+      "statusUpdatedMessage": "{{title}} أصبحت {{status}}.",
+      "statusUpdateError": "فشل تحديث حالة الوظيفة.",
+      "deletingButton": "جارٍ الحذف...",
+      "deleteJob": "حذف الوظيفة",
+      "deleteMessage": "حذف {{title}}؟ سيتم حذف المتقدّمين لهذه الوظيفة أيضًا.",
+      "deletedTitle": "تم حذف الوظيفة",
+      "deletedMessage": "تمت إزالة {{title}}.",
+      "deleteError": "فشل حذف الوظيفة.",
+      "deleteTitle": "حذف الوظيفة"
+    },
+    "createPost": {
+      "eyebrow": "إنشاء وظيفة",
+      "title": "إنشاء إعلان وظيفة",
+      "description": "أنشئ إعلان وظيفة كاملاً واحفظه كمسودة أو انشره فورًا."
+    },
+    "editPost": {
+      "eyebrow": "تعديل الوظيفة",
+      "description": "حدّث تفاصيل الوظيفة والمتطلّبات وتوقعات التوظيف.",
+      "notFoundTitle": "الوظيفة غير موجودة",
+      "notFoundMessage": "إعلان الوظيفة هذا غير متاح."
+    },
+    "preview": {
+      "backToEdit": "العودة إلى التعديل",
+      "pause": "إيقاف",
+      "publish": "نشر",
+      "viewApplicants": "عرض المتقدّمين",
+      "statusUpdateError": "فشل تحديث الحالة.",
+      "eyebrow": "معاينة الوظيفة",
+      "previewTitle": "معاينة",
+      "notFoundTitle": "المعاينة غير متاحة",
+      "notFoundMessage": "تعذّر العثور على إعلان الوظيفة هذا."
+    },
+    "jobDetails": {
+      "viewApplicants": "عرض المتقدّمين",
+      "editJob": "تعديل الوظيفة",
+      "preview": "معاينة",
+      "pause": "إيقاف",
+      "publish": "نشر",
+      "delete": "حذف",
+      "eyebrow": "تفاصيل الوظيفة",
+      "views": "المشاهدات",
+      "applicants": "المتقدّمون",
+      "avgMatch": "متوسط التطابق",
+      "status": "الحالة",
+      "jobOverview": "نظرة عامة على الوظيفة",
+      "experiencePrefix": "الخبرة",
+      "educationPrefix": "التعليم",
+      "recentApplicants": "آخر المتقدّمين",
+      "noApplicants": "لا يوجد متقدّمون بعد.",
+      "deleteConfirm": "حذف الوظيفة",
+      "deleteMessage": "حذف {{title}}؟",
+      "deletedTitle": "تم حذف الوظيفة",
+      "deletedMessage": "تمت إزالة {{title}}.",
+      "deleteTitle": "حذف الوظيفة",
+      "notFoundTitle": "الوظيفة غير موجودة",
+      "notFoundMessage": "إعلان الوظيفة هذا غير متاح."
+    },
+    "applicants": {
+      "eyebrow": "نظام تتبّع المتقدّمين الذكي",
+      "title": "متقدّمو {{title}}",
+      "description": "راجع درجات المطابقة بالذكاء الاصطناعي وفجوات المهارات وحالة المرشّحين.",
+      "allJobsLabel": "كل الوظائف",
+      "searchPlaceholder": "ابحث بالاسم أو العنوان أو المهارة أو الحالة",
+      "statusOptions": {
+        "all": "الكل",
+        "new": "جديد",
+        "under_review": "قيد المراجعة",
+        "shortlisted": "ضمن القائمة المختصرة",
+        "rejected": "مرفوض"
+      },
+      "sortOptions": {
+        "match": "درجة المطابقة",
+        "newest": "الأحدث",
+        "experience": "سنوات الخبرة"
+      },
+      "notFoundTitle": "الوظيفة غير موجودة",
+      "notFoundMessage": "تعذّر تحميل المتقدّمين لهذه الوظيفة."
+    },
+    "applicantProfile": {
+      "notFoundTitle": "المتقدّم غير موجود",
+      "notFoundMessage": "سجل هذا المرشّح غير متاح.",
+      "approve": "موافقة",
+      "shortlist": "إدراج",
+      "unshortlist": "إلغاء الإدراج",
+      "messageCandidate": "مراسلة المرشّح",
+      "reject": "رفض",
+      "downloadCv": "تنزيل السيرة الذاتية",
+      "backToApplicants": "العودة إلى المتقدّمين",
+      "eyebrow": "ملف المتقدّم",
+      "selectedRole": "الوظيفة المختارة",
+      "applicantSubtitle": "{{title}} لـ {{job}}",
+      "applicationStatus": "حالة الطلب",
+      "experience": "الخبرة",
+      "yearsLabel": "{{years}} سنوات",
+      "education": "التعليم",
+      "topSkills": "أبرز المهارات",
+      "noSkills": "لا توجد مهارات مدرجة.",
+      "aiMatch": "مطابقة الذكاء الاصطناعي",
+      "missingSkills": "المهارات المفقودة",
+      "noMissingDetected": "لم يتم اكتشاف مهارات مفقودة",
+      "noEmail": "لا يوجد بريد إلكتروني"
+    },
+    "cvViewer": {
+      "title": "عارض السيرة الذاتية غير متاح",
+      "message": "عرض السيرة الذاتية محاكاة جزئية ويعتمد على التنزيل حاليًا."
+    },
+    "matching": {
+      "approve": "موافقة",
+      "shortlist": "إدراج",
+      "reject": "رفض",
+      "viewProfile": "عرض الملف",
+      "eyebrow": "تفاصيل المطابقة بالذكاء الاصطناعي",
+      "strong": "مرشّح قوي",
+      "needsReview": "بحاجة إلى مراجعة",
+      "low": "تطابق منخفض",
+      "evaluatedAgainst": "تم التقييم مقابل {{title}}.",
+      "matchScore": "درجة المطابقة",
+      "requiredChecklist": "قائمة المهارات المطلوبة",
+      "noRequiredTitle": "لا توجد مهارات مطلوبة",
+      "noRequiredMessage": "هذه الوظيفة لا تحتوي على مهارات مطلوبة بعد.",
+      "expMatch": "تطابق الخبرة:",
+      "expValue": "{{years}} سنوات",
+      "expSuffix": "لوظيفة بمستوى {{level}}.",
+      "eduMatch": "تطابق التعليم:",
+      "recommendation": "التوصية:",
+      "notFoundTitle": "تفاصيل المطابقة غير متاحة",
+      "notFoundMessage": "تعذّر العثور على بيانات المتقدّم أو الوظيفة."
+    },
+    "notifications": {
+      "errorTitle": "الإشعارات غير متاحة",
+      "errorMessage": "تعذّر تحميل إشعارات الشركة.",
+      "markAllError": "تعذّر تعليم الإشعارات كمقروءة.",
+      "markAll": "تعليم الكل كمقروء",
+      "eyebrow": "الإشعارات",
+      "title": "إشعارات الشركة",
+      "description": "تابع تحديثات المتقدّمين والوظائف والرسائل والمشاهدات.",
+      "filters": {
+        "all": "الكل",
+        "unread": "غير مقروء",
+        "messages": "الرسائل",
+        "applications": "الطلبات",
+        "views": "المشاهدات"
+      },
+      "emptyTitle": "لا توجد إشعارات",
+      "emptyMessage": "لا توجد إشعارات تطابق هذا الفلتر.",
+      "fallbackTitle": "إشعار"
+    },
+    "messages": {
+      "eyebrow": "الرسائل",
+      "title": "محادثات المرشّحين",
+      "muteAll": "كتم جميع الرسائل",
+      "unmuteAll": "إلغاء كتم جميع الرسائل",
+      "muteChat": "كتم المحادثة",
+      "unmuteChat": "إلغاء كتم المحادثة",
+      "inbox": "صندوق الوارد",
+      "chatsCount": "{{count}} محادثة",
+      "searchPlaceholder": "ابحث عن مرشّحين أو وظائف أو رسائل",
+      "selectedCandidate": "المرشّح المختار",
+      "jobConversation": "محادثة وظيفة",
+      "generalConversation": "محادثة عامة",
+      "shortlistedFallback": "ضمن القائمة المختصرة",
+      "newTag": "جديد",
+      "emptyTitle": "لا توجد رسائل",
+      "emptyMessage": "ليس لديك رسائل بعد.",
+      "emptySearchMessage": "لا توجد محادثات تطابق بحثك.",
+      "noMessagesYet": "لا توجد رسائل بعد",
+      "mutedTitle": "محادثة مكتومة",
+      "interviewScheduledTitle": "تم جدولة المقابلة",
+      "interviewPassedTitle": "انتهت المقابلة",
+      "interviewScheduledText": "تم جدولة المقابلة في {{date}}. يرجى تأكيد توفّرك.",
+      "noInterview": "لم يتم جدولة مقابلة بعد.",
+      "rescheduleLink": "تعديل وقت المقابلة",
+      "reinterviewLink": "إعادة المقابلة",
+      "reschedule": "إعادة الجدولة",
+      "schedule": "جدولة",
+      "selectChatPlaceholder": "اختر محادثة من اليسار لبدء المراسلة.",
+      "noMessagesInChat": "لا توجد رسائل بعد.",
+      "youLabel": "أنت",
+      "messagePlaceholder": "اكتب رسالتك...",
+      "send": "إرسال",
+      "deleteChat": "حذف المحادثة",
+      "deleteError": "فشل حذف المحادثة."
+    },
+    "settings": {
+      "eyebrow": "الإعدادات",
+      "title": "إعدادات الحساب",
+      "description": "أدِر ملف حسابك وبريدك الإلكتروني وأمان كلمة المرور.",
+      "incorrectPassword": "كلمة مرور غير صحيحة. حاول مرة أخرى.",
+      "nameRequired": "الاسم مطلوب.",
+      "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا.",
+      "passwordMin": "يجب أن تتكوّن كلمة المرور من 8 أحرف على الأقل.",
+      "passwordMatch": "يجب أن تتطابق كلمتا المرور.",
+      "savedTitle": "تم حفظ الإعدادات",
+      "savedMessage": "تم تحديث إعدادات الحساب بنجاح.",
+      "updateFailedTitle": "فشل التحديث",
+      "updateFailedMessage": "تعذّر تحديث الإعدادات.",
+      "securityTitle": "مطلوب تحقّق أمني",
+      "securityHint": "يرجى إدخال كلمة المرور الحالية لإلغاء قفل تغييرات {{target}}.",
+      "currentPassword": "كلمة المرور الحالية",
+      "verifying": "جارٍ التحقّق...",
+      "unlock": "إلغاء القفل",
+      "accountDetails": "تفاصيل الحساب",
+      "accountName": "اسم الحساب",
+      "emailAddress": "البريد الإلكتروني",
+      "passwordLabel": "كلمة المرور",
+      "passwordMask": "••••••••",
+      "change": "تغيير",
+      "newPasswordSection": "كلمة المرور الجديدة",
+      "newPasswordField": "كلمة المرور",
+      "confirmField": "تأكيد كلمة المرور",
+      "save": "حفظ الإعدادات",
+      "saving": "جارٍ الحفظ..."
+    }
+  },
+  "companyNav": {
+    "dashboard": "لوحة التحكم",
+    "companyProfile": "ملف الشركة",
+    "manageJobs": "إدارة الوظائف",
+    "createJob": "إنشاء وظيفة",
+    "applicants": "المتقدّمون",
+    "messages": "الرسائل",
+    "notifications": "الإشعارات",
+    "settings": "الإعدادات",
+    "publicSite": "عرض الموقع العام",
+    "workspaceLabel": "مساحة عمل صاحب العمل"
+  },
+  "adminNav": {
+    "dashboard": "لوحة التحكم",
+    "users": "إدارة المستخدمين",
+    "jobs": "إدارة الوظائف",
+    "activity": "سجل النشاط",
+    "settings": "الإعدادات",
+    "workspaceLabel": "مساحة عمل المسؤول"
+  },
+  "experienceLevels": {
+    "Internship": "تدريب",
+    "Entry Level / Junior": "مبتدئ / مستوى أوّل",
+    "Mid Level": "مستوى متوسط",
+    "Senior": "متقدّم",
+    "Lead / Manager": "قائد / مدير",
+    "Director / Executive": "مدير تنفيذي"
+  },
+  "categories": {
+    "Engineering": "الهندسة",
+    "Design": "التصميم",
+    "Marketing": "التسويق",
+    "Data Science": "علم البيانات",
+    "Finance": "المالية",
+    "Customer Success": "نجاح العملاء",
+    "Operations": "العمليات",
+    "Human Resources": "الموارد البشرية",
+    "Other": "أخرى",
+    "General": "عام"
+  },
+  "jobTypesLabels": {
+    "Full-time": "دوام كامل",
+    "Part-time": "دوام جزئي",
+    "Contract": "عقد",
+    "Internship": "تدريب",
+    "Remote": "عن بُعد"
+  },
+  "publicJobs": {
+    "eyebrow": "البحث عن وظائف",
+    "title": "تصفّح الوظائف التي تناسب أهدافك",
+    "description": "ابحث عن الوظائف المفتوحة أو فعّل فلتر الذكاء الاصطناعي للحصول على ترشيحات مطابقة لملفك.",
+    "aiCard": {
+      "title": "الوظائف الموصى بها",
+      "scanning": "الذكاء الاصطناعي يفحص ملفك ومهاراتك...",
+      "cta": "فعّل المطابقة بالذكاء الاصطناعي لعرض الوظائف المرتّبة حسب ملفك.",
+      "notSeeker": "سجّل الدخول كباحث عن عمل لاستخدام الوظائف الموصى بها من صفحة التصفّح العامة.",
+      "aiOn": "الذكاء الاصطناعي مفعّل",
+      "useAi": "استخدم الذكاء الاصطناعي"
+    },
+    "searchJobPlaceholder": "المسمى الوظيفي أو الكلمات المفتاحية أو الشركة",
+    "searchLocationPlaceholder": "المدينة أو الولاية أو عن بُعد",
+    "searchButton": "ابحث عن وظائف",
+    "popular": "الأكثر شيوعًا:",
+    "showFilters": "إظهار الفلاتر",
+    "hideFilters": "إخفاء الفلاتر",
+    "filters": {
+      "title": "الفلاتر",
+      "category": "الفئة",
+      "jobType": "نوع الوظيفة",
+      "experience": "مستوى الخبرة",
+      "clearAll": "مسح جميع الفلاتر"
+    },
+    "loadingJobs": "جارٍ تحميل الوظائف...",
+    "results": {
+      "showing": "عرض",
+      "modes": {
+        "all": "وظائف",
+        "recommended": "ترشيحات الذكاء الاصطناعي"
+      },
+      "recommendedTag": "الوظائف الموصى بها",
+      "categoryTag": "الفئة: {{name}}"
+    },
+    "errors": {
+      "aiUnavailable": "ترشيحات الذكاء الاصطناعي غير متاحة. ارفع سيرتك الذاتية وأكمل ملف الباحث عن عمل أولاً.",
+      "loadFailed": "فشل تحميل الوظائف. حاول مرة أخرى."
+    },
+    "empty": {
+      "lockedTitle": "الترشيحات مقفلة",
+      "lockedDescription": "يرجى رفع سيرتك الذاتية وملء ملفك لفتح ترشيحات الوظائف المخصّصة بالذكاء الاصطناعي.",
+      "uploadCv": "رفع السيرة الذاتية",
+      "noAiTitle": "لا توجد ترشيحات",
+      "noAiDescription": "حاول مسح الفلاتر أو أضف مزيدًا من المهارات إلى ملفك.",
+      "noJobsTitle": "لا توجد وظائف تطابق بحثك",
+      "noJobsDescription": "حاول تعديل الفلاتر أو مصطلحات البحث.",
+      "clearFilters": "مسح الفلاتر"
+    },
+    "admin": {
+      "forceDelete": "حذف نهائي",
+      "confirmDelete": "حذف نهائي لـ {{title}}؟ سيتم اعتبار الوظيفة محذوفة بشكل دائم.",
+      "deleted": "تم حذف الوظيفة بنجاح",
+      "deleteFailed": "فشل حذف الوظيفة"
+    },
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي",
+      "page": "صفحة {{current}} من {{total}}"
+    }
+  },
+  "jobDetails": {
+    "notFound": "الوظيفة غير موجودة أو لم تعد متاحة.",
+    "browseJobs": "تصفّح الوظائف",
+    "breadcrumb": "الوظائف",
+    "admin": {
+      "controls": "أدوات المسؤول",
+      "forceDelete": "حذف الوظيفة نهائيًا",
+      "viewDashboard": "عرض في لوحة التحكم",
+      "confirmDelete": "حذف نهائي لـ {{title}}؟ سيتم اعتبار الوظيفة محذوفة بشكل دائم.",
+      "deleted": "تم حذف الوظيفة بنجاح",
+      "deleteFailed": "فشل حذف الوظيفة"
+    },
+    "owner": {
+      "viewMode": "وضع العرض العام",
+      "editJob": "تعديل الوظيفة",
+      "manageApplicants": "إدارة المتقدّمين"
+    },
+    "loginToApply": "سجّل الدخول للتقديم",
+    "saved": "محفوظة",
+    "saveJob": "حفظ الوظيفة",
+    "jobDescription": "وصف الوظيفة",
+    "responsibilities": "المسؤوليات",
+    "requirements": "المتطلّبات",
+    "skillsNeeded": "المهارات المطلوبة",
+    "aboutCompany": "عن {{name}}",
+    "noCompanyInfo": "لا توجد معلومات عن الشركة.",
+    "employees": "{{count}} موظف",
+    "viewCompanyProfile": "عرض ملف الشركة"
+  },
+  "companyDetails": {
+    "notFound": "الشركة غير موجودة أو لم تعد متاحة.",
+    "browseCompanies": "تصفّح الشركات",
+    "breadcrumb": "الشركات",
+    "admin": {
+      "controls": "أدوات المسؤول",
+      "viewDashboard": "عرض الشركة في لوحة التحكم"
+    },
+    "owner": {
+      "viewMode": "وضع العرض العام",
+      "editProfile": "تعديل الملف",
+      "postJob": "نشر وظيفة"
+    },
+    "toastHasJobs": "لدى {{name}} وظائف مفتوحة",
+    "toastNoJobs": "لا توجد وظائف من {{name}}",
+    "toastHasJobsMessage_zero": "{{name}} ليس لديها وظائف نشطة حاليًا.",
+    "toastHasJobsMessage_one": "{{name}} لديها {{count}} وظيفة نشطة مدرجة أدناه.",
+    "toastHasJobsMessage_two": "{{name}} لديها وظيفتان نشطتان مدرجتان أدناه.",
+    "toastHasJobsMessage_few": "{{name}} لديها {{count}} وظائف نشطة مدرجة أدناه.",
+    "toastHasJobsMessage_many": "{{name}} لديها {{count}} وظيفة نشطة مدرجة أدناه.",
+    "toastHasJobsMessage_other": "{{name}} لديها {{count}} وظيفة نشطة مدرجة أدناه.",
+    "toastNoJobsMessage": "{{name}} لم تنشر وظائف نشطة حاليًا.",
+    "checkUpdates": "تحقّق من تحديثات وظائف الشركة",
+    "checkAria": "تحقّق مما إذا كانت {{name}} قد نشرت وظائف",
+    "openPositions": "الوظائف المفتوحة",
+    "openPositionsCount": "{{count}} وظيفة مفتوحة",
+    "employeesCount": "{{count}} موظف",
+    "aboutTitle": "عن {{name}}",
+    "noDescription": "لا يوجد وصف مقدّم.",
+    "hiringNow": "يوظّف الآن",
+    "openPositionsHeader": "الوظائف المفتوحة ({{count}})",
+    "manageJobs": "إدارة الوظائف",
+    "postedAt": "نُشِرت {{date}}",
+    "recentlyPosted": "نُشرت مؤخرًا",
+    "defaultCategory": "عام",
+    "moreSkills": "+{{count}} أخرى",
+    "noPositionsTitle": "لا توجد وظائف مفتوحة حاليًا",
+    "noPositionsHint": "عُد لاحقًا للاطّلاع على وظائف جديدة من {{name}}.",
+    "snapshotTitle": "نبذة عن الشركة",
+    "snapshot": {
+      "industry": "الصناعة",
+      "location": "الموقع",
+      "openRoles": "الوظائف المفتوحة",
+      "website": "الموقع الإلكتروني"
+    },
+    "benefitsTitle": "المزايا"
+  },
+  "privacy": {
+    "title": "سياسة الخصوصية",
+    "intro": "خصوصيتك تهمّنا. توضّح هذه السياسة كيف تجمع بوابة الوظائف الذكية معلوماتك الشخصية وتستخدمها وتحميها.",
+    "sectionsHeader": "الأقسام",
+    "ctaTitle": "هل لديك أسئلة حول بياناتك؟",
+    "ctaDescription": "فريق الخصوصية لدينا هنا للمساعدة. تواصل معنا لأي استفسار يخصّ البيانات.",
+    "ctaButton": "تواصل مع فريق الخصوصية",
+    "nav": {
+      "collection": "المعلومات التي نجمعها",
+      "usage": "كيف نستخدمها",
+      "sharing": "مشاركة البيانات",
+      "security": "أمن البيانات",
+      "rights": "حقوقك",
+      "cookies": "ملفات تعريف الارتباط"
+    },
+    "sections": {
+      "collection": {
+        "heading": "المعلومات التي نجمعها",
+        "intro": "نجمع المعلومات التي تقدّمها مباشرة عند إنشاء حساب أو رفع سيرتك الذاتية أو التقديم على وظائف أو التواصل معنا. تشمل هذه:",
+        "items": [
+          "الاسم وعنوان البريد الإلكتروني ومعلومات التواصل",
+          "الخبرة المهنية والتعليم والمهارات",
+          "مستندات السيرة الذاتية التي ترفعها",
+          "طلبات التوظيف وتفضيلات الوظائف المحفوظة",
+          "إعدادات الحساب وتفضيلات التواصل",
+          "بيانات الاستخدام مثل الصفحات التي تمت زيارتها والميزات المستخدمة"
+        ]
+      },
+      "usage": {
+        "heading": "كيف نستخدم معلوماتك",
+        "intro": "نستخدم معلوماتك لتقديم خدماتنا وتحسينها، بما في ذلك:",
+        "items": [
+          "مطابقتك مع فرص الوظائف ذات الصلة باستخدام تقنية الذكاء الاصطناعي",
+          "تسهيل طلبات التوظيف بين الباحثين عن عمل والشركات",
+          "تخصيص تجربتك في البحث عن وظائف والترشيحات",
+          "تحليل سيرتك الذاتية لاستخراج البيانات المهنية وهيكلتها",
+          "إرسال إشعارات حول تحديثات حالة الطلبات",
+          "تحسين منصّتنا وتطوير ميزات جديدة"
+        ]
+      },
+      "sharing": {
+        "heading": "مشاركة البيانات",
+        "intro": "نشارك معلوماتك فقط في الحالات التالية:",
+        "items": [
+          "<strong>مع أصحاب العمل:</strong> عندما تتقدّم لوظيفة، تتلقّى الشركة بيانات طلبك وملفك الشخصي.",
+          "<strong>مقدّمو الخدمات:</strong> قد نشارك البيانات مع خدمات أطراف ثالثة موثوقة تساعدنا في تشغيل المنصّة.",
+          "<strong>المتطلّبات القانونية:</strong> قد نفصح عن المعلومات إذا اقتضى القانون ذلك أو لحماية حقوقنا."
+        ],
+        "note": "نحن لا نبيع بياناتك الشخصية لأي طرف ثالث لأغراض إعلانية أو تسويقية."
+      },
+      "security": {
+        "heading": "أمن البيانات",
+        "paragraph": "نطبّق تدابير أمنية بمعايير الصناعة لحماية معلوماتك الشخصية، بما في ذلك التشفير أثناء النقل وفي حالة السكون، والمصادقة الآمنة، وعمليات تدقيق أمنية منتظمة. لكنّ أيّ طريقة إرسال عبر الإنترنت ليست آمنة بنسبة 100%، ولا يمكننا ضمان الأمان المطلق."
+      },
+      "rights": {
+        "heading": "حقوقك",
+        "intro": "لديك الحقوق التالية فيما يتعلّق ببياناتك الشخصية:",
+        "items": [
+          "<strong>الوصول:</strong> طلب نسخة من بياناتك الشخصية.",
+          "<strong>التصحيح:</strong> تحديث أو تصحيح المعلومات غير الدقيقة.",
+          "<strong>الحذف:</strong> طلب حذف حسابك وبياناتك.",
+          "<strong>التصدير:</strong> تنزيل بياناتك بتنسيق قابل للنقل.",
+          "<strong>إلغاء الاشتراك:</strong> إلغاء الاشتراك من المراسلات التسويقية في أي وقت."
+        ]
+      },
+      "cookies": {
+        "heading": "ملفات تعريف الارتباط",
+        "paragraph": "نستخدم ملفات تعريف الارتباط والتقنيات المماثلة للحفاظ على جلستك وتذكّر تفضيلاتك وتحسين تجربتك. الكوكيز الأساسية مطلوبة لعمل المنصّة. يمكنك إدارة تفضيلات الكوكيز عبر إعدادات متصفّحك."
+      }
+    }
+  },
+  "terms": {
+    "title": "شروط الخدمة",
+    "lastUpdated": "آخر تحديث: أكتوبر 2023",
+    "sections": {
+      "account": {
+        "title": "1. استخدام الحساب",
+        "p1": "بوصولك إلى بوابة الوظائف الذكية أو استخدامك لها، فإنك توافق على الالتزام بهذه الشروط. أنت مسؤول عن حماية كلمة المرور التي تستخدمها للوصول إلى الخدمة وعن أي أنشطة أو إجراءات تتم تحت كلمة المرور الخاصة بك، سواء كانت مع خدمتنا أو مع خدمة طرف ثالث.",
+        "p2": "توافق على عدم الإفصاح عن كلمة المرور لأي طرف ثالث. يجب إخطارنا فورًا بمجرد علمك بأي خرق أمني أو استخدام غير مصرّح به لحسابك."
+      },
+      "seeker": {
+        "title": "2. مسؤوليات الباحث عن عمل",
+        "p1": "بصفتك باحثًا عن عمل، فإنك توافق على تقديم معلومات دقيقة وحديثة وكاملة أثناء عملية التسجيل وعلى تحديثها للحفاظ على دقتها واكتمالها.",
+        "bullet1": "لن تقدّم معلومات مضلّلة عن هويتك أو مؤهلاتك.",
+        "bullet2": "ستستخدم ميزات المطابقة بالذكاء الاصطناعي بمسؤولية ولن تحاول التلاعب بخوارزميات التقييم.",
+        "bullet3": "تقرّ بأن بوابة الوظائف الذكية لا تضمن الحصول على وظيفة."
+      },
+      "company": {
+        "title": "3. مسؤوليات الشركة",
+        "p1": "يجب على أصحاب العمل والمسؤولين عن التوظيف الذين يستخدمون المنصّة التأكّد من أن جميع إعلانات الوظائف تمتثل للقوانين المحلية والإقليمية والوطنية والدولية المعمول بها، بما في ذلك قوانين العمل والتوظيف المتعلّقة بعدم التمييز.",
+        "p2": "الشركات هي المسؤولة وحدها عن إعلاناتها على المنصّة وعن أي عواقب تترتّب عليها. تحتفظ المنصّة بالحق في إزالة أي إعلان ينتهك هذه الشروط دون إشعار مسبق."
+      },
+      "postings": {
+        "title": "4. قواعد إعلانات الوظائف",
+        "p1": "للحفاظ على جودة منظومة المطابقة المعتمدة على البيانات، يجب أن تكون جميع إعلانات الوظائف:",
+        "bullet1": "تصف الوظيفة والمسؤوليات والمهارات المطلوبة بوضوح.",
+        "bullet2": "خالية من الرسوم الخفيّة أو الاحتيال الهرمي أو المحتوى غير اللائق.",
+        "bullet3": "تعكس التعويض بدقة في حال تقديمه."
+      },
+      "limitations": {
+        "title": "5. قيود المنصّة",
+        "p1": "تستخدم بوابة الوظائف الذكية خوارزميات تعلّم آلي متقدّمة لتسهيل مطابقة المواهب. ومع ذلك، لا نضمن أن تعمل الخدمة دون انقطاع أو أن تكون آمنة أو متاحة في أي وقت أو موقع معيّن.",
+        "p2": "نحن لسنا مسؤولين عن تصرّفات أو محتوى أو معلومات أو بيانات الأطراف الثالثة، وأنت تعفينا ومدراءنا ومسؤولينا وموظفينا ووكلاءنا من أي مطالبات وأضرار، معروفة وغير معروفة، تنشأ عن أي مطالبة ضد أيّ من هذه الأطراف الثالثة."
+      },
+      "termination": {
+        "title": "6. سياسة الإنهاء",
+        "p1": "يجوز لنا إنهاء أو تعليق حسابك فورًا، دون إشعار مسبق أو مسؤولية، لأي سبب كان، بما في ذلك على سبيل المثال لا الحصر مخالفتك للشروط.",
+        "p2": "عند الإنهاء، ينتهي حقّك في استخدام الخدمة فورًا. إذا كنت ترغب في إنهاء حسابك، يمكنك ببساطة التوقّف عن استخدام الخدمة."
+      }
+    }
+  },
+  "faq": {
+    "title": "الأسئلة الشائعة",
+    "description": "اعثر على إجابات للأسئلة الشائعة حول إعداد ملفك الشخصي والتقديم على الوظائف وفهم تقنية المطابقة بالذكاء الاصطناعي لدينا.",
+    "searchPlaceholder": "ابحث في الأسئلة الشائعة...",
+    "clear": "مسح",
+    "categoriesHeader": "الفئات",
+    "noResults": "لا توجد نتائج",
+    "noResultsHelp": "جرّب كلمات مختلفة أو تصفّح الفئات.",
+    "ctaTitle": "ما زلت لا تجد ما تبحث عنه؟",
+    "ctaDescription": "فريق الدعم لدينا متاح على مدار الساعة طوال أيام الأسبوع لمساعدتك في أي مشكلة محددة.",
+    "contactSupport": "تواصل مع الدعم",
+    "categories": {
+      "account": "الحساب والملف الشخصي",
+      "ai": "تقنية المطابقة بالذكاء الاصطناعي"
+    },
+    "items": {
+      "verifyEmail": {
+        "q": "كيف أتحقّق من بريدي الإلكتروني المهني؟",
+        "a": "للتحقّق من بريدك، انتقل إلى الإعدادات > الحساب > تفضيلات البريد. انقر زر \"إرسال رابط التحقق\" بجانب بريدك الأساسي. ستصلك رسالة من بوابة الوظائف الذكية خلال 5 دقائق تحتوي على رابط آمن ومحدّد بالوقت.",
+        "tip": "إذا لم تجد الرسالة، تحقّق من مجلد الرسائل غير المرغوب فيها، أو تأكّد أن جدار حماية شركتك يسمح بالرسائل من no-reply@smartjobportal.com."
+      },
+      "hideProfile": {
+        "q": "هل يمكنني إخفاء ملفي عن صاحب العمل الحالي؟",
+        "a": "نعم! انتقل إلى الإعدادات > الخصوصية وفعّل \"الوضع المخفي\". سيؤدي ذلك إلى إخفاء ملفك عن شركات محددة تضيفها. سيبقى ملفك مرئيًا لأصحاب العمل والمسؤولين الآخرين."
+      },
+      "exportData": {
+        "q": "كيف أصدّر بيانات ملفي الشخصي؟",
+        "a": "انتقل إلى الإعدادات > الحساب > البيانات والخصوصية. انقر \"تصدير بياناتي\" لتنزيل نسخة كاملة من ملفك وطلباتك وسجل نشاطك بصيغة JSON أو PDF."
+      },
+      "matchScore": {
+        "q": "كيف يُحسب درجة المطابقة بالذكاء الاصطناعي؟",
+        "a": "يحلّل الذكاء الاصطناعي لدينا أكثر من 50 عاملاً تشمل مهاراتك وخبرتك وتعليمك وتفضيلات الموقع وتوقعات الراتب ومسارك المهني. يقارنها بمتطلبات الوظيفة باستخدام خوارزمية موزونة خاصة لإنتاج درجة مطابقة بالنسبة المئوية."
+      }
+    }
+  },
+  "contact": {
+    "heroTitle": "تواصل معنا",
+    "heroDescription": "سواء كنت باحثًا عن عمل تخطّط لمسيرتك المهنية أو شركة تبحث عن أفضل المواهب، فمنصّتنا المدعومة بالذكاء الاصطناعي هنا للمساعدة. تواصل مع فريق الدعم.",
+    "formTitle": "أرسل لنا رسالة",
+    "nameLabel": "الاسم الكامل",
+    "namePlaceholder": "محمد أحمد",
+    "emailLabel": "البريد الإلكتروني",
+    "emailPlaceholder": "jane@example.com",
+    "subjectLabel": "الموضوع",
+    "subjects": {
+      "seeker": "دعم الباحثين عن عمل",
+      "employer": "خدمات أصحاب العمل",
+      "technical": "مشكلة تقنية",
+      "billing": "استفسار فواتير",
+      "other": "أخرى"
+    },
+    "messageLabel": "الرسالة",
+    "messagePlaceholder": "كيف يمكننا مساعدتك؟",
+    "sending": "جارٍ الإرسال...",
+    "sendMessage": "إرسال الرسالة",
+    "toastSuccessTitle": "تم إرسال الرسالة",
+    "toastSuccessMessage": "سنعود إليك قريبًا.",
+    "toastErrorTitle": "خطأ",
+    "toastErrorMessage": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "errors": {
+      "nameRequired": "الاسم مطلوب.",
+      "emailRequired": "البريد الإلكتروني مطلوب.",
+      "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا.",
+      "messageRequired": "الرسالة مطلوبة."
+    },
+    "info": {
+      "title": "معلومات التواصل",
+      "emailLabel": "البريد الإلكتروني",
+      "emailValue": "support@smartjobportal.com",
+      "phoneLabel": "الهاتف",
+      "phoneValue": "+1 (555) 123-4567",
+      "phoneHours": "من الإثنين إلى الجمعة، 9 صباحًا - 6 مساءً بتوقيت المحيط الهادئ",
+      "locationLabel": "الموقع",
+      "locationLine1": "100 Innovation Drive",
+      "locationLine2": "San Francisco, CA 94105"
+    },
+    "faqCard": {
+      "title": "تبحث عن إجابات سريعة؟",
+      "description": "تصفّح الأسئلة الشائعة. قد تجد ما تحتاجه دون انتظار.",
+      "browseFaq": "تصفّح الأسئلة الشائعة"
+    }
+  },
+  "about": {
+    "heroTitle": "مهمتنا: سدّ فجوة المواهب بالذكاء",
+    "heroDescription": "نؤمن بأن مستقبل العمل يُبنى على إمكانات الإنسان. باستخدام الذكاء الاصطناعي المتقدم، نزيل التحيّز والاحتكاك ونقدّم تجربة توظيف أسرع وأدقّ وأكثر إنسانية.",
+    "visionTitle": "إعادة تعريف مستقبل العمل",
+    "visionDescription": "بوابة الوظائف الذكية ليست مجرد لوحة وظائف؛ إنها منصة ذكاء للمواهب. نتصوّر عالمًا يكون فيه كل فرد متطابقًا تمامًا مع وظيفة يمكنه النجاح فيها، وكل شركة تبني فرقًا تقود الابتكار التحويلي.",
+    "scienceTitle": "علم المطابقة",
+    "scienceSubtitle": "لماذا بنينا نهجًا قائمًا على الذكاء الاصطناعي.",
+    "features": {
+      "fairness": {
+        "title": "العدالة الجذرية",
+        "description": "خوارزمياتنا مُدرَّبة على تجاهل المعرّفات الديموغرافية، وتركّز فقط على المهارات والإمكانات والتوافق الثقافي لإزالة التحيّز اللاواعي."
+      },
+      "precision": {
+        "title": "دقة جراحية",
+        "description": "بتحليل ملايين المسارات المهنية الناجحة، يحدّد الذكاء الاصطناعي تداخلات المهارات الدقيقة التي تفوّتها مطابقة الكلمات المفتاحية التقليدية."
+      },
+      "velocity": {
+        "title": "سرعة معجّلة",
+        "description": "اختصر وقت التوظيف من أسابيع إلى أيام. القوائم المختصرة الذكية الفورية تعني أن مسؤولي التوظيف يقضون الوقت في إجراء المقابلات لا في تصفية السير الذاتية."
+      }
+    },
+    "seekers": {
+      "title": "للباحثين عن عمل: اكتشف إمكاناتك.",
+      "description": "توقّف عن إرسال سيرتك الذاتية في الفراغ. تعمل بوابة الوظائف الذكية كوكيلك المهني الشخصي، فتطابق مهاراتك الفريدة مع وظائف لم تكن تعلم بوجودها، مع شفافية كاملة في الراتب والتوقّعات.",
+      "bullets": {
+        "parsing": "تحليل ملف تلقائي",
+        "scoring": "تقييم مطابقة شفّاف",
+        "privacy": "تحكّم في البيانات يضع الخصوصية أولاً"
+      },
+      "demoCard": {
+        "title": "مطوّر أول",
+        "company": "TechFlow Inc.",
+        "matchLabel": "مطابقة"
+      }
+    },
+    "companies": {
+      "title": "للشركات: ابنِ فريقك المستقبلي.",
+      "description": "تجاوز نهج \"الرشّ والصلاة\". احصل على مجموعة مواهب مفلترة ومستهدفة بدقة. يفهم الذكاء الاصطناعي ثقافتك ومنظومتك التقنية، ويقدّم لك مرشحين جاهزين للتأثير من اليوم الأول.",
+      "bullets": {
+        "retention": "تحليلات استبقاء تنبؤية",
+        "ats": "تكامل سلس مع أنظمة تتبّع المتقدّمين",
+        "diversity": "لوحة مقاييس التنوّع"
+      },
+      "stats": {
+        "fasterHire": "وقت توظيف أسرع",
+        "acceptance": "قبول العرض"
+      }
+    }
+  },
+  "home": {
+    "heroBadge": "مطابقة الوظائف بالذكاء الاصطناعي",
+    "heroTitleLine1": "اعثر على وظيفة أحلامك،",
+    "heroTitleLine2": "بشكل أذكى وأسرع.",
+    "heroDescription": "انضم إلى منصة الوظائف من الجيل الجديد. تستخدم بوابة الوظائف الذكية الذكاء الاصطناعي المتقدم لمطابقة مهاراتك الفريدة مع الفرص المناسبة في أفضل الشركات حول العالم.",
+    "searchJobPlaceholder": "المسمى الوظيفي أو الكلمات المفتاحية أو الشركة",
+    "searchLocationPlaceholder": "المدينة أو الولاية أو عن بُعد",
+    "searchSubmit": "ابحث عن وظائف",
+    "popular": "الأكثر شيوعًا:",
+    "stats": {
+      "activeJobs": "وظائف نشطة",
+      "topCompanies": "أفضل الشركات",
+      "availableLocations": "المواقع المتاحة"
+    },
+    "howItWorks": {
+      "eyebrow": "كيف يعمل",
+      "title": "حياتك المهنية ببساطة",
+      "description": "ثلاث خطوات بسيطة للعثور على وظيفتك التالية وكسبها بدقة الذكاء الاصطناعي.",
+      "stepLabel": "الخطوة",
+      "steps": {
+        "upload": {
+          "title": "ارفع سيرتك الذاتية",
+          "description": "يحلّل الذكاء الاصطناعي سيرتك الذاتية فورًا ويستخرج مهاراتك وخبراتك ومؤهلاتك في ملف ذكي."
+        },
+        "match": {
+          "title": "احصل على ترشيحات بالذكاء الاصطناعي",
+          "description": "تحلّل خوارزمية المطابقة لدينا مئات العوامل لإبراز الوظائف الأنسب لملفك وأهدافك."
+        },
+        "apply": {
+          "title": "قدّم وتواصل",
+          "description": "قدّم بنقرة واحدة، وتتبّع طلباتك لحظيًا، وتواصل مباشرة مع مسؤولي التوظيف."
+        }
+      }
+    },
+    "categories": {
+      "eyebrow": "استكشف",
+      "title": "فئات الوظائف الشائعة",
+      "description": "تصفّح الوظائف عبر أكثر المجالات والصناعات طلبًا.",
+      "empty": "لا توجد فئات متاحة بعد.",
+      "jobCount_zero": "لا توجد وظائف",
+      "jobCount_one": "وظيفة واحدة",
+      "jobCount_two": "وظيفتان",
+      "jobCount_few": "{{count}} وظائف",
+      "jobCount_many": "{{count}} وظيفة",
+      "jobCount_other": "{{count}} وظيفة"
+    },
+    "cta": {
+      "badge": "هل أنت مستعد للبدء؟",
+      "title": "خطوتك المهنية القادمة تبدأ هنا",
+      "description": "انضم إلى آلاف المحترفين الذين وجدوا فرصتهم المثالية عبر منصتنا المدعومة بالذكاء الاصطناعي.",
+      "createAccount": "أنشئ حسابًا مجانيًا",
+      "browseJobs": "تصفّح الوظائف"
+    }
+  },
+  "emptyStatesShort": {
+    "notifications": "لا توجد إشعارات جديدة."
+  },
+  "forms": {
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "name": "الاسم",
+    "role": "الدور",
+    "jobSearch": "المسمى الوظيفي أو الكلمات المفتاحية أو الشركة",
+    "locationSearch": "المدينة أو الولاية أو عن بُعد"
+  },
+  "validation": {
+    "required": "هذا الحقل مطلوب.",
+    "email": "أدخل بريداً إلكترونياً صالحاً.",
+    "passwordMin": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
+    "passwordComplexity": "يجب أن تحتوي كلمة المرور على حرف كبير ورقم على الأقل.",
+    "passwordMatch": "يجب أن تتطابق كلمتا المرور.",
+    "invalidRole": "اختر دوراً صالحاً.",
+    "invalidStatus": "اختر حالة صالحة."
+  },
+  "statuses": {
+    "application": {
+      "applied": "تم التقديم",
+      "underReview": "قيد المراجعة",
+      "shortlisted": "في القائمة المختصرة",
+      "rejected": "مرفوض"
+    },
+    "job": {
+      "active": "نشطة",
+      "inactive": "غير نشطة"
+    },
+    "user": {
+      "active": "نشط",
+      "banned": "محظور"
+    },
+    "loading": "جارٍ التحميل",
+    "success": "نجح",
+    "error": "خطأ"
+  },
+  "jobTypes": {
+    "fullTime": "دوام كامل",
+    "partTime": "دوام جزئي",
+    "contract": "عقد",
+    "internship": "تدريب",
+    "remote": "عن بُعد"
+  },
+  "roles": {
+    "jobSeeker": "باحث عن عمل",
+    "company": "شركة",
+    "admin": "مسؤول"
+  },
+  "pages": {
+    "home": {
+      "title": "اعثر على وظيفة أحلامك بشكل أذكى وأسرع.",
+      "eyebrow": "مطابقة الوظائف بالذكاء الاصطناعي",
+      "description": "انضم إلى منصة الوظائف من الجيل الجديد. تستخدم بوابة الوظائف الذكية الذكاء الاصطناعي المتقدم لمطابقة مهاراتك الفريدة مع أفضل الشركات حول العالم.",
+      "stats": {
+        "activeJobs": "وظائف نشطة",
+        "topCompanies": "أفضل الشركات",
+        "averageHireTime": "متوسط مدة التوظيف"
+      }
+    },
+    "login": {
+      "title": "تسجيل الدخول"
+    },
+    "register": {
+      "title": "إنشاء حساب"
+    },
+    "jobs": {
+      "title": "الوظائف"
+    },
+    "companies": {
+      "title": "الشركات"
+    },
+    "salaryGuide": {
+      "title": "دليل الرواتب"
+    },
+    "postJob": {
+      "title": "نشر وظيفة"
+    },
+    "applications": {
+      "title": "الطلبات"
+    },
+    "errors": {
+      "forbidden": "الوصول مرفوض"
+    }
+  },
+  "emptyStates": {
+    "jobs": "لا توجد وظائف.",
+    "applications": "لا توجد طلبات بعد.",
+    "applicants": "لا يوجد متقدمون بعد.",
+    "notifications": "لا توجد إشعارات بعد."
+  },
+  "errors": {
+    "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "network": "تعذّر الوصول إلى الخادم.",
+    "unauthorized": "يرجى تسجيل الدخول للمتابعة.",
+    "forbidden": "ليس لديك صلاحية للوصول إلى هذه الصفحة.",
+    "notFound": "تعذّر العثور على العنصر المطلوب."
+  },
+  "language": {
+    "label": "اللغة",
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "auth": {
+    "login": {
+      "heroTitle": "خطوتك المهنية القادمة تنتظرك.",
+      "heroDescription": "سجّل الدخول للوصول إلى وظائف مخصصة لك، وتتبّع طلباتك، والتواصل مع أفضل أصحاب العمل.",
+      "welcomeBack": "مرحبًا بعودتك!",
+      "subtitle": "سجّل الدخول إلى بوابة الوظائف الذكية.",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "signingIn": "جارٍ تسجيل الدخول...",
+      "submit": "تسجيل الدخول",
+      "newHere": "جديد على بوابة الوظائف الذكية؟",
+      "createAccount": "إنشاء حساب",
+      "toastTitle": "مرحبًا بعودتك!",
+      "toastMessage": "تم تسجيل الدخول بنجاح.",
+      "errors": {
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا.",
+        "passwordRequired": "كلمة المرور مطلوبة."
+      }
+    },
+    "forgotPassword": {
+      "title": "إعادة تعيين كلمة المرور",
+      "description": "أدخل البريد الإلكتروني المرتبط بحسابك وسنرسل لك رابطًا لإعادة تعيين كلمة المرور.",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "مثال: alex@example.com",
+      "submit": "إرسال رابط إعادة التعيين",
+      "sending": "جارٍ الإرسال...",
+      "successMessage": "تم إرسال الرابط! تحقّق من بريدك الإلكتروني للحصول على التعليمات.",
+      "backToLogin": "العودة إلى تسجيل الدخول",
+      "errors": {
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا.",
+        "emailNotFound": "البريد الإلكتروني غير موجود. تحقّق منه وحاول مرة أخرى."
+      }
+    },
+    "resetPassword": {
+      "headerSubtitle": "أعد تعيين كلمة المرور لاستعادة الوصول",
+      "newPasswordLabel": "كلمة المرور الجديدة",
+      "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
+      "confirmLabel": "تأكيد كلمة المرور الجديدة",
+      "confirmPlaceholder": "أعد إدخال كلمة المرور الجديدة",
+      "submit": "إعادة تعيين كلمة المرور",
+      "resetting": "جارٍ إعادة التعيين...",
+      "strengthLabel": "قوة كلمة المرور",
+      "strength": {
+        "characters": "8 أحرف فأكثر",
+        "uppercase": "حرف كبير",
+        "number": "رقم",
+        "symbol": "رمز"
+      },
+      "passwordsMatch": "كلمتا المرور متطابقتان",
+      "successTitle": "تم إعادة تعيين كلمة المرور",
+      "successMessage": "تم تحديث كلمة المرور بنجاح. يمكنك الآن استخدامها لتسجيل الدخول.",
+      "goToLogin": "اذهب إلى تسجيل الدخول",
+      "toastSuccessTitle": "تم تحديث كلمة المرور",
+      "toastSuccessMessage": "تمت إعادة تعيين كلمة المرور بنجاح.",
+      "toastErrorTitle": "خطأ",
+      "toastErrorMessage": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+      "errors": {
+        "invalidLink": "رابط إعادة التعيين غير صالح أو ينقصه بيانات مطلوبة.",
+        "passwordRequired": "كلمة المرور مطلوبة.",
+        "passwordMin": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
+        "passwordUpper": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل.",
+        "passwordNumber": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.",
+        "confirmRequired": "يرجى تأكيد كلمة المرور.",
+        "confirmMatch": "كلمتا المرور غير متطابقتين."
+      }
+    },
+    "emailVerification": {
+      "pageTitle": "التحقق من البريد الإلكتروني",
+      "verifying": "جارٍ التحقق من بريدك الإلكتروني...",
+      "successTitle": "تم التحقق من البريد!",
+      "successMessage": "تم التحقق من بريدك الإلكتروني بنجاح. يمكنك الآن تسجيل الدخول.",
+      "continueToLogin": "المتابعة إلى تسجيل الدخول",
+      "errorTitle": "فشل التحقق",
+      "errorMessage": "رابط التحقق غير صالح أو منتهي الصلاحية.",
+      "resendPlaceholder": "أدخل بريدك الإلكتروني لإعادة الإرسال",
+      "resending": "جارٍ الإرسال...",
+      "resendButton": "إعادة إرسال بريد التحقق",
+      "resendSuccess": "تم إرسال بريد التحقق!",
+      "resendFailed": "فشل الإرسال. يرجى المحاولة مرة أخرى.",
+      "backToLogin": "العودة إلى تسجيل الدخول"
+    },
+    "sessionExpired": {
+      "title": "انتهت الجلسة",
+      "description": "حفاظًا على أمانك، انتهت الجلسة بسبب عدم النشاط. يرجى تسجيل الدخول مرة أخرى للمتابعة في إدارة ملفك المهني.",
+      "loginAgain": "تسجيل الدخول مرة أخرى",
+      "returnHome": "العودة إلى الرئيسية"
+    },
+    "register": {
+      "heroTitle": "ابنِ مسيرة مهنية تحبّها.",
+      "heroDescription": "أنشئ حسابك لاكتشاف وظائف مناسبة لمهاراتك والتقديم بنقرة واحدة.",
+      "title": "أنشئ حسابك",
+      "subtitle": "انضم إلى بوابة الوظائف الذكية في ثوانٍ.",
+      "nameLabel": "الاسم الكامل",
+      "namePlaceholder": "محمد أحمد",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "8 أحرف على الأقل",
+      "confirmLabel": "تأكيد كلمة المرور",
+      "confirmPlaceholder": "أعد إدخال كلمة المرور",
+      "roleLabel": "أنا",
+      "roleSeeker": "باحث عن عمل",
+      "roleCompany": "شركة",
+      "termsAgree": "أوافق على شروط الخدمة وسياسة الخصوصية.",
+      "submit": "إنشاء الحساب",
+      "creating": "جارٍ إنشاء الحساب...",
+      "haveAccount": "لديك حساب بالفعل؟",
+      "signIn": "تسجيل الدخول",
+      "toastSuccessTitle": "تم إنشاء الحساب!",
+      "toastSuccessMessage": "يرجى التحقق من بريدك الإلكتروني للتفعيل.",
+      "toastErrorTitle": "فشل التسجيل",
+      "errors": {
+        "nameRequired": "الاسم الكامل مطلوب.",
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا.",
+        "passwordRequired": "كلمة المرور مطلوبة.",
+        "passwordMin": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
+        "passwordUpper": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل.",
+        "passwordNumber": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.",
+        "confirmRequired": "يرجى تأكيد كلمة المرور.",
+        "confirmMatch": "كلمتا المرور غير متطابقتين.",
+        "termsRequired": "يجب الموافقة على الشروط.",
+        "roleRequired": "يرجى اختيار الدور."
+      }
+    }
+  }
+}

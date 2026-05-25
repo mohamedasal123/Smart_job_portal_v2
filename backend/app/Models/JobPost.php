@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasLocalizedFields;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,14 +13,20 @@ use Illuminate\Database\Eloquent\Builder;
 class JobPost extends Model
 {
     use SoftDeletes;
+    use HasLocalizedFields;
 
     protected $fillable = [
         'company_id',
         'title',
+        'title_ar',
         'category',
+        'category_ar',
         'description',
+        'description_ar',
         'responsibilities',
+        'responsibilities_ar',
         'location',
+        'location_ar',
         'work_mode',
         'job_type',
         'salary_range',
@@ -30,6 +37,16 @@ class JobPost extends Model
         'status',
         'views',
         'is_active',
+    ];
+
+    protected array $localizedFields = ['title', 'category', 'description', 'responsibilities', 'location'];
+
+    protected $appends = [
+        'title_localized',
+        'category_localized',
+        'description_localized',
+        'responsibilities_localized',
+        'location_localized',
     ];
 
     protected function casts(): array

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ConfirmModal from '../../components/ConfirmModal';
 import AdminConfirmModal from '../../components/admin/AdminConfirmModal';
 import ApplicantMatchScore from '../../components/company/ApplicantMatchScore';
@@ -78,16 +79,18 @@ function Section({ title, children }) {
 }
 
 function PaginationControls({ page, setPage, itemsCount }) {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-stack-md bg-surface-container-lowest p-stack-sm rounded-lg border border-outline-variant">
-      <button className={buttonSecondary} disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Previous</button>
-      <span className="text-on-surface-variant font-label-md">Page {page}</span>
-      <button className={buttonSecondary} disabled={itemsCount < 15} onClick={() => setPage(p => p + 1)}>Next</button>
+      <button className={buttonSecondary} disabled={page <= 1} onClick={() => setPage(p => p - 1)}>{t('companyFlow.previous')}</button>
+      <span className="text-on-surface-variant font-label-md">{t('companyFlow.page', { page })}</span>
+      <button className={buttonSecondary} disabled={itemsCount < 15} onClick={() => setPage(p => p + 1)}>{t('companyFlow.next')}</button>
     </div>
   );
 }
 
 function ApplicantActionModals({ shortlistTarget, rejectTarget, setShortlistTarget, setRejectTarget, onComplete }) {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const [sendEmail, setSendEmail] = useState(true);
   const [note, setNote] = useState('');
@@ -106,12 +109,12 @@ function ApplicantActionModals({ shortlistTarget, rejectTarget, setShortlistTarg
       const nextStatus = target.nextStatus || status;
       await companyDataService.updateApplicantStatus(target.applicationId, nextStatus);
       addToast({
-        title: nextStatus === 'shortlisted' ? 'Candidate shortlisted' : nextStatus === 'under_review' ? 'Candidate moved back' : 'Candidate rejected',
-        message: `${target.name} was moved to ${nextStatus.replace('_', ' ')}.`,
+        title: nextStatus === 'shortlisted' ? t('companyFlow.shortlistedToastTitle') : nextStatus === 'under_review' ? t('companyFlow.unshortlistedToastTitle') : t('companyFlow.rejectedToastTitle'),
+        message: t('companyFlow.statusMovedMessage', { name: target.name, status: nextStatus.replace('_', ' ') }),
       });
       onComplete?.();
     } catch (e) {
-      addToast({ title: 'Error', message: 'Failed to update applicant status.', type: 'error' });
+      addToast({ title: t('companyFlow.errorTitle'), message: t('companyFlow.updateStatusError'), type: 'error' });
     } finally {
       setSaving(false);
       setShortlistTarget(null);
@@ -122,49 +125,53 @@ function ApplicantActionModals({ shortlistTarget, rejectTarget, setShortlistTarg
   return (
     <>
       <ConfirmModal
-        confirmLabel={saving ? "Saving..." : shortlistTarget?.nextStatus === 'under_review' ? "Unshortlist Candidate" : "Shortlist Candidate"}
-        message={shortlistTarget ? (shortlistTarget.nextStatus === 'under_review' ? `Move ${shortlistTarget.name} back to under review?` : `Move ${shortlistTarget.name} to the shortlist for recruiter follow-up?`) : ''}
+        confirmLabel={saving ? t('companyFlow.saving') : shortlistTarget?.nextStatus === 'under_review' ? t('companyFlow.unshortlistConfirm') : t('companyFlow.shortlistConfirm')}
+        message={shortlistTarget ? (shortlistTarget.nextStatus === 'under_review' ? t('companyFlow.unshortlistMessage', { name: shortlistTarget.name }) : t('companyFlow.shortlistMessage', { name: shortlistTarget.name })) : ''}
         onCancel={() => setShortlistTarget(null)}
         onConfirm={() => updateStatus(shortlistTarget, 'shortlisted')}
         open={Boolean(shortlistTarget)}
-        title={shortlistTarget?.nextStatus === 'under_review' ? "Unshortlist candidate" : "Shortlist candidate"}
+        title={shortlistTarget?.nextStatus === 'under_review' ? t('companyFlow.unshortlistTargetTitle') : t('companyFlow.shortlistTargetTitle')}
       />
 
       {rejectTarget && (
         <div className="fixed inset-0 z-[9990] flex items-center justify-center bg-black/40">
           <div className="bg-surface-container-lowest rounded-xl shadow-overlay border border-outline-variant p-stack-lg w-full max-w-2xl mx-4">
-            <h3 className="font-h2 text-h2 text-primary">Reject candidate</h3>
+            <h3 className="font-h2 text-h2 text-primary">{t('companyFlow.rejectTitle')}</h3>
             <p className="font-body-md text-body-md text-on-surface-variant mt-unit">
-              Review the rejection details for {rejectTarget.name} on {rejectJob?.title || 'this job'}.
+              {t('companyFlow.rejectReviewText', { name: rejectTarget.name, job: rejectJob?.title || t('companyFlow.thisJob') })}
             </p>
             <div className="mt-stack-md flex flex-wrap gap-unit">
               {rejectTarget.missingSkills?.length ? rejectTarget.missingSkills.map((skill) => (
                 <CompanySkillTag tone="missing" key={skill}>{skill}</CompanySkillTag>
-              )) : <CompanySkillTag tone="matched">No missing skills</CompanySkillTag>}
+              )) : <CompanySkillTag tone="matched">{t('companyFlow.noMissingSkills')}</CompanySkillTag>}
             </div>
             <label className="mt-stack-md flex items-center gap-stack-sm text-on-surface-variant">
               <input checked={sendEmail} onChange={(event) => setSendEmail(event.target.checked)} type="checkbox" disabled={saving} />
-              Send automated rejection email
+              {t('companyFlow.sendRejectionEmail')}
             </label>
             {sendEmail && (
               <div className="mt-stack-md bg-surface-container-low rounded-lg p-stack-md border border-outline-variant">
-                <p className="font-label-md text-label-md text-primary mb-unit">Email preview</p>
+                <p className="font-label-md text-label-md text-primary mb-unit">{t('companyFlow.emailPreview')}</p>
                 <p className="font-body-md text-body-md text-on-surface-variant">
-                  Hi {rejectTarget.name}, thank you for applying to {rejectJob?.title || 'our role'}. After review, we will not move forward at this time. We were specifically looking for stronger coverage in {rejectTarget.missingSkills?.join(', ') || 'the required role criteria'}.
+                  {t('companyFlow.rejectEmailBody', {
+                    name: rejectTarget.name,
+                    job: rejectJob?.title || t('companyFlow.ourRole'),
+                    skills: rejectTarget.missingSkills?.join(', ') || t('companyFlow.roleCriteria'),
+                  })}
                 </p>
                 <textarea
                   className="mt-stack-md w-full min-h-24 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 disabled:opacity-50"
                   onChange={(event) => setNote(event.target.value)}
-                  placeholder="Add an optional recruiter note"
+                  placeholder={t('companyFlow.addRecruiterNote')}
                   value={note}
                   disabled={saving}
                 />
               </div>
             )}
             <div className="mt-stack-lg flex justify-end gap-stack-sm">
-              <button className={buttonSecondary} disabled={saving} onClick={() => setRejectTarget(null)}>Cancel</button>
+              <button className={buttonSecondary} disabled={saving} onClick={() => setRejectTarget(null)}>{t('companyFlow.cancel')}</button>
               <button className={buttonDanger} disabled={saving} onClick={() => { updateStatus(rejectTarget, 'rejected'); setSendEmail(true); setNote(''); }}>
-                {saving ? 'Rejecting...' : 'Confirm Reject'}
+                {saving ? t('companyFlow.rejecting') : t('companyFlow.confirmReject')}
               </button>
             </div>
           </div>
@@ -175,6 +182,7 @@ function ApplicantActionModals({ shortlistTarget, rejectTarget, setShortlistTarg
 }
 
 function useApplicantActions(refresh) {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const [shortlistTarget, setShortlistTarget] = useState(null);
   const [rejectTarget, setRejectTarget] = useState(null);
@@ -190,24 +198,24 @@ function useApplicantActions(refresh) {
         shortlistTarget={shortlistTarget}
       />
       <ConfirmModal
-        confirmLabel="Approve Candidate"
-        message={approveTarget ? `Approve ${approveTarget.name} for this role?` : ''}
+        confirmLabel={t('companyFlow.approveConfirm')}
+        message={approveTarget ? t('companyFlow.approveMessage', { name: approveTarget.name }) : ''}
         onCancel={() => setApproveTarget(null)}
         onConfirm={async () => {
           try {
             await companyDataService.updateApplicantStatus(approveTarget.applicationId, 'approved');
             addToast({
-              title: 'Candidate approved',
-              message: `${approveTarget.name} was approved for this role.`,
+              title: t('companyFlow.approvedToastTitle'),
+              message: t('companyFlow.approvedToastMessage', { name: approveTarget.name }),
             });
             setApproveTarget(null);
             refresh?.();
           } catch (e) {
-            addToast({ title: 'Error', message: 'Failed to approve applicant.', type: 'error' });
+            addToast({ title: t('companyFlow.errorTitle'), message: t('companyFlow.approveError'), type: 'error' });
           }
         }}
         open={Boolean(approveTarget)}
-        title="Approve candidate"
+        title={t('companyFlow.approveTitle')}
       />
     </>
   );
@@ -215,11 +223,13 @@ function useApplicantActions(refresh) {
   return { setShortlistTarget, setRejectTarget, setApproveTarget, modals };
 }
 
-function NotFoundState({ title = 'Item not found', message = 'The record may have been removed or is unavailable.' }) {
-  return <CompanyEmptyState title={title} message={message} />;
+function NotFoundState({ title, message }) {
+  const { t } = useTranslation();
+  return <CompanyEmptyState title={title || t('companyFlow.itemNotFound')} message={message || t('companyFlow.itemNotFoundMessage')} />;
 }
 
 function JobForm({ initialJob, mode }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { addToast } = useToast();
   const { errors, serverError, handleApiError, clearErrors, setErrors } = useValidationErrors();
@@ -244,17 +254,17 @@ function JobForm({ initialJob, mode }) {
   const validate = () => {
     clearErrors();
     const nextErrors = {};
-    if (!form.title.trim()) nextErrors.title = 'Job title is required.';
-    if (!form.category.trim()) nextErrors.category = 'Category is required.';
-    if (!form.location.trim()) nextErrors.location = 'Location is required.';
-    if (!form.type.trim()) nextErrors.type = 'Job type is required.';
-    if (!form.description.trim()) nextErrors.description = 'Description is required.';
-    if (!toList(form.requiredSkills).length) nextErrors.requiredSkills = 'Add at least one required skill.';
+    if (!form.title.trim()) nextErrors.title = t('companyFlow.form.errors.titleRequired');
+    if (!form.category.trim()) nextErrors.category = t('companyFlow.form.errors.categoryRequired');
+    if (!form.location.trim()) nextErrors.location = t('companyFlow.form.errors.locationRequired');
+    if (!form.type.trim()) nextErrors.type = t('companyFlow.form.errors.typeRequired');
+    if (!form.description.trim()) nextErrors.description = t('companyFlow.form.errors.descriptionRequired');
+    if (!toList(form.requiredSkills).length) nextErrors.requiredSkills = t('companyFlow.form.errors.skillsRequired');
 
     if (Object.keys(nextErrors).length) {
       setErrors(nextErrors);
       const firstError = Object.values(nextErrors)[0];
-      addToast({ title: 'Missing information', message: firstError, type: 'error' });
+      addToast({ title: t('companyFlow.missingInfoTitle'), message: firstError, type: 'error' });
       return false;
     }
     return true;
@@ -275,7 +285,7 @@ function JobForm({ initialJob, mode }) {
     try {
       if (mode === 'edit') {
         const updated = await companyDataService.updateCompanyJob(initialJob.id, payload(status === 'preview' ? 'draft' : status));
-        addToast({ title: 'Job updated', message: `${updated.title} was saved.` });
+        addToast({ title: t('companyFlow.form.jobUpdatedTitle'), message: t('companyFlow.form.jobUpdatedMessage', { title: updated.title }) });
         if (status === 'preview') {
           navigate(`/company/jobs/${updated.id}/preview`);
         } else {
@@ -283,7 +293,7 @@ function JobForm({ initialJob, mode }) {
         }
       } else {
         const created = await companyDataService.createCompanyJob(payload(status === 'preview' ? 'draft' : status));
-        addToast({ title: status === 'draft' || status === 'preview' ? 'Draft saved' : 'Job published', message: `${created.title} is now saved.` });
+        addToast({ title: status === 'draft' || status === 'preview' ? t('companyFlow.form.draftSavedTitle') : t('companyFlow.form.jobPublishedTitle'), message: t('companyFlow.form.jobSavedMessage', { title: created.title }) });
         navigate(status === 'preview' ? `/company/jobs/${created.id}/preview` : (status === 'draft' ? ROUTES.COMPANY_JOBS : `/company/jobs/${created.id}`));
       }
     } catch (err) {
@@ -302,105 +312,95 @@ function JobForm({ initialJob, mode }) {
           <p>{serverError}</p>
         </div>
       )}
-      <Section title="Basic info">
+      <Section title={t('companyFlow.form.basicInfo')}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-          <Field error={errors.title} label="Job title"><TextInput disabled={isSaving} onChange={(event) =>
+          <Field error={errors.title} label={t('companyFlow.form.jobTitle')}><TextInput disabled={isSaving} onChange={(event) =>
             update('title', event.target.value)} value={form.title} /></Field>
-          <Field error={errors.category} label="Category">
+          <Field error={errors.category} label={t('companyFlow.form.category')}>
             <SelectInput disabled={isSaving} onChange={(event) => update('category', event.target.value)} value={form.category}>
-              <option value="">Select category</option>
-              <option value="Engineering">Engineering</option>
-              <option value="Design">Design</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Data Science">Data Science</option>
-              <option value="Finance">Finance</option>
-              <option value="Customer Success">Customer Success</option>
-              <option value="Operations">Operations</option>
-              <option value="Human Resources">Human Resources</option>
-              <option value="Other">Other</option>
+              <option value="">{t('companyFlow.form.selectCategory')}</option>
+              {['Engineering', 'Design', 'Marketing', 'Data Science', 'Finance', 'Customer Success', 'Operations', 'Human Resources', 'Other'].map((c) => (
+                <option key={c} value={c}>{t(`categories.${c}`, { defaultValue: c })}</option>
+              ))}
             </SelectInput>
           </Field>
-          <Field error={errors.type} label="Job type">
+          <Field error={errors.type} label={t('companyFlow.form.jobType')}>
             <SelectInput disabled={isSaving} onChange={(event) => update('type', event.target.value)} value={form.type}>
-              <option value="">Select type</option>
-              <option value="full_time">Full time</option>
-              <option value="part_time">Part time</option>
-              <option value="contract">Contract</option>
-              <option value="internship">Internship</option>
+              <option value="">{t('companyFlow.form.selectType')}</option>
+              {['full_time', 'part_time', 'contract', 'internship'].map((tp) => (
+                <option key={tp} value={tp}>{t(`companyFlow.jobTypeOptions.${tp}`)}</option>
+              ))}
             </SelectInput>
           </Field>
-          <Field error={errors.location} label="Location"><TextInput disabled={isSaving} onChange={(event) => update('location', event.target.value)} value={form.location} /></Field>
-          <Field error={errors.workMode} label="Work mode">
+          <Field error={errors.location} label={t('companyFlow.form.location')}><TextInput disabled={isSaving} onChange={(event) => update('location', event.target.value)} value={form.location} /></Field>
+          <Field error={errors.workMode} label={t('companyFlow.form.workMode')}>
             <SelectInput disabled={isSaving} onChange={(event) => update('workMode', event.target.value)} value={form.workMode}>
-              <option value="Remote">Remote</option>
-              <option value="Hybrid">Hybrid</option>
-              <option value="On-site">On-site</option>
+              {['Remote', 'Hybrid', 'On-site'].map((m) => (
+                <option key={m} value={m}>{t(`companyFlow.workModes.${m}`)}</option>
+              ))}
             </SelectInput>
           </Field>
         </div>
       </Section>
 
-      <Section title="Description">
-        <Field error={errors.description} label="Job description"><TextArea disabled={isSaving} onChange={(event) => update('description', event.target.value)} value={form.description} /></Field>
+      <Section title={t('companyFlow.form.description')}>
+        <Field error={errors.description} label={t('companyFlow.form.jobDescription')}><TextArea disabled={isSaving} onChange={(event) => update('description', event.target.value)} value={form.description} /></Field>
       </Section>
 
-      <Section title="Responsibilities">
-        <Field error={errors.responsibilities} label="One responsibility per line"><TextArea disabled={isSaving} onChange={(event) => update('responsibilities', event.target.value)} value={form.responsibilities} /></Field>
+      <Section title={t('companyFlow.form.responsibilities')}>
+        <Field error={errors.responsibilities} label={t('companyFlow.form.responsibilitiesHint')}><TextArea disabled={isSaving} onChange={(event) => update('responsibilities', event.target.value)} value={form.responsibilities} /></Field>
       </Section>
 
-      <Section title="Required skills">
-        <Field error={errors.requiredSkills} label="Enter skills separated by commas or new lines"><TextArea disabled={isSaving} onChange={(event) => update('requiredSkills', event.target.value)} value={form.requiredSkills} /></Field>
+      <Section title={t('companyFlow.form.requiredSkills')}>
+        <Field error={errors.requiredSkills} label={t('companyFlow.form.skillsHint')}><TextArea disabled={isSaving} onChange={(event) => update('requiredSkills', event.target.value)} value={form.requiredSkills} /></Field>
         <div className="flex flex-wrap gap-unit">
           {toList(form.requiredSkills).map((skill) => <CompanySkillTag key={skill}>{skill}</CompanySkillTag>)}
         </div>
       </Section>
 
-      <Section title="Salary, experience, and education">
+      <Section title={t('companyFlow.form.salaryExpEdu')}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-          <Field error={errors.salaryMin} label="Salary min">
+          <Field error={errors.salaryMin} label={t('companyFlow.form.salaryMin')}>
             <TextInput
               disabled={isSaving}
               onChange={(event) => update('salaryMin', event.target.value.replace(/\D/g, '').slice(0, 7))}
               value={form.salaryMin ? Number(form.salaryMin).toLocaleString() : ''}
-              placeholder="e.g. 90,000"
+              placeholder={t('companyFlow.form.salaryMinPlaceholder')}
             />
           </Field>
-          <Field error={errors.salaryMax} label="Salary max">
+          <Field error={errors.salaryMax} label={t('companyFlow.form.salaryMax')}>
             <TextInput
               disabled={isSaving}
               onChange={(event) => update('salaryMax', event.target.value.replace(/\D/g, '').slice(0, 7))}
               value={form.salaryMax ? Number(form.salaryMax).toLocaleString() : ''}
-              placeholder="e.g. 130,000"
+              placeholder={t('companyFlow.form.salaryMaxPlaceholder')}
             />
           </Field>
-          <Field error={errors.experienceLevel} label="Experience level">
+          <Field error={errors.experienceLevel} label={t('companyFlow.form.experienceLevel')}>
             <SelectInput disabled={isSaving} onChange={(event) => update('experienceLevel', event.target.value)} value={form.experienceLevel}>
-              <option value="">Select level</option>
-              <option value="Internship">Internship</option>
-              <option value="Entry Level / Junior">Entry Level / Junior</option>
-              <option value="Mid Level">Mid Level</option>
-              <option value="Senior">Senior</option>
-              <option value="Lead / Manager">Lead / Manager</option>
-              <option value="Director / Executive">Director / Executive</option>
+              <option value="">{t('companyFlow.form.selectLevel')}</option>
+              {['Internship', 'Entry Level / Junior', 'Mid Level', 'Senior', 'Lead / Manager', 'Director / Executive'].map((lvl) => (
+                <option key={lvl} value={lvl}>{t(`experienceLevels.${lvl}`, { defaultValue: lvl })}</option>
+              ))}
             </SelectInput>
           </Field>
-          <Field error={errors.education} label="Education"><TextInput disabled={isSaving} onChange={(event) => update('education', event.target.value)} value={form.education} /></Field>
+          <Field error={errors.education} label={t('companyFlow.form.education')}><TextInput disabled={isSaving} onChange={(event) => update('education', event.target.value)} value={form.education} /></Field>
         </div>
       </Section>
 
       <div className="flex flex-wrap justify-end gap-stack-sm">
-        <button type="button" disabled={isSaving} className={buttonSecondary} onClick={() => navigate(mode === 'edit' ? `/company/jobs/${initialJob.id}` : ROUTES.COMPANY_JOBS)}>Cancel</button>
+        <button type="button" disabled={isSaving} className={buttonSecondary} onClick={() => navigate(mode === 'edit' ? `/company/jobs/${initialJob.id}` : ROUTES.COMPANY_JOBS)}>{t('companyFlow.cancel')}</button>
 
         <button type="button" disabled={isSaving} className={buttonSecondary} onClick={() => save('draft')}>
-          {savingStatus === 'draft' ? 'Saving...' : 'Save Draft'}
+          {savingStatus === 'draft' ? t('companyFlow.saving') : t('companyFlow.form.saveDraft')}
         </button>
 
         <button type="button" disabled={isSaving} className={buttonSecondary} onClick={() => save('preview')}>
-          {savingStatus === 'preview' ? 'Loading...' : 'Preview'}
+          {savingStatus === 'preview' ? t('companyFlow.form.loading') : t('companyFlow.form.preview')}
         </button>
 
         <button type="button" disabled={isSaving} className={buttonPrimary} onClick={() => save('active')}>
-          {savingStatus === 'active' ? 'Publishing...' : (mode === 'edit' ? 'Publish Changes' : 'Publish Job')}
+          {savingStatus === 'active' ? t('companyFlow.form.publishing') : (mode === 'edit' ? t('companyFlow.form.publishChanges') : t('companyFlow.form.publishJob'))}
         </button>
       </div>
     </form>
@@ -408,6 +408,7 @@ function JobForm({ initialJob, mode }) {
 }
 
 function UndoToast({ target, onClear }) {
+  const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState(5);
 
   useEffect(() => {
@@ -428,7 +429,7 @@ function UndoToast({ target, onClear }) {
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-lg shadow-overlay flex items-center justify-between gap-4 w-auto min-w-[320px] max-w-[400px] animate-fade-up">
-      <p className="font-body-sm truncate flex-1">Chat with {target.conv.candidate} deleted.</p>
+      <p className="font-body-sm truncate flex-1">{t('companyFlow.undoChatDeleted', { name: target.conv.candidate })}</p>
       <div className="flex items-center gap-3 shrink-0">
         <span className="font-label-sm w-4 text-center">{timeLeft}s</span>
         <button
@@ -438,7 +439,7 @@ function UndoToast({ target, onClear }) {
           }}
           className="font-label-sm text-secondary hover:underline px-2 py-1 rounded hover:bg-secondary/10 transition-colors uppercase tracking-wider"
         >
-          Undo
+          {t('companyFlow.undo')}
         </button>
       </div>
     </div>
@@ -446,6 +447,7 @@ function UndoToast({ target, onClear }) {
 }
 
 export function CompanyDashboard() {
+  const { t } = useTranslation();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -467,12 +469,12 @@ export function CompanyDashboard() {
     try {
       await companyApi.updateApplicantStatus(target.application_id, status);
       addToast({
-        title: status === 'shortlisted' ? 'Candidate shortlisted' : 'Candidate rejected',
-        message: `${target.applicant_name} was moved to ${status}.`,
+        title: status === 'shortlisted' ? t('companyFlow.shortlistedToastTitle') : t('companyFlow.rejectedToastTitle'),
+        message: t('companyFlow.statusMovedMessage', { name: target.applicant_name, status }),
       });
       fetchData();
     } catch (e) {
-      addToast({ title: 'Error', message: 'Failed to update applicant status.', type: 'error' });
+      addToast({ title: t('companyFlow.errorTitle'), message: t('companyFlow.updateStatusError'), type: 'error' });
     } finally {
       setShortlistTarget(null);
     }
@@ -480,40 +482,40 @@ export function CompanyDashboard() {
 
   const modals = (
     <AdminConfirmModal
-      confirmLabel="Shortlist Candidate"
-      message={shortlistTarget ? `Move ${shortlistTarget.applicant_name} to the shortlist for recruiter follow-up?` : ''}
+      confirmLabel={t('companyFlow.shortlistConfirm')}
+      message={shortlistTarget ? t('companyFlow.shortlistMessage', { name: shortlistTarget.applicant_name }) : ''}
       onCancel={() => setShortlistTarget(null)}
       onConfirm={() => updateStatus(shortlistTarget, 'shortlisted')}
       open={Boolean(shortlistTarget)}
-      title="Shortlist candidate"
+      title={t('companyFlow.shortlistTargetTitle')}
     />
   );
 
   if (loading) return <FullPageSpinner />;
-  if (error) return <CompanyEmptyState title="Error loading dashboard" message={error} />;
+  if (error) return <CompanyEmptyState title={t('companyFlow.dashboard.errorTitle')} message={error} />;
   if (!stats) return null;
 
   return (
     <>
       <CompanyPageHeader
-        actions={<Link className={buttonPrimary} to={ROUTES.COMPANY_CREATE_JOB}><span className="material-symbols-outlined text-[18px]">add</span>Create Job</Link>}
-        eyebrow="Company Dashboard"
-        title="Welcome back"
-        description="Track job performance, applicant quality, and recruiter actions from one connected workspace."
+        actions={<Link className={buttonPrimary} to={ROUTES.COMPANY_CREATE_JOB}><span className="material-symbols-outlined text-[18px]">add</span>{t('companyFlow.dashboard.createJob')}</Link>}
+        eyebrow={t('companyFlow.dashboard.eyebrow')}
+        title={t('companyFlow.dashboard.title')}
+        description={t('companyFlow.dashboard.description')}
       />
 
       {/* Overview Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
-        <CompanyStatsCard icon="work" label="Total jobs" to={ROUTES.COMPANY_JOBS} value={stats.total_jobs} />
-        <CompanyStatsCard icon="work_outline" label="Active jobs" to={ROUTES.COMPANY_JOBS} value={stats.active_jobs} />
-        <CompanyStatsCard icon="group" label="Total applicants" to={ROUTES.COMPANY_APPLICANTS} value={stats.total_applicants} />
-        <CompanyStatsCard icon="new_releases" label="New this week" to={ROUTES.COMPANY_APPLICANTS} value={stats.new_applicants_this_week} />
+        <CompanyStatsCard icon="work" label={t('companyFlow.dashboard.totalJobs')} to={ROUTES.COMPANY_JOBS} value={stats.total_jobs} />
+        <CompanyStatsCard icon="work_outline" label={t('companyFlow.dashboard.activeJobs')} to={ROUTES.COMPANY_JOBS} value={stats.active_jobs} />
+        <CompanyStatsCard icon="group" label={t('companyFlow.dashboard.totalApplicants')} to={ROUTES.COMPANY_APPLICANTS} value={stats.total_applicants} />
+        <CompanyStatsCard icon="new_releases" label={t('companyFlow.dashboard.newThisWeek')} to={ROUTES.COMPANY_APPLICANTS} value={stats.new_applicants_this_week} />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-gutter">
-        {/* Main Content Area (Left side) */}
+        {/* Main Content Area */}
         <div className="xl:col-span-2 flex flex-col gap-gutter">
-          <Section title="Recent applicants">
+          <Section title={t('companyFlow.dashboard.recentApplicants')}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-stack-md">
               {stats.recent_applicants?.map((applicant) => {
                 const isShortlisted = String(applicant.status || '').toLowerCase() === 'shortlisted';
@@ -521,27 +523,27 @@ export function CompanyDashboard() {
                   <div key={applicant.applicationId} className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm hover:shadow-hover transition-shadow flex flex-col justify-between gap-4">
                     <div>
                       <div className="flex justify-between items-start mb-2">
-                        <p className="font-h3 text-primary truncate pr-2">{applicant.name}</p>
+                        <p className="font-h3 text-primary truncate pe-2">{applicant.name}</p>
                         <span className="bg-secondary/10 text-secondary text-xs font-bold px-2 py-1 rounded-full shrink-0">
-                          {applicant.matchScore}% Match
+                          {t('companyFlow.dashboard.percentMatch', { percent: applicant.matchScore })}
                         </span>
                       </div>
                       <p className="text-sm text-on-surface-variant flex items-center gap-1.5">
                         <span className="material-symbols-outlined text-[16px]">work</span>
-                        <span className="truncate">{applicant.job_title || applicant.title || 'Job Application'}</span>
+                        <span className="truncate">{applicant.job_title || applicant.title || t('companyFlow.dashboard.jobApplication')}</span>
                       </p>
                     </div>
                     <button onClick={() => setShortlistTarget({ ...applicant, nextStatus: isShortlisted ? 'under_review' : 'shortlisted' })} className={`w-full mt-2 text-center py-2 font-label-md rounded-lg transition-colors border ${isShortlisted ? 'border-outline-variant text-primary hover:bg-surface-container-high' : 'border-secondary/30 bg-surface-container-highest hover:bg-secondary/10 text-secondary'}`}>
-                      {isShortlisted ? 'Unshortlist' : 'Shortlist Candidate'}
+                      {isShortlisted ? t('companyFlow.dashboard.unshortlistButton') : t('companyFlow.dashboard.shortlistButton')}
                     </button>
                   </div>
                 )
               })}
-              {!stats.recent_applicants?.length && <p className="text-on-surface-variant p-4">No recent applicants.</p>}
+              {!stats.recent_applicants?.length && <p className="text-on-surface-variant p-4">{t('companyFlow.dashboard.noRecentApplicants')}</p>}
             </div>
           </Section>
 
-          <Section title="Top performing jobs">
+          <Section title={t('companyFlow.dashboard.topPerformingJobs')}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-stack-md">
               {stats.top_jobs?.map((job) => (
                 <div key={job.id} className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant shadow-sm flex flex-col gap-4">
@@ -551,25 +553,25 @@ export function CompanyDashboard() {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-on-surface-variant mt-auto">
                     <span className="material-symbols-outlined text-[18px]">group</span>
-                    <span>{job.applicants_count} Applicants</span>
+                    <span>{t('companyFlow.dashboard.applicantsCount', { count: job.applicants_count })}</span>
                   </div>
                 </div>
               ))}
-              {!stats.top_jobs?.length && <p className="text-on-surface-variant p-4">No top jobs.</p>}
+              {!stats.top_jobs?.length && <p className="text-on-surface-variant p-4">{t('companyFlow.dashboard.noTopJobs')}</p>}
             </div>
           </Section>
         </div>
 
-        {/* Sidebar Area (Right side) */}
+        {/* Sidebar Area */}
         <div className="flex flex-col gap-gutter">
-          <Section title="Hiring Pipeline">
+          <Section title={t('companyFlow.dashboard.hiringPipeline')}>
             <div className="flex flex-col gap-stack-sm">
               <Link to={ROUTES.COMPANY_APPLICANTS} className="bg-surface-container-lowest hover:bg-surface-container-low transition-colors rounded-xl p-4 border border-outline-variant flex justify-between items-center group">
                 <span className="text-on-surface-variant group-hover:text-primary transition-colors flex items-center gap-3 font-medium">
                   <div className="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center">
                     <span className="material-symbols-outlined text-[18px]">hourglass_top</span>
                   </div>
-                  Under review
+                  {t('companyFlow.dashboard.underReview')}
                 </span>
                 <span className="font-h2 text-primary">{stats.under_review}</span>
               </Link>
@@ -579,7 +581,7 @@ export function CompanyDashboard() {
                   <div className="w-8 h-8 rounded-full bg-success/10 text-success flex items-center justify-center">
                     <span className="material-symbols-outlined text-[18px]">check_circle</span>
                   </div>
-                  Shortlisted
+                  {t('companyFlow.dashboard.shortlisted')}
                 </span>
                 <span className="font-h2 text-primary">{stats.shortlisted}</span>
               </Link>
@@ -589,7 +591,7 @@ export function CompanyDashboard() {
                   <div className="w-8 h-8 rounded-full bg-error/10 text-error flex items-center justify-center">
                     <span className="material-symbols-outlined text-[18px]">cancel</span>
                   </div>
-                  Rejected
+                  {t('companyFlow.dashboard.rejected')}
                 </span>
                 <span className="font-h2 text-primary">{stats.rejected}</span>
               </Link>
@@ -603,6 +605,7 @@ export function CompanyDashboard() {
 }
 
 export function CompanyProfile() {
+  const { t } = useTranslation();
   const [profile, setProfile] = useState(null);
   const [activeJobs, setActiveJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -618,23 +621,23 @@ export function CompanyProfile() {
   }, []);
 
   if (loading) return <FullPageSpinner />;
-  if (!profile) return <NotFoundState title="Profile not found" />;
+  if (!profile) return <NotFoundState title={t('companyFlow.profile.profileNotFound')} />;
 
   return (
     <>
       <CompanyPageHeader
         actions={<><Link className={buttonSecondary} to={ROUTES.COMPANY_PROFILE + '/preview'}>
           <span className="material-symbols-outlined text-[18px]">open_in_new</span>
-          Public Preview
+          {t('companyFlow.profile.publicPreview')}
         </Link><Link className={buttonPrimary} to={ROUTES.COMPANY_PROFILE + '/edit'}>
             <span className="material-symbols-outlined text-[18px]">edit</span>
-            Edit Profile
+            {t('companyFlow.profile.editProfile')}
           </Link></>}
-        eyebrow="Company Profile"
+        eyebrow={t('companyFlow.profile.eyebrow')}
         title={profile.name}
         description={profile.description}
       />
-      <Section title="Company details">
+      <Section title={t('companyFlow.profile.details')}>
         <div className="flex flex-col md:flex-row gap-8">
           <div className="w-36 h-36 rounded-2xl bg-surface border border-outline-variant flex items-center justify-center p-2 shrink-0">
             {profile.logo ? (
@@ -645,14 +648,14 @@ export function CompanyProfile() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
             {[
-              ['Industry', profile.industry],
-              ['Website', profile.website],
-              ['Location', profile.location],
-              ['Contact email', profile.contactEmail],
-              ['Phone', profile.phone],
-              ['Founded', profile.foundedYear],
-              ['Company size', profile.companySize],
-              ['Active jobs', activeJobs.length],
+              [t('companyFlow.profile.industry'), profile.industry],
+              [t('companyFlow.profile.website'), profile.website],
+              [t('companyFlow.profile.location'), profile.location],
+              [t('companyFlow.profile.contactEmail'), profile.contactEmail],
+              [t('companyFlow.profile.phone'), profile.phone],
+              [t('companyFlow.profile.founded'), profile.foundedYear],
+              [t('companyFlow.profile.companySize'), profile.companySize],
+              [t('companyFlow.profile.activeJobs'), activeJobs.length],
             ].map(([label, value]) => (
               <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm flex flex-col justify-center" key={label}>
                 <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2">{label}</p>
@@ -667,6 +670,7 @@ export function CompanyProfile() {
 }
 
 export function CompanyEditProfile() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { addToast } = useToast();
   const { errors, serverError, handleApiError, clearErrors, setErrors } = useValidationErrors();
@@ -688,9 +692,9 @@ export function CompanyEditProfile() {
   const validate = () => {
     clearErrors();
     const nextErrors = {};
-    if (!form.name?.trim()) nextErrors.name = 'Company name is required.';
-    if (!form.industry?.trim()) nextErrors.industry = 'Industry is required.';
-    if (!form.location?.trim()) nextErrors.location = 'Location is required.';
+    if (!form.name?.trim()) nextErrors.name = t('companyFlow.profile.errors.nameRequired');
+    if (!form.industry?.trim()) nextErrors.industry = t('companyFlow.profile.errors.industryRequired');
+    if (!form.location?.trim()) nextErrors.location = t('companyFlow.profile.errors.locationRequired');
 
     if (Object.keys(nextErrors).length) {
       setErrors(nextErrors);
@@ -704,7 +708,7 @@ export function CompanyEditProfile() {
     setSaving(true);
     try {
       await companyDataService.updateCompanyProfile(form);
-      addToast({ title: 'Profile saved', message: 'Company profile changes were saved.' });
+      addToast({ title: t('companyFlow.profile.profileSavedTitle'), message: t('companyFlow.profile.profileSavedMessage') });
       navigate(ROUTES.COMPANY_PROFILE);
     } catch (err) {
       handleApiError(err);
@@ -718,25 +722,25 @@ export function CompanyEditProfile() {
 
   return (
     <>
-      <CompanyPageHeader eyebrow="Company Profile" title="Edit company profile" description="Keep your public employer brand and recruiter contact information current." />
+      <CompanyPageHeader eyebrow={t('companyFlow.profile.editEyebrow')} title={t('companyFlow.profile.editTitle')} description={t('companyFlow.profile.editDescription')} />
       {serverError && (
         <div className="bg-error-container text-on-error-container p-stack-sm rounded-lg border border-error">
           <p>{serverError}</p>
         </div>
       )}
-      <Section title="Profile information">
+      <Section title={t('companyFlow.profile.profileInformation')}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-          <Field error={errors.name} label="Company name"><TextInput disabled={saving} onChange={(event) => update('name', event.target.value)} value={form.name || ''} /></Field>
-          <Field error={errors.industry} label="Industry"><TextInput disabled={saving} onChange={(event) => update('industry', event.target.value)} value={form.industry || ''} /></Field>
-          <Field error={errors.website} label="Website"><TextInput disabled={saving} onChange={(event) => update('website', event.target.value)} value={form.website || ''} /></Field>
-          <Field error={errors.location} label="Location"><TextInput disabled={saving} onChange={(event) => update('location', event.target.value)} value={form.location || ''} /></Field>
-          <Field error={errors.contactEmail} label="Contact email"><TextInput disabled={saving} onChange={(event) => update('contactEmail', event.target.value)} value={form.contactEmail || ''} /></Field>
-          <Field error={errors.phone} label="Phone"><TextInput disabled={saving} onChange={(event) => update('phone', event.target.value)} value={form.phone || ''} /></Field>
-          <Field error={errors.foundedYear} label="Founded year"><TextInput disabled={saving} onChange={(event) => update('foundedYear', event.target.value)} type="number" value={form.foundedYear || ''} /></Field>
-          <Field error={errors.companySize} label="Company size"><TextInput disabled={saving} onChange={(event) => update('companySize', event.target.value)} value={form.companySize || ''} /></Field>
+          <Field error={errors.name} label={t('companyFlow.profile.fields.companyName')}><TextInput disabled={saving} onChange={(event) => update('name', event.target.value)} value={form.name || ''} /></Field>
+          <Field error={errors.industry} label={t('companyFlow.profile.fields.industry')}><TextInput disabled={saving} onChange={(event) => update('industry', event.target.value)} value={form.industry || ''} /></Field>
+          <Field error={errors.website} label={t('companyFlow.profile.fields.website')}><TextInput disabled={saving} onChange={(event) => update('website', event.target.value)} value={form.website || ''} /></Field>
+          <Field error={errors.location} label={t('companyFlow.profile.fields.location')}><TextInput disabled={saving} onChange={(event) => update('location', event.target.value)} value={form.location || ''} /></Field>
+          <Field error={errors.contactEmail} label={t('companyFlow.profile.fields.contactEmail')}><TextInput disabled={saving} onChange={(event) => update('contactEmail', event.target.value)} value={form.contactEmail || ''} /></Field>
+          <Field error={errors.phone} label={t('companyFlow.profile.fields.phone')}><TextInput disabled={saving} onChange={(event) => update('phone', event.target.value)} value={form.phone || ''} /></Field>
+          <Field error={errors.foundedYear} label={t('companyFlow.profile.fields.foundedYear')}><TextInput disabled={saving} onChange={(event) => update('foundedYear', event.target.value)} type="number" value={form.foundedYear || ''} /></Field>
+          <Field error={errors.companySize} label={t('companyFlow.profile.fields.companySize')}><TextInput disabled={saving} onChange={(event) => update('companySize', event.target.value)} value={form.companySize || ''} /></Field>
         </div>
-        <Field error={errors.description} label="Description"><TextArea disabled={saving} onChange={(event) => update('description', event.target.value)} value={form.description || ''} /></Field>
-        <Field label="Logo upload">
+        <Field error={errors.description} label={t('companyFlow.profile.fields.description')}><TextArea disabled={saving} onChange={(event) => update('description', event.target.value)} value={form.description || ''} /></Field>
+        <Field label={t('companyFlow.profile.fields.logoUpload')}>
           <input
             className="block w-full text-on-surface-variant disabled:opacity-50"
             disabled={saving}
@@ -750,27 +754,28 @@ export function CompanyEditProfile() {
                   if (newLogoUrl) {
                     patchUser({ profile_image: newLogoUrl, avatar: newLogoUrl });
                   }
-                  addToast({ title: 'Logo uploaded', message: 'Logo was updated successfully.' });
+                  addToast({ title: t('companyFlow.profile.logoUploadedTitle'), message: t('companyFlow.profile.logoUploadedMessage') });
                   await refreshUser();
                 } catch (e) {
-                  addToast({ title: 'Error', message: 'Failed to upload logo.', type: 'error' });
+                  addToast({ title: t('companyFlow.errorTitle'), message: t('companyFlow.profile.logoUploadError'), type: 'error' });
                 }
               }
             }}
             type="file"
           />
-          {logoFile && <p className="font-body-sm text-body-sm text-on-surface-variant mt-unit">Selected: {logoFile}</p>}
+          {logoFile && <p className="font-body-sm text-body-sm text-on-surface-variant mt-unit">{t('companyFlow.profile.selectedFile', { name: logoFile })}</p>}
         </Field>
       </Section>
       <div className="flex justify-end gap-stack-sm mt-stack-md">
-        <button disabled={saving} className={buttonSecondary} onClick={() => navigate(ROUTES.COMPANY_PROFILE)}>Cancel</button>
-        <button disabled={saving} className={buttonPrimary} onClick={save}>{saving ? 'Saving...' : 'Save Changes'}</button>
+        <button disabled={saving} className={buttonSecondary} onClick={() => navigate(ROUTES.COMPANY_PROFILE)}>{t('companyFlow.cancel')}</button>
+        <button disabled={saving} className={buttonPrimary} onClick={save}>{saving ? t('companyFlow.saving') : t('companyFlow.profile.saveChanges')}</button>
       </div>
     </>
   );
 }
 
 export function CompanyProfilePreview() {
+  const { t } = useTranslation();
   const [profile, setProfile] = useState(null);
   const [activeJobs, setActiveJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -793,16 +798,16 @@ export function CompanyProfilePreview() {
       <CompanyPageHeader
         actions={<><Link className={buttonSecondary} to={ROUTES.COMPANY_PROFILE}>
           <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-          Back to Profile
+          {t('companyFlow.profile.preview.backToProfile')}
         </Link><Link className={buttonPrimary} to={ROUTES.COMPANY_PROFILE + '/edit'}>
             <span className="material-symbols-outlined text-[18px]">edit</span>
-            Edit Profile
+            {t('companyFlow.profile.editProfile')}
           </Link></>}
-        eyebrow="Public Preview"
+        eyebrow={t('companyFlow.profile.preview.eyebrow')}
         title={profile.name}
         description={profile.description}
       />
-      <Section title="Employer profile">
+      <Section title={t('companyFlow.profile.preview.employerProfile')}>
         <div className="flex flex-col md:flex-row gap-8">
           <div className="w-32 h-32 rounded-2xl bg-surface border border-outline-variant flex items-center justify-center p-2 shrink-0">
             {profile.logo ? (
@@ -813,12 +818,12 @@ export function CompanyProfilePreview() {
           </div>
           <div className="space-y-2 text-on-surface-variant flex flex-col justify-center">
             <p className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">category</span> {profile.industry} · {profile.location}</p>
-            <p className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">group</span> {profile.companySize} · Founded {profile.foundedYear}</p>
+            <p className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">group</span> {profile.companySize} · {t('companyFlow.profile.preview.foundedPrefix')} {profile.foundedYear}</p>
             <p className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">language</span> <a href={profile.website} target="_blank" rel="noreferrer" className="text-secondary hover:underline">{profile.website}</a></p>
           </div>
         </div>
       </Section>
-      <Section title="Open jobs">
+      <Section title={t('companyFlow.profile.preview.openJobs')}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {activeJobs.map((job) => <CompanyJobCard job={job} key={job.id} />)}
         </div>
@@ -828,6 +833,7 @@ export function CompanyProfilePreview() {
 }
 
 export function CompanyManageJobs() {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const [filters, setFilters] = useState({ query: '', status: 'all', sort: 'newest' });
   const [page, setPage] = useState(1);
@@ -858,18 +864,22 @@ export function CompanyManageJobs() {
   return (
     <>
       <CompanyPageHeader
-        actions={<Link className={buttonPrimary} to={ROUTES.COMPANY_CREATE_JOB}><span className="material-symbols-outlined text-[18px]">add</span>Create Job</Link>}
-        eyebrow="Manage Jobs"
-        title="Job board"
-        description="Search, filter, publish, pause, edit, preview, and remove job posts."
+        actions={<Link className={buttonPrimary} to={ROUTES.COMPANY_CREATE_JOB}><span className="material-symbols-outlined text-[18px]">add</span>{t('companyFlow.dashboard.createJob')}</Link>}
+        eyebrow={t('companyFlow.manageJobs.eyebrow')}
+        title={t('companyFlow.manageJobs.title')}
+        description={t('companyFlow.manageJobs.description')}
       />
       <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient p-6 grid grid-cols-1 md:grid-cols-[1fr_160px_160px] gap-6 mb-8">
-        <TextInput onChange={(event) => updateFilters('query', event.target.value)} placeholder="Search jobs by title, location, skill, work mode, or status..." value={filters.query} />
+        <TextInput onChange={(event) => updateFilters('query', event.target.value)} placeholder={t('companyFlow.manageJobs.searchPlaceholder')} value={filters.query} />
         <SelectInput onChange={(event) => updateFilters('status', event.target.value)} value={filters.status}>
-          <option value="all">All Status</option><option value="active">Active</option><option value="draft">Draft</option><option value="paused">Paused</option><option value="closed">Closed</option>
+          {['all', 'active', 'draft', 'paused', 'closed'].map((s) => (
+            <option key={s} value={s}>{t(`companyFlow.manageJobs.statusOptions.${s}`)}</option>
+          ))}
         </SelectInput>
         <SelectInput onChange={(event) => updateFilters('sort', event.target.value)} value={filters.sort}>
-          <option value="newest">Newest</option><option value="applicants">Most applicants</option><option value="views">Most views</option>
+          {['newest', 'applicants', 'views'].map((s) => (
+            <option key={s} value={s}>{t(`companyFlow.manageJobs.sortOptions.${s}`)}</option>
+          ))}
         </SelectInput>
       </div>
 
@@ -881,10 +891,10 @@ export function CompanyManageJobs() {
             onToggleStatus={async (id) => {
               try {
                 const updated = await companyDataService.toggleJobStatus(id);
-                addToast({ title: 'Job status updated', message: `${updated.title} is now ${updated.status}.` });
+                addToast({ title: t('companyFlow.manageJobs.statusUpdatedTitle'), message: t('companyFlow.manageJobs.statusUpdatedMessage', { title: updated.title, status: updated.status }) });
                 refresh();
               } catch (e) {
-                addToast({ title: 'Error', message: 'Failed to update job status.', type: 'error' });
+                addToast({ title: t('companyFlow.errorTitle'), message: t('companyFlow.manageJobs.statusUpdateError'), type: 'error' });
               }
             }}
           />
@@ -893,24 +903,24 @@ export function CompanyManageJobs() {
       )}
 
       <ConfirmModal
-        confirmLabel={saving ? "Deleting..." : "Delete Job"}
-        message={deleteTarget ? `Delete ${deleteTarget.title}? Applicants for this job will also be removed.` : ''}
+        confirmLabel={saving ? t('companyFlow.manageJobs.deletingButton') : t('companyFlow.manageJobs.deleteJob')}
+        message={deleteTarget ? t('companyFlow.manageJobs.deleteMessage', { title: deleteTarget.title }) : ''}
         onCancel={() => setDeleteTarget(null)}
         onConfirm={async () => {
           setSaving(true);
           try {
             await companyDataService.deleteCompanyJob(deleteTarget.id);
-            addToast({ title: 'Job deleted', message: `${deleteTarget.title} was removed.` });
+            addToast({ title: t('companyFlow.manageJobs.deletedTitle'), message: t('companyFlow.manageJobs.deletedMessage', { title: deleteTarget.title }) });
             setDeleteTarget(null);
             refresh();
           } catch (e) {
-            addToast({ title: 'Error', message: 'Failed to delete job.', type: 'error' });
+            addToast({ title: t('companyFlow.errorTitle'), message: t('companyFlow.manageJobs.deleteError'), type: 'error' });
           } finally {
             setSaving(false);
           }
         }}
         open={Boolean(deleteTarget)}
-        title="Delete job"
+        title={t('companyFlow.manageJobs.deleteTitle')}
         variant="danger"
       />
     </>
@@ -918,15 +928,17 @@ export function CompanyManageJobs() {
 }
 
 export function CompanyCreateJobPost() {
+  const { t } = useTranslation();
   return (
     <>
-      <CompanyPageHeader eyebrow="Create Job" title="Create job post" description="Build a complete job post and save it as a draft or publish it immediately." />
+      <CompanyPageHeader eyebrow={t('companyFlow.createPost.eyebrow')} title={t('companyFlow.createPost.title')} description={t('companyFlow.createPost.description')} />
       <JobForm mode="create" />
     </>
   );
 }
 
 export function CompanyEditJobPost() {
+  const { t } = useTranslation();
   const params = useParams();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -939,17 +951,18 @@ export function CompanyEditJobPost() {
   }, [params]);
 
   if (loading) return <FullPageSpinner />;
-  if (!job) return <NotFoundState title="Job not found" message="This job post is unavailable." />;
+  if (!job) return <NotFoundState title={t('companyFlow.editPost.notFoundTitle')} message={t('companyFlow.editPost.notFoundMessage')} />;
 
   return (
     <>
-      <CompanyPageHeader eyebrow="Edit Job" title={job.title} description="Update job details, requirements, and hiring expectations." />
+      <CompanyPageHeader eyebrow={t('companyFlow.editPost.eyebrow')} title={job.title} description={t('companyFlow.editPost.description')} />
       <JobForm initialJob={job} mode="edit" />
     </>
   );
 }
 
 export function CompanyJobPostPreview() {
+  const { t } = useTranslation();
   const params = useParams();
   const { addToast } = useToast();
   const [job, setJob] = useState(null);
@@ -966,34 +979,35 @@ export function CompanyJobPostPreview() {
     try {
       const updated = await companyDataService.toggleJobStatus(job.id);
       setJob(updated);
-      addToast({ title: 'Job status updated', message: `${updated.title} is now ${updated.status}.` });
+      addToast({ title: t('companyFlow.manageJobs.statusUpdatedTitle'), message: t('companyFlow.manageJobs.statusUpdatedMessage', { title: updated.title, status: updated.status }) });
     } catch (e) {
-      addToast({ title: 'Error', message: 'Failed to update status.', type: 'error' });
+      addToast({ title: t('companyFlow.errorTitle'), message: t('companyFlow.preview.statusUpdateError'), type: 'error' });
     }
   };
 
   if (loading) return <FullPageSpinner />;
-  if (!job) return <NotFoundState title="Preview unavailable" message="This job post could not be found." />;
+  if (!job) return <NotFoundState title={t('companyFlow.preview.notFoundTitle')} message={t('companyFlow.preview.notFoundMessage')} />;
 
   return (
     <>
       <CompanyPageHeader
-        actions={<><Link className={buttonSecondary} to={`/company/jobs/${job.id}/edit`}>Back to Edit</Link><button className={buttonPrimary} onClick={toggle}>{job.status === 'active' ? 'Pause' : 'Publish'}</button><Link className={buttonSecondary} to={`/company/jobs/${job.id}/applicants`}>View Applicants</Link></>}
-        eyebrow="Job Preview"
+        actions={<><Link className={buttonSecondary} to={`/company/jobs/${job.id}/edit`}>{t('companyFlow.preview.backToEdit')}</Link><button className={buttonPrimary} onClick={toggle}>{job.status === 'active' ? t('companyFlow.preview.pause') : t('companyFlow.preview.publish')}</button><Link className={buttonSecondary} to={`/company/jobs/${job.id}/applicants`}>{t('companyFlow.preview.viewApplicants')}</Link></>}
+        eyebrow={t('companyFlow.preview.eyebrow')}
         title={job.title}
         description={`${job.location} · ${job.workMode} · ${job.type}`}
       />
-      <Section title="Preview">
+      <Section title={t('companyFlow.preview.previewTitle')}>
         <div className="flex items-center justify-between"><CompanyStatusBadge status={job.status} /><p className="font-h2 text-h2 text-primary">{salary(job)}</p></div>
         <p className="font-body-lg text-body-lg text-on-surface-variant">{job.description}</p>
         <div className="flex flex-wrap gap-unit">{job.requiredSkills.map((skill) => <CompanySkillTag key={skill}>{skill}</CompanySkillTag>)}</div>
-        <ul className="list-disc pl-6 text-on-surface-variant space-y-unit">{job.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul>
+        <ul className="list-disc ps-6 text-on-surface-variant space-y-unit">{job.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul>
       </Section>
     </>
   );
 }
 
 export function CompanyJobDetails() {
+  const { t } = useTranslation();
   const params = useParams();
   const navigate = useNavigate();
   const { addToast } = useToast();
@@ -1029,48 +1043,48 @@ export function CompanyJobDetails() {
   const { setShortlistTarget, setRejectTarget, setApproveTarget, modals } = useApplicantActions(fetchData);
 
   if (loading) return <FullPageSpinner />;
-  if (!job) return <NotFoundState title="Job not found" message="This job post is unavailable." />;
+  if (!job) return <NotFoundState title={t('companyFlow.jobDetails.notFoundTitle')} message={t('companyFlow.jobDetails.notFoundMessage')} />;
 
   const averageScore = applicants.length ? Math.round(applicants.reduce((sum, item) => sum + item.matchScore, 0) / applicants.length) : 0;
 
   return (
     <>
       <CompanyPageHeader
-        actions={<><Link className={buttonSecondary} to={`/company/jobs/${job.id}/applicants`}>View Applicants</Link><Link className={buttonSecondary} to={`/company/jobs/${job.id}/edit`}>Edit Job</Link><Link className={buttonSecondary} to={`/company/jobs/${job.id}/preview`}>Preview</Link><button className={buttonPrimary} onClick={async () => { const updated = await companyDataService.toggleJobStatus(job.id); setJob(updated); addToast({ title: 'Job status updated', message: `${updated.title} is now ${updated.status}.` }); }}>{job.status === 'active' ? 'Pause' : 'Publish'}</button><button className={buttonDanger} onClick={() => setDeleteOpen(true)}>Delete</button></>}
-        eyebrow="Job Details"
+        actions={<><Link className={buttonSecondary} to={`/company/jobs/${job.id}/applicants`}>{t('companyFlow.jobDetails.viewApplicants')}</Link><Link className={buttonSecondary} to={`/company/jobs/${job.id}/edit`}>{t('companyFlow.jobDetails.editJob')}</Link><Link className={buttonSecondary} to={`/company/jobs/${job.id}/preview`}>{t('companyFlow.jobDetails.preview')}</Link><button className={buttonPrimary} onClick={async () => { const updated = await companyDataService.toggleJobStatus(job.id); setJob(updated); addToast({ title: t('companyFlow.manageJobs.statusUpdatedTitle'), message: t('companyFlow.manageJobs.statusUpdatedMessage', { title: updated.title, status: updated.status }) }); }}>{job.status === 'active' ? t('companyFlow.jobDetails.pause') : t('companyFlow.jobDetails.publish')}</button><button className={buttonDanger} onClick={() => setDeleteOpen(true)}>{t('companyFlow.jobDetails.delete')}</button></>}
+        eyebrow={t('companyFlow.jobDetails.eyebrow')}
         title={job.title}
         description={`${job.location} · ${job.workMode} · ${salary(job)}`}
       />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter">
-        <CompanyStatsCard icon="visibility" label="Views" value={job.views} />
-        <CompanyStatsCard icon="group" label="Applicants" value={applicants.length} />
-        <CompanyStatsCard icon="analytics" label="Avg. match" value={`${averageScore}%`} />
-        <CompanyStatsCard icon="work" label="Status" value={<CompanyStatusBadge status={job.status} />} />
+        <CompanyStatsCard icon="visibility" label={t('companyFlow.jobDetails.views')} value={job.views} />
+        <CompanyStatsCard icon="group" label={t('companyFlow.jobDetails.applicants')} value={applicants.length} />
+        <CompanyStatsCard icon="analytics" label={t('companyFlow.jobDetails.avgMatch')} value={`${averageScore}%`} />
+        <CompanyStatsCard icon="work" label={t('companyFlow.jobDetails.status')} value={<CompanyStatusBadge status={job.status} />} />
       </div>
-      <Section title="Job overview">
+      <Section title={t('companyFlow.jobDetails.jobOverview')}>
         <p className="font-body-lg text-body-lg text-on-surface-variant">{job.description}</p>
         <div className="flex flex-wrap gap-unit">{job.requiredSkills.map((skill) => <CompanySkillTag key={skill}>{skill}</CompanySkillTag>)}</div>
-        <ul className="list-disc pl-6 text-on-surface-variant space-y-unit">{job.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul>
-        <p className="text-on-surface-variant">Experience: {job.experienceLevel} · Education: {job.education}</p>
+        <ul className="list-disc ps-6 text-on-surface-variant space-y-unit">{job.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul>
+        <p className="text-on-surface-variant">{t('companyFlow.jobDetails.experiencePrefix')}: {job.experienceLevel} · {t('companyFlow.jobDetails.educationPrefix')}: {job.education}</p>
       </Section>
-      <Section title="Recent applicants">
+      <Section title={t('companyFlow.jobDetails.recentApplicants')}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-stack-md">
           {applicants.slice(0, 4).map((applicant) => <CompanyApplicantCard applicant={applicant} key={applicant.id} onReject={setRejectTarget} onShortlist={setShortlistTarget} onApprove={setApproveTarget} />)}
-          {!applicants.length && <p className="text-on-surface-variant">No applicants yet.</p>}
+          {!applicants.length && <p className="text-on-surface-variant">{t('companyFlow.jobDetails.noApplicants')}</p>}
         </div>
       </Section>
       {modals}
       <ConfirmModal
-        confirmLabel="Delete Job"
-        message={`Delete ${job.title}?`}
+        confirmLabel={t('companyFlow.jobDetails.deleteConfirm')}
+        message={t('companyFlow.jobDetails.deleteMessage', { title: job.title })}
         onCancel={() => setDeleteOpen(false)}
         onConfirm={async () => {
           await companyDataService.deleteCompanyJob(job.id);
-          addToast({ title: 'Job deleted', message: `${job.title} was removed.` });
+          addToast({ title: t('companyFlow.jobDetails.deletedTitle'), message: t('companyFlow.jobDetails.deletedMessage', { title: job.title }) });
           navigate(ROUTES.COMPANY_JOBS);
         }}
         open={deleteOpen}
-        title="Delete job"
+        title={t('companyFlow.jobDetails.deleteTitle')}
         variant="danger"
       />
     </>
@@ -1078,6 +1092,7 @@ export function CompanyJobDetails() {
 }
 
 export function CompanyApplicants() {
+  const { t } = useTranslation();
   const params = useParams();
   const jobId = jobParam(params);
 
@@ -1099,7 +1114,7 @@ export function CompanyApplicants() {
         setApplicants(a);
       } else {
         const a = await companyDataService.getApplicants({ ...filters, page });
-        setJob({ title: 'All Jobs' });
+        setJob({ title: t('companyFlow.applicants.allJobsLabel') });
         setApplicants(a);
       }
     } catch (e) {
@@ -1118,18 +1133,22 @@ export function CompanyApplicants() {
   };
 
   if (loading && !job) return <FullPageSpinner />;
-  if (!job) return <NotFoundState title="Job not found" message="Applicants cannot be loaded for this job." />;
+  if (!job) return <NotFoundState title={t('companyFlow.applicants.notFoundTitle')} message={t('companyFlow.applicants.notFoundMessage')} />;
 
   return (
     <>
-      <CompanyPageHeader eyebrow="Smart ATS" title={`Applicants for ${job.title}`} description="Review AI match scores, skill gaps, and candidate status." />
+      <CompanyPageHeader eyebrow={t('companyFlow.applicants.eyebrow')} title={t('companyFlow.applicants.title', { title: job.title })} description={t('companyFlow.applicants.description')} />
       <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient p-stack-md grid grid-cols-1 md:grid-cols-[1fr_180px_200px] gap-stack-md">
-        <TextInput onChange={(event) => updateFilters('query', event.target.value)} placeholder="Search by name, title, skill, or status" value={filters.query} />
+        <TextInput onChange={(event) => updateFilters('query', event.target.value)} placeholder={t('companyFlow.applicants.searchPlaceholder')} value={filters.query} />
         <SelectInput onChange={(event) => updateFilters('status', event.target.value)} value={filters.status}>
-          <option value="all">All</option><option value="new">New</option><option value="under_review">Under Review</option><option value="shortlisted">Shortlisted</option><option value="rejected">Rejected</option>
+          {['all', 'new', 'under_review', 'shortlisted', 'rejected'].map((s) => (
+            <option key={s} value={s}>{t(`companyFlow.applicants.statusOptions.${s}`)}</option>
+          ))}
         </SelectInput>
         <SelectInput onChange={(event) => updateFilters('sort', event.target.value)} value={filters.sort}>
-          <option value="match">Match score</option><option value="newest">Newest</option><option value="experience">Years experience</option>
+          {['match', 'newest', 'experience'].map((s) => (
+            <option key={s} value={s}>{t(`companyFlow.applicants.sortOptions.${s}`)}</option>
+          ))}
         </SelectInput>
       </div>
 
@@ -1146,6 +1165,7 @@ export function CompanyApplicants() {
 }
 
 export function CompanyApplicantProfile() {
+  const { t } = useTranslation();
   const params = useParams();
   const [applicant, setApplicant] = useState(null);
   const [job, setJob] = useState(null);
@@ -1169,7 +1189,7 @@ export function CompanyApplicantProfile() {
   const { setShortlistTarget, setRejectTarget, setApproveTarget, modals } = useApplicantActions(fetchData);
 
   if (loading) return <FullPageSpinner />;
-  if (!applicant) return <NotFoundState title="Applicant not found" message="This candidate record is unavailable." />;
+  if (!applicant) return <NotFoundState title={t('companyFlow.applicantProfile.notFoundTitle')} message={t('companyFlow.applicantProfile.notFoundMessage')} />;
 
   const isShortlisted = String(applicant.status || '').toLowerCase() === 'shortlisted';
   const messagePath = applicant.userId ? `${ROUTES.COMPANY_MESSAGES}?user=${applicant.userId}&job=${applicant.jobId}&application=${applicant.id}&name=${encodeURIComponent(applicant.name)}` : ROUTES.COMPANY_MESSAGES;
@@ -1178,20 +1198,20 @@ export function CompanyApplicantProfile() {
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-stack-sm w-full">
       <button className={`${buttonPrimary} ${profileActionBase}`} onClick={() => setApproveTarget(applicant)}>
         <span className="material-symbols-outlined text-[18px]">verified</span>
-        Approve
+        {t('companyFlow.applicantProfile.approve')}
       </button>
       <button className={`${isShortlisted ? buttonSecondary : buttonPrimary} ${profileActionBase}`} onClick={() => setShortlistTarget({ ...applicant, nextStatus: isShortlisted ? 'under_review' : 'shortlisted' })}>
         <span className="material-symbols-outlined text-[18px]">{isShortlisted ? 'undo' : 'check_circle'}</span>
-        {isShortlisted ? 'Unshortlist' : 'Shortlist'}
+        {isShortlisted ? t('companyFlow.applicantProfile.unshortlist') : t('companyFlow.applicantProfile.shortlist')}
       </button>
-      {isShortlisted ? <Link className={`${buttonSecondary} ${profileActionBase}`} to={messagePath}><span className="material-symbols-outlined text-[18px]">chat</span>Message Candidate</Link> : <div className={`${profileActionBase} hidden sm:block invisible`} />}
+      {isShortlisted ? <Link className={`${buttonSecondary} ${profileActionBase}`} to={messagePath}><span className="material-symbols-outlined text-[18px]">chat</span>{t('companyFlow.applicantProfile.messageCandidate')}</Link> : <div className={`${profileActionBase} hidden sm:block invisible`} />}
     </div>
   );
   const secondaryActions = (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-stack-sm w-full">
       <button className={`${buttonDanger} ${profileActionBase}`} onClick={() => setRejectTarget(applicant)}>
         <span className="material-symbols-outlined text-[18px]">cancel</span>
-        Reject
+        {t('companyFlow.applicantProfile.reject')}
       </button>
       <button className={`${buttonSecondary} ${profileActionBase}`} onClick={async () => {
         const blob = await companyDataService.getApplicantCV(applicant.id);
@@ -1203,11 +1223,11 @@ export function CompanyApplicantProfile() {
         link.click();
       }}>
         <span className="material-symbols-outlined text-[18px]">download</span>
-        Download CV
+        {t('companyFlow.applicantProfile.downloadCv')}
       </button>
       <Link className={`${buttonSecondary} ${profileActionBase}`} to={`/company/jobs/${applicant.jobId}/applicants`}>
         <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-        Back to Applicants
+        {t('companyFlow.applicantProfile.backToApplicants')}
       </Link>
     </div>
   );
@@ -1216,14 +1236,14 @@ export function CompanyApplicantProfile() {
     <>
       <CompanyPageHeader
         actions={<div className="w-full sm:w-auto flex flex-col gap-stack-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-stack-sm shadow-sm">{primaryActions}{secondaryActions}</div>}
-        eyebrow="Applicant Profile"
+        eyebrow={t('companyFlow.applicantProfile.eyebrow')}
         title={applicant.name}
-        description={`${applicant.title} for ${job?.title || 'selected role'}`}
+        description={t('companyFlow.applicantProfile.applicantSubtitle', { title: applicant.title, job: job?.title || t('companyFlow.applicantProfile.selectedRole') })}
       />
       <div className="flex flex-col gap-8">
         <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
           <div className="h-32 bg-secondary/10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-10 transform translate-x-1/4 -translate-y-1/4">
+            <div className="absolute top-0 end-0 p-8 opacity-10 transform translate-x-1/4 -translate-y-1/4">
               <span className="material-symbols-outlined text-[150px] text-secondary">person</span>
             </div>
           </div>
@@ -1236,22 +1256,22 @@ export function CompanyApplicantProfile() {
                 <h1 className="font-display text-h2 text-primary">{applicant.name}</h1>
                 <p className="font-body-lg text-on-surface-variant mt-1 flex items-center gap-2">
                   <span className="material-symbols-outlined text-[18px]">email</span>
-                  {applicant.email || 'No email available'}
+                  {applicant.email || t('companyFlow.applicantProfile.noEmail')}
                 </p>
                 {applicant.location && <p className="font-body-md text-on-surface-variant mt-1 flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">location_on</span>{applicant.location}</p>}
                 {applicant.phone && <p className="font-body-md text-on-surface-variant mt-1 flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">call</span>{applicant.phone}</p>}
               </div>
               <div className="grid grid-cols-1 md:grid-cols-[180px_160px_minmax(260px,1fr)] gap-3 items-stretch">
                 <div className="bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 min-h-[96px] flex flex-col justify-center">
-                  <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2">Application status</p>
+                  <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2">{t('companyFlow.applicantProfile.applicationStatus')}</p>
                   <CompanyStatusBadge status={applicant.status} />
                 </div>
                 <div className="bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 min-h-[96px] flex flex-col justify-center">
-                  <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2 flex items-center gap-2"><span className="material-symbols-outlined text-[16px]">work</span>Experience</p>
-                  <p className="font-h3 text-primary">{applicant.yearsExperience} years</p>
+                  <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2 flex items-center gap-2"><span className="material-symbols-outlined text-[16px]">work</span>{t('companyFlow.applicantProfile.experience')}</p>
+                  <p className="font-h3 text-primary">{t('companyFlow.applicantProfile.yearsLabel', { years: applicant.yearsExperience })}</p>
                 </div>
                 <div className="bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 min-h-[96px] flex flex-col justify-center">
-                  <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2 flex items-center gap-2"><span className="material-symbols-outlined text-[16px]">school</span>Education</p>
+                  <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2 flex items-center gap-2"><span className="material-symbols-outlined text-[16px]">school</span>{t('companyFlow.applicantProfile.education')}</p>
                   <p className="font-body-md text-primary leading-relaxed" title={applicant.education}>{applicant.education}</p>
                 </div>
               </div>
@@ -1259,17 +1279,17 @@ export function CompanyApplicantProfile() {
 
             <div className="mt-6 pt-6 border-t border-outline-variant grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
               <div>
-                <h3 className="font-h3 text-primary mb-3">Top Skills</h3>
+                <h3 className="font-h3 text-primary mb-3">{t('companyFlow.applicantProfile.topSkills')}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {applicant.skills?.length > 0 ? applicant.skills.map((skill) => <CompanySkillTag key={skill}>{skill}</CompanySkillTag>) : <p className="text-sm italic text-on-surface-variant">No skills listed.</p>}
+                  {applicant.skills?.length > 0 ? applicant.skills.map((skill) => <CompanySkillTag key={skill}>{skill}</CompanySkillTag>) : <p className="text-sm italic text-on-surface-variant">{t('companyFlow.applicantProfile.noSkills')}</p>}
                 </div>
               </div>
               <Link to={`/company/applicants/${applicant.id}/matching`} className="block bg-surface-container-low rounded-xl p-4 border border-outline-variant hover:border-secondary hover:shadow-hover transition-all">
-                <p className="font-h3 text-primary mb-3">AI match</p>
+                <p className="font-h3 text-primary mb-3">{t('companyFlow.applicantProfile.aiMatch')}</p>
                 <div className="flex justify-center"><ApplicantMatchScore score={applicant.matchScore} size="lg" /></div>
-                <p className="font-label-md text-label-md text-primary mt-4 mb-2">Missing skills</p>
+                <p className="font-label-md text-label-md text-primary mt-4 mb-2">{t('companyFlow.applicantProfile.missingSkills')}</p>
                 <div className="flex flex-wrap gap-2">
-                  {applicant.missingSkills?.length ? applicant.missingSkills.map((skill) => <CompanySkillTag tone="missing" key={skill}>{skill}</CompanySkillTag>) : <CompanySkillTag tone="matched">No missing skills detected</CompanySkillTag>}
+                  {applicant.missingSkills?.length ? applicant.missingSkills.map((skill) => <CompanySkillTag tone="missing" key={skill}>{skill}</CompanySkillTag>) : <CompanySkillTag tone="matched">{t('companyFlow.applicantProfile.noMissingDetected')}</CompanySkillTag>}
                 </div>
               </Link>
             </div>
@@ -1282,10 +1302,12 @@ export function CompanyApplicantProfile() {
 }
 
 export function CompanyApplicantCvViewer() {
-  return <NotFoundState title="CV Viewer unavailable" message="CV viewing is partially mocked and relies on download right now." />;
+  const { t } = useTranslation();
+  return <NotFoundState title={t('companyFlow.cvViewer.title')} message={t('companyFlow.cvViewer.message')} />;
 }
 
 export function CompanyApplicantMatchingDetails() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [applicant, setApplicant] = useState(null);
   const [job, setJob] = useState(null);
@@ -1309,20 +1331,20 @@ export function CompanyApplicantMatchingDetails() {
   const { setShortlistTarget, setRejectTarget, setApproveTarget, modals } = useApplicantActions(fetchData);
 
   if (loading) return <FullPageSpinner />;
-  if (!applicant || !job) return <NotFoundState title="Matching details unavailable" message="Applicant or job data could not be found." />;
-  const recommendation = applicant.matchScore >= 85 ? 'Strong candidate' : applicant.matchScore >= 70 ? 'Needs review' : 'Low match';
+  if (!applicant || !job) return <NotFoundState title={t('companyFlow.matching.notFoundTitle')} message={t('companyFlow.matching.notFoundMessage')} />;
+  const recommendation = applicant.matchScore >= 85 ? t('companyFlow.matching.strong') : applicant.matchScore >= 70 ? t('companyFlow.matching.needsReview') : t('companyFlow.matching.low');
 
   return (
     <>
       <CompanyPageHeader
-        actions={<div className="flex flex-col items-start sm:items-end gap-unit"><div className="flex flex-wrap gap-unit"><button className={buttonPrimary} onClick={() => setApproveTarget(applicant)}>Approve</button><button className={buttonSecondary} onClick={() => setShortlistTarget({ ...applicant, nextStatus: 'shortlisted' })}>Shortlist</button></div><div className="flex flex-wrap gap-unit"><button className={buttonDanger} onClick={() => setRejectTarget(applicant)}>Reject</button><Link className={buttonSecondary} to={`/company/applicants/${applicant.id}`}>View Profile</Link></div></div>}
-        eyebrow="AI Matching Details"
+        actions={<div className="flex flex-col items-start sm:items-end gap-unit"><div className="flex flex-wrap gap-unit"><button className={buttonPrimary} onClick={() => setApproveTarget(applicant)}>{t('companyFlow.matching.approve')}</button><button className={buttonSecondary} onClick={() => setShortlistTarget({ ...applicant, nextStatus: 'shortlisted' })}>{t('companyFlow.matching.shortlist')}</button></div><div className="flex flex-wrap gap-unit"><button className={buttonDanger} onClick={() => setRejectTarget(applicant)}>{t('companyFlow.matching.reject')}</button><Link className={buttonSecondary} to={`/company/applicants/${applicant.id}`}>{t('companyFlow.matching.viewProfile')}</Link></div></div>}
+        eyebrow={t('companyFlow.matching.eyebrow')}
         title={`${applicant.name} · ${recommendation}`}
-        description={`Evaluated against ${job.title}.`}
+        description={t('companyFlow.matching.evaluatedAgainst', { title: job.title })}
       />
       <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-8">
         <div className="flex flex-col gap-6">
-          <Section title="Match Score">
+          <Section title={t('companyFlow.matching.matchScore')}>
             <div className="flex justify-center py-4 border-b border-outline-variant mb-4">
               <ApplicantMatchScore score={applicant.matchScore} size="lg" />
             </div>
@@ -1331,7 +1353,7 @@ export function CompanyApplicantMatchingDetails() {
             </div>
           </Section>
         </div>
-        <Section title="Required skills checklist">
+        <Section title={t('companyFlow.matching.requiredChecklist')}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {job.requiredSkills.length ? job.requiredSkills.map((skill) => {
               const normalize = (value) => String(value || '').trim().toLowerCase();
@@ -1345,15 +1367,15 @@ export function CompanyApplicantMatchingDetails() {
                   <span className="font-body-md text-primary font-medium">{skill}</span>
                 </div>
               );
-            }) : <CompanyEmptyState title="No required skills" message="This job does not have required skills configured yet." />}
+            }) : <CompanyEmptyState title={t('companyFlow.matching.noRequiredTitle')} message={t('companyFlow.matching.noRequiredMessage')} />}
           </div>
           <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm space-y-3">
-            <p className="text-on-surface-variant font-body-md flex items-center gap-2"><span className="material-symbols-outlined text-secondary">work</span> Experience match: <span className="font-bold text-primary">{applicant.yearsExperience} years</span> for a {job.experienceLevel} role.</p>
-            <p className="text-on-surface-variant font-body-md flex items-center gap-2"><span className="material-symbols-outlined text-secondary">school</span> Education match: <span className="font-bold text-primary">{applicant.education}</span></p>
+            <p className="text-on-surface-variant font-body-md flex items-center gap-2"><span className="material-symbols-outlined text-secondary">work</span> {t('companyFlow.matching.expMatch')} <span className="font-bold text-primary">{t('companyFlow.matching.expValue', { years: applicant.yearsExperience })}</span> {t('companyFlow.matching.expSuffix', { level: job.experienceLevel })}</p>
+            <p className="text-on-surface-variant font-body-md flex items-center gap-2"><span className="material-symbols-outlined text-secondary">school</span> {t('companyFlow.matching.eduMatch')} <span className="font-bold text-primary">{applicant.education}</span></p>
             <div className="border-t border-outline-variant pt-3 mt-3">
               <p className="font-h3 text-h3 text-primary flex items-center gap-2">
                 <span className="material-symbols-outlined text-secondary">psychology</span>
-                Recommendation: <span className={applicant.matchScore >= 85 ? 'text-success' : applicant.matchScore >= 70 ? 'text-secondary' : 'text-error'}>{recommendation}</span>
+                {t('companyFlow.matching.recommendation')} <span className={applicant.matchScore >= 85 ? 'text-success' : applicant.matchScore >= 70 ? 'text-secondary' : 'text-error'}>{recommendation}</span>
               </p>
             </div>
           </div>
@@ -1365,6 +1387,7 @@ export function CompanyApplicantMatchingDetails() {
 }
 
 export function CompanyNotifications() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { addToast } = useToast();
   const [filter, setFilter] = useState('all');
@@ -1379,7 +1402,7 @@ export function CompanyNotifications() {
       })
       .catch((error) => {
         console.error(error);
-        addToast({ title: 'Notifications unavailable', message: 'Could not load company notifications.', type: 'error' });
+        addToast({ title: t('companyFlow.notifications.errorTitle'), message: t('companyFlow.notifications.errorMessage'), type: 'error' });
       })
       .finally(() => setLoading(false));
   }, [addToast]);
@@ -1410,7 +1433,7 @@ export function CompanyNotifications() {
       refresh();
     } catch (error) {
       console.error(error);
-      addToast({ title: 'Update failed', message: 'Could not mark notifications as read.', type: 'error' });
+      addToast({ title: t('companyFlow.errorTitle'), message: t('companyFlow.notifications.markAllError'), type: 'error' });
     }
   };
 
@@ -1437,27 +1460,27 @@ export function CompanyNotifications() {
   return (
     <div className="w-full max-w-7xl space-y-gutter">
       <CompanyPageHeader
-        actions={<button className={buttonSecondary} disabled={!unreadCount} onClick={markAll} type="button"><span className="material-symbols-outlined text-[18px]">done_all</span>Mark all as read</button>}
-        eyebrow="Notifications"
-        title="Company notifications"
-        description="Monitor applicant, job, message, and view updates."
+        actions={<button className={buttonSecondary} disabled={!unreadCount} onClick={markAll} type="button"><span className="material-symbols-outlined text-[18px]">done_all</span>{t('companyFlow.notifications.markAll')}</button>}
+        eyebrow={t('companyFlow.notifications.eyebrow')}
+        title={t('companyFlow.notifications.title')}
+        description={t('companyFlow.notifications.description')}
       />
-      <div className="flex flex-wrap gap-unit">{['all', 'unread', 'messages', 'applications', 'views'].map((item) => <button className={`${filter === item ? 'bg-secondary text-on-secondary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'} px-stack-md py-stack-sm rounded-lg font-label-md text-label-md capitalize transition-colors`} key={item} onClick={() => setFilter(item)} type="button">{item}</button>)}</div>
+      <div className="flex flex-wrap gap-unit">{['all', 'unread', 'messages', 'applications', 'views'].map((item) => <button className={`${filter === item ? 'bg-secondary text-on-secondary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'} px-stack-md py-stack-sm rounded-lg font-label-md text-label-md transition-colors`} key={item} onClick={() => setFilter(item)} type="button">{t(`companyFlow.notifications.filters.${item}`)}</button>)}</div>
       <section className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest shadow-ambient">
-        {loading ? <FullPageSpinner /> : (!visibleNotifications.length ? <CompanyEmptyState title="No notifications" message="No notifications match this filter." /> : visibleNotifications.map((notification) => {
+        {loading ? <FullPageSpinner /> : (!visibleNotifications.length ? <CompanyEmptyState title={t('companyFlow.notifications.emptyTitle')} message={t('companyFlow.notifications.emptyMessage')} /> : visibleNotifications.map((notification) => {
           const type = notification.type || notification.data?.type;
           const tone = toneFor(type);
           const unread = !notification.read_at && !notification.read;
 
           return (
-            <button className={`w-full border-b border-outline-variant p-stack-lg text-left transition-colors last:border-b-0 ${unread ? 'bg-secondary-container/10 hover:bg-secondary-container/20' : 'hover:bg-surface-container-low'}`} key={notification.id} onClick={() => openNotification(notification)} type="button">
+            <button className={`w-full border-b border-outline-variant p-stack-lg text-start transition-colors last:border-b-0 ${unread ? 'bg-secondary-container/10 hover:bg-secondary-container/20' : 'hover:bg-surface-container-low'}`} key={notification.id} onClick={() => openNotification(notification)} type="button">
               <div className="flex items-start gap-stack-md">
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${tone.className}`}>
                   <span className="material-symbols-outlined">{notification.icon || tone.icon}</span>
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
-                    <h3 className={`font-h3 text-h3 ${unread ? 'text-primary' : 'text-on-surface'}`}>{notification.title || notification.data?.title || 'Notification'}</h3>
+                    <h3 className={`font-h3 text-h3 ${unread ? 'text-primary' : 'text-on-surface'}`}>{notification.title || notification.data?.title || t('companyFlow.notifications.fallbackTitle')}</h3>
                     <span className="whitespace-nowrap text-label-sm text-on-surface-variant">{new Date(notification.created_at || Date.now()).toLocaleString()}</span>
                   </div>
                   <p className="mt-unit text-body-md text-on-surface-variant">{notification.message || notification.data?.message}</p>
@@ -1473,6 +1496,7 @@ export function CompanyNotifications() {
 }
 
 export function CompanyMessages() {
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const { addToast } = useToast();
   const [conversations, setConversations] = useState([]);
@@ -1564,14 +1588,14 @@ export function CompanyMessages() {
         nextConversations = [{
           id: `draft-${targetUser}-${targetJob || 'general'}`,
           other_user_id: Number(targetUser),
-          candidate: targetName || 'Selected candidate',
-          role: targetJob ? 'Job conversation' : 'General conversation',
+          candidate: targetName || t('companyFlow.messages.selectedCandidate'),
+          role: targetJob ? t('companyFlow.messages.jobConversation') : t('companyFlow.messages.generalConversation'),
           job_id: targetJob ? Number(targetJob) : null,
           application_id: targetApplication ? Number(targetApplication) : null,
           last_message: '',
-          time: 'New',
+          time: t('companyFlow.messages.newTag'),
           unread: false,
-          status: 'Shortlisted',
+          status: t('companyFlow.messages.shortlistedFallback'),
         }, ...nextConversations];
       }
 
@@ -1611,7 +1635,7 @@ export function CompanyMessages() {
 
     try {
       const sent = await companyDataService.sendCompanyMessage(conv.other_user_id, newMessage, conv.job_id);
-      setMessages(prev => [...prev, { id: sent.id, from: 'You', text: sent.content, created_at: sent.created_at }]);
+      setMessages(prev => [...prev, { id: sent.id, from: t('companyFlow.messages.youLabel'), text: sent.content, created_at: sent.created_at }]);
       setNewMessage('');
     } catch (e) {
       console.error(e);
@@ -1626,12 +1650,13 @@ export function CompanyMessages() {
 
     // strip _passed if user is rescheduling
     const cleanTime = interviewTime.replace('_passed', '');
-    const formatted = new Date(cleanTime).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
-    const text = `Interview scheduled for ${formatted}. Please confirm your availability.`;
+    const dateLocale = i18n.language === 'ar' ? 'ar-EG' : 'en-US';
+    const formatted = new Date(cleanTime).toLocaleString(dateLocale, { dateStyle: 'medium', timeStyle: 'short' });
+    const text = t('companyFlow.messages.interviewScheduledText', { date: formatted });
 
     try {
       const sent = await companyDataService.sendCompanyMessage(conv.other_user_id, text, conv.job_id, { interview_at: cleanTime });
-      setMessages(prev => [...prev, { id: sent.id, from: 'You', text: sent.content, created_at: sent.created_at }]);
+      setMessages(prev => [...prev, { id: sent.id, from: t('companyFlow.messages.youLabel'), text: sent.content, created_at: sent.created_at }]);
 
       const payload = {
         time: cleanTime,
@@ -1707,7 +1732,7 @@ export function CompanyMessages() {
           setMessages(prevMessages);
           setActiveId(prevActiveId);
         }
-        addToast({ title: 'Error', message: 'Failed to delete chat.', type: 'error' });
+        addToast({ title: t('companyFlow.errorTitle'), message: t('companyFlow.messages.deleteError'), type: 'error' });
       }
       setUndoTarget((current) => current === target ? null : current);
     }, 5000);
@@ -1718,34 +1743,34 @@ export function CompanyMessages() {
       <div className="h-full min-h-0 overflow-hidden flex flex-col gap-3">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 shrink-0">
           <div>
-            <p className="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-1">Messages</p>
-            <h1 className="font-h2 text-h2 text-primary">Candidate conversations</h1>
+            <p className="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-1">{t('companyFlow.messages.eyebrow')}</p>
+            <h1 className="font-h2 text-h2 text-primary">{t('companyFlow.messages.title')}</h1>
           </div>
           <button className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 shadow-sm ${muteAllMessages ? 'bg-surface-container-high text-on-surface-variant border border-outline-variant' : 'bg-secondary text-on-secondary hover:opacity-90'} ${mutePulse === 'all' ? 'animate-scale-in' : ''}`} onClick={toggleMuteAllMessages}>
             <span className="material-symbols-outlined text-[20px]">{muteAllMessages ? 'notifications_off' : 'notifications_active'}</span>
-            {muteAllMessages ? 'Unmute all messages' : 'Mute all messages'}
+            {muteAllMessages ? t('companyFlow.messages.unmuteAll') : t('companyFlow.messages.muteAll')}
           </button>
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-[360px_1fr] gap-5 flex-1 min-h-0 overflow-hidden">
           <section className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient overflow-hidden flex flex-col min-h-0">
             <div className="px-5 py-4 border-b border-outline-variant flex items-center justify-between">
-              <h2 className="font-h2 text-h2 text-primary">Inbox</h2>
-              <span className="text-sm text-on-surface-variant">{filteredConversations.length} chats</span>
+              <h2 className="font-h2 text-h2 text-primary">{t('companyFlow.messages.inbox')}</h2>
+              <span className="text-sm text-on-surface-variant">{t('companyFlow.messages.chatsCount', { count: filteredConversations.length })}</span>
             </div>
             <div className="px-4 pb-4 border-b border-outline-variant">
               <label className="relative block">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+                <span className="material-symbols-outlined absolute start-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
                 <input
-                  className="w-full rounded-full border border-outline-variant bg-surface-container-low py-2 pl-10 pr-3 text-on-surface outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                  className="w-full rounded-full border border-outline-variant bg-surface-container-low py-2 ps-10 pe-3 text-on-surface outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
                   onChange={(event) => setMessageQuery(event.target.value)}
-                  placeholder="Search candidates, roles, messages"
+                  placeholder={t('companyFlow.messages.searchPlaceholder')}
                   value={messageQuery}
                 />
               </label>
             </div>
             <div className="divide-y divide-outline-variant overflow-y-auto flex-1 p-2">
               {loading ? <FullPageSpinner /> : (
-                filteredConversations.length === 0 ? <CompanyEmptyState title="No messages" message={messageQuery ? 'No conversations match your search.' : 'You have no messages yet.'} /> :
+                filteredConversations.length === 0 ? <CompanyEmptyState title={t('companyFlow.messages.emptyTitle')} message={messageQuery ? t('companyFlow.messages.emptySearchMessage') : t('companyFlow.messages.emptyMessage')} /> :
                   filteredConversations.map((item) => (
                     <div
                       key={item.id}
@@ -1761,12 +1786,12 @@ export function CompanyMessages() {
                           <div className="flex items-start justify-between gap-3">
                             <Link className="font-h3 text-h3 text-primary hover:text-secondary truncate block" to={item.application_id ? `/company/applicants/${item.application_id}` : '#'}>{item.candidate}</Link>
                             <span className="flex shrink-0 items-center gap-2 mt-1">
-                              {mutedConversations.includes(conversationKey(item)) && <span className="material-symbols-outlined text-[16px] text-on-surface-variant" title="Muted conversation">notifications_off</span>}
+                              {mutedConversations.includes(conversationKey(item)) && <span className="material-symbols-outlined text-[16px] text-on-surface-variant" title={t('companyFlow.messages.mutedTitle')}>notifications_off</span>}
                               {item.unread && <span className="h-2.5 w-2.5 rounded-full bg-secondary" aria-hidden="true" />}
                             </span>
                           </div>
                           <p className="text-on-surface-variant text-sm truncate">{item.role}</p>
-                          <p className="mt-2 text-body-sm text-on-surface-variant truncate">{item.last_message || 'No messages yet'}</p>
+                          <p className="mt-2 text-body-sm text-on-surface-variant truncate">{item.last_message || t('companyFlow.messages.noMessagesYet')}</p>
                           <div className="mt-2 flex items-center justify-between gap-3">
                             <span className="text-body-sm text-secondary font-medium">{item.status}</span>
                             <span className="text-xs text-outline">{item.time}</span>
@@ -1795,7 +1820,7 @@ export function CompanyMessages() {
                   <div className="flex flex-col sm:flex-row gap-2 shrink-0">
                     <button className={`inline-flex items-center justify-center gap-2 rounded-full px-3 py-1.5 font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 ${mutedConversations.includes(conversationKey(active)) ? 'border border-outline-variant bg-surface-container-high text-on-surface-variant' : 'bg-secondary text-on-secondary'} ${mutePulse === conversationKey(active) ? 'animate-scale-in' : ''}`} onClick={() => toggleMuteConversation(active)}>
                       <span className="material-symbols-outlined text-[18px]">{mutedConversations.includes(conversationKey(active)) ? 'notifications_off' : 'notifications_active'}</span>
-                      {mutedConversations.includes(conversationKey(active)) ? 'Unmute Chat' : 'Mute Chat'}
+                      {mutedConversations.includes(conversationKey(active)) ? t('companyFlow.messages.unmuteChat') : t('companyFlow.messages.muteChat')}
                     </button>
                   </div>
                 </div>
@@ -1805,16 +1830,16 @@ export function CompanyMessages() {
                       <div className={`flex items-center gap-3 ${scheduledInterview.includes('_passed') ? 'text-on-surface-variant' : 'text-secondary'}`}>
                         <span className="material-symbols-outlined">{scheduledInterview.includes('_passed') ? 'history' : 'event_available'}</span>
                         <div>
-                          <p className="font-semibold text-sm">{scheduledInterview.includes('_passed') ? 'Interview passed' : 'Interview scheduled'}</p>
-                          <p className="text-sm">{new Date(scheduledInterview.replace('_passed', '')).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
+                          <p className="font-semibold text-sm">{scheduledInterview.includes('_passed') ? t('companyFlow.messages.interviewPassedTitle') : t('companyFlow.messages.interviewScheduledTitle')}</p>
+                          <p className="text-sm">{new Date(scheduledInterview.replace('_passed', '')).toLocaleString(i18n.language === 'ar' ? 'ar-EG' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
                         </div>
                       </div>
-                      <button className={`${scheduledInterview.includes('_passed') ? 'text-primary' : 'text-secondary'} font-semibold underline`} onClick={() => { setInterviewTime(scheduledInterview.includes('_passed') ? '' : scheduledInterview); setEditingInterview(true); }}>{scheduledInterview.includes('_passed') ? 'Re-interview' : 'Edit interview time'}</button>
+                      <button className={`${scheduledInterview.includes('_passed') ? 'text-primary' : 'text-secondary'} font-semibold underline`} onClick={() => { setInterviewTime(scheduledInterview.includes('_passed') ? '' : scheduledInterview); setEditingInterview(true); }}>{scheduledInterview.includes('_passed') ? t('companyFlow.messages.reinterviewLink') : t('companyFlow.messages.rescheduleLink')}</button>
                     </div>
                   ) : (
                     <div className="rounded-lg border border-dashed border-outline-variant px-3 py-1.5 text-on-surface-variant text-sm flex items-center gap-2">
                       <span className="material-symbols-outlined text-[18px]">event_busy</span>
-                      No interview scheduled yet.
+                      {t('companyFlow.messages.noInterview')}
                     </div>
                   )}
                 </div>
@@ -1834,10 +1859,10 @@ export function CompanyMessages() {
                           </div>
                           <button className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-1.5 font-semibold text-sm transition-all duration-200 shadow-sm ${interviewTime ? 'bg-secondary text-on-secondary hover:-translate-y-0.5 hover:opacity-90' : 'bg-surface-container text-on-surface-variant cursor-not-allowed opacity-50'}`} disabled={!interviewTime} onClick={handleScheduleInterview}>
                             <span className="material-symbols-outlined text-[18px]">calendar_add_on</span>
-                            {scheduledInterview ? 'Reschedule' : 'Schedule'}
+                            {scheduledInterview ? t('companyFlow.messages.reschedule') : t('companyFlow.messages.schedule')}
                           </button>
                           <button className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-1.5 font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 border border-outline-variant text-on-surface-variant hover:bg-surface-container-high" onClick={() => { setEditingInterview(false); setInterviewTime(''); }}>
-                            Cancel
+                            {t('companyFlow.cancel')}
                           </button>
                         </>
                       )}
@@ -1845,13 +1870,14 @@ export function CompanyMessages() {
                   )}
                 </div>
                 <div className="space-y-4 bg-surface-container-low px-6 py-5 flex-1 overflow-y-auto min-h-0">
-                  {messages.length === 0 ? <p className="text-on-surface-variant text-center font-body-sm italic mt-10">No messages yet.</p> :
+                  {messages.length === 0 ? <p className="text-on-surface-variant text-center font-body-sm italic mt-10">{t('companyFlow.messages.noMessagesInChat')}</p> :
                     messages.map((message, index) => {
-                      const mine = message.from === 'You';
+                      const youLabel = t('companyFlow.messages.youLabel');
+                      const mine = message.from === 'You' || message.from === youLabel;
                       return (
                         <div className={`flex ${mine ? 'justify-end' : 'justify-start'}`} key={`${active.id}-${message.id || index}`}>
                           <div className={`max-w-[75%] rounded-2xl px-5 py-3 shadow-sm ${mine ? 'bg-secondary text-on-secondary rounded-tr-none' : 'bg-surface-container-lowest border border-outline-variant rounded-tl-none'}`}>
-                            <p className={`font-label-sm text-xs mb-1 ${mine ? 'opacity-80' : 'text-on-surface-variant'}`}>{message.from}</p>
+                            <p className={`font-label-sm text-xs mb-1 ${mine ? 'opacity-80' : 'text-on-surface-variant'}`}>{mine ? youLabel : message.from}</p>
                             <p className="font-body-md leading-relaxed">{message.text}</p>
                           </div>
                         </div>
@@ -1863,19 +1889,19 @@ export function CompanyMessages() {
                 <div className="flex gap-3 p-2.5 border-t border-outline-variant bg-surface-container-lowest shrink-0">
                   <input
                     className="flex-1 rounded-full border border-outline-variant bg-surface-container-low px-5 py-2.5 outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/30 transition-all"
-                    placeholder="Type your message..."
+                    placeholder={t('companyFlow.messages.messagePlaceholder')}
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                   />
                   <button className={`${buttonPrimary} rounded-full px-5`} onClick={handleSend} disabled={!newMessage.trim()}>
                     <span className="material-symbols-outlined text-[20px]">send</span>
-                    Send
+                    {t('companyFlow.messages.send')}
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-1 items-center justify-center p-12 text-on-surface-variant border-2 border-dashed border-outline-variant rounded-xl m-6">Select a conversation from the left to start messaging.</div>
+              <div className="flex flex-1 items-center justify-center p-12 text-on-surface-variant border-2 border-dashed border-outline-variant rounded-xl m-6">{t('companyFlow.messages.selectChatPlaceholder')}</div>
             )}
           </section>
         </div>
@@ -1886,11 +1912,11 @@ export function CompanyMessages() {
           style={{ top: contextMenu.y, left: contextMenu.x }}
         >
           <button
-            className="w-full text-left px-4 py-3 flex items-center gap-2 text-error hover:bg-error-container transition-colors"
+            className="w-full text-start px-4 py-3 flex items-center gap-2 text-error hover:bg-error-container transition-colors"
             onClick={() => handleDeleteConversation(contextMenu.conversation)}
           >
             <span className="material-symbols-outlined text-[18px]">delete</span>
-            Delete Chat
+            {t('companyFlow.messages.deleteChat')}
           </button>
         </div>
       )}
@@ -1901,6 +1927,7 @@ export function CompanyMessages() {
 }
 
 export function CompanySettings() {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const { user, refreshUser } = useAuth();
 
@@ -1954,7 +1981,7 @@ export function CompanySettings() {
       setSettings(prev => ({ ...prev, currentPassword: verifyInput }));
       setVerifyTarget(null);
     } catch (e) {
-      setVerifyError('Incorrect password. Please try again.');
+      setVerifyError(t('companyFlow.settings.incorrectPassword'));
     } finally {
       setVerifying(false);
     }
@@ -1962,12 +1989,12 @@ export function CompanySettings() {
 
   const validate = () => {
     const next = {};
-    if (!settings.name.trim()) next.name = 'Name is required.';
-    if (unlockState.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(settings.email)) next.email = 'Enter a valid email.';
+    if (!settings.name.trim()) next.name = t('companyFlow.settings.nameRequired');
+    if (unlockState.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(settings.email)) next.email = t('companyFlow.settings.emailInvalid');
 
     if (unlockState.password) {
-      if (!settings.newPassword || settings.newPassword.length < 8) next.newPassword = 'Password must be at least 8 characters.';
-      if (settings.newPassword !== settings.confirmPassword) next.confirmPassword = 'Passwords must match.';
+      if (!settings.newPassword || settings.newPassword.length < 8) next.newPassword = t('companyFlow.settings.passwordMin');
+      if (settings.newPassword !== settings.confirmPassword) next.confirmPassword = t('companyFlow.settings.passwordMatch');
     }
 
     setErrors(next);
@@ -1985,14 +2012,14 @@ export function CompanySettings() {
         newPassword: unlockState.password ? settings.newPassword : undefined,
       });
 
-      addToast({ title: 'Settings saved', message: 'Account settings were updated successfully.', type: 'success' });
+      addToast({ title: t('companyFlow.settings.savedTitle'), message: t('companyFlow.settings.savedMessage'), type: 'success' });
 
       refreshUser();
 
       setSettings(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }));
       setUnlockState({ email: false, password: false });
     } catch (e) {
-      addToast({ title: 'Update failed', message: e?.response?.data?.message || 'Could not update settings.', type: 'error' });
+      addToast({ title: t('companyFlow.settings.updateFailedTitle'), message: e?.response?.data?.message || t('companyFlow.settings.updateFailedMessage'), type: 'error' });
     } finally {
       setSaving(false);
     }
@@ -2002,22 +2029,22 @@ export function CompanySettings() {
     <div className="bg-surface-container-low p-6 rounded-xl border border-outline-variant shadow-sm mt-2">
       <p className="font-h3 text-primary mb-2 flex items-center gap-2">
         <span className="material-symbols-outlined text-[20px] text-secondary">lock</span>
-        Security Check Required
+        {t('companyFlow.settings.securityTitle')}
       </p>
-      <p className="font-body-sm text-on-surface-variant mb-4">Please enter your current password to unlock {targetName} changes.</p>
+      <p className="font-body-sm text-on-surface-variant mb-4">{t('companyFlow.settings.securityHint', { target: targetName })}</p>
       <div className="flex flex-col sm:flex-row gap-3">
         <input
           type="password"
           className="flex-1 bg-surface border border-outline-variant rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
-          placeholder="Current password"
+          placeholder={t('companyFlow.settings.currentPassword')}
           value={verifyInput}
           onChange={(e) => setVerifyInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && confirmVerify()}
         />
         <div className="flex gap-2">
-          <button className={buttonSecondary} onClick={cancelVerify} disabled={verifying}>Cancel</button>
+          <button className={buttonSecondary} onClick={cancelVerify} disabled={verifying}>{t('companyFlow.cancel')}</button>
           <button className={buttonPrimary} onClick={confirmVerify} disabled={verifying || !verifyInput}>
-            {verifying ? 'Verifying...' : 'Unlock'}
+            {verifying ? t('companyFlow.settings.verifying') : t('companyFlow.settings.unlock')}
           </button>
         </div>
       </div>
@@ -2028,25 +2055,25 @@ export function CompanySettings() {
   return (
     <>
       <CompanyPageHeader
-        eyebrow="Settings"
-        title="Account Settings"
-        description="Manage your account profile, email, and password security."
+        eyebrow={t('companyFlow.settings.eyebrow')}
+        title={t('companyFlow.settings.title')}
+        description={t('companyFlow.settings.description')}
       />
       <div className="flex flex-col gap-8">
-        <Section title="Account Details">
+        <Section title={t('companyFlow.settings.accountDetails')}>
           <div className="grid grid-cols-1 gap-6">
-            <Field error={errors.name} label="Account Name">
+            <Field error={errors.name} label={t('companyFlow.settings.accountName')}>
               <TextInput onChange={(e) => update('name', e.target.value)} value={settings.name} disabled={saving} />
             </Field>
 
             <div>
-              <span className="font-label-md text-label-md text-primary block mb-1">Email Address</span>
+              <span className="font-label-md text-label-md text-primary block mb-1">{t('companyFlow.settings.emailAddress')}</span>
               {!unlockState.email ? (
-                verifyTarget === 'email' ? renderVerifyBlock('email') : (
+                verifyTarget === 'email' ? renderVerifyBlock(t('companyFlow.settings.emailAddress').toLowerCase()) : (
                   <div className="flex items-center justify-between bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5">
                     <span className="text-on-surface-variant font-body-md truncate">{user?.email}</span>
                     <button onClick={() => startVerify('email')} className="text-secondary font-semibold text-sm hover:underline flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[16px]">edit</span> Change
+                      <span className="material-symbols-outlined text-[16px]">edit</span> {t('companyFlow.settings.change')}
                     </button>
                   </div>
                 )
@@ -2058,23 +2085,23 @@ export function CompanySettings() {
             </div>
 
             <div>
-              <span className="font-label-md text-label-md text-primary block mb-1">Password</span>
+              <span className="font-label-md text-label-md text-primary block mb-1">{t('companyFlow.settings.passwordLabel')}</span>
               {!unlockState.password ? (
-                verifyTarget === 'password' ? renderVerifyBlock('password') : (
+                verifyTarget === 'password' ? renderVerifyBlock(t('companyFlow.settings.passwordLabel').toLowerCase()) : (
                   <div className="flex items-center justify-between bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5">
-                    <span className="text-on-surface-variant font-body-md tracking-[0.2em] mt-1">••••••••</span>
+                    <span className="text-on-surface-variant font-body-md tracking-[0.2em] mt-1">{t('companyFlow.settings.passwordMask')}</span>
                     <button onClick={() => startVerify('password')} className="text-secondary font-semibold text-sm hover:underline flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[16px]">edit</span> Change
+                      <span className="material-symbols-outlined text-[16px]">edit</span> {t('companyFlow.settings.change')}
                     </button>
                   </div>
                 )
               ) : (
                 <div className="space-y-4 bg-surface-container-low p-6 rounded-xl border border-outline-variant shadow-sm">
-                  <h4 className="font-h3 text-primary">New Password</h4>
-                  <Field error={errors.newPassword} label="Password">
+                  <h4 className="font-h3 text-primary">{t('companyFlow.settings.newPasswordSection')}</h4>
+                  <Field error={errors.newPassword} label={t('companyFlow.settings.newPasswordField')}>
                     <TextInput type="password" onChange={(e) => update('newPassword', e.target.value)} value={settings.newPassword} disabled={saving} />
                   </Field>
-                  <Field error={errors.confirmPassword} label="Confirm Password">
+                  <Field error={errors.confirmPassword} label={t('companyFlow.settings.confirmField')}>
                     <TextInput type="password" onChange={(e) => update('confirmPassword', e.target.value)} value={settings.confirmPassword} disabled={saving} />
                   </Field>
                 </div>
@@ -2085,7 +2112,7 @@ export function CompanySettings() {
           <div className="flex justify-end pt-6 border-t border-outline-variant mt-2">
             <button className={buttonPrimary} onClick={save} disabled={saving}>
               <span className="material-symbols-outlined text-[20px]">save</span>
-              {saving ? 'Saving...' : 'Save Settings'}
+              {saving ? t('companyFlow.settings.saving') : t('companyFlow.settings.save')}
             </button>
           </div>
         </Section>

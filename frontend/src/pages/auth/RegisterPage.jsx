@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../utils/constants';
 import { evaluatePasswordStrength, isValidEmail } from '../../utils/validation';
 import { useToast } from '../../components/useToast';
@@ -16,6 +17,7 @@ export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
   const { addToast } = useToast();
+  const { t } = useTranslation();
   const [role, setRole] = useState('seeker');
   const [form, setForm] = useState({ fullName: '', email: '', password: '', terms: false });
   const [errors, setErrors] = useState({});
@@ -25,22 +27,22 @@ export default function RegisterPage() {
 
   const strength = evaluatePasswordStrength(form.password);
   const reduce = useReducedMotion();
-  
+
   const validate = () => {
     const e = {};
-    if (!form.fullName.trim()) e.fullName = 'Full name is required.';
-    if (!form.email.trim()) e.email = 'Email is required.';
-    else if (!isValidEmail(form.email)) e.email = 'Enter a valid email address.';
+    if (!form.fullName.trim()) e.fullName = t('auth.register.errors.nameRequired');
+    if (!form.email.trim()) e.email = t('auth.register.errors.emailRequired');
+    else if (!isValidEmail(form.email)) e.email = t('auth.register.errors.emailInvalid');
     if (!form.password) {
-      e.password = 'Password is required.';
+      e.password = t('auth.register.errors.passwordRequired');
     } else if (form.password.length < 8) {
-      e.password = 'Password must be at least 8 characters.';
+      e.password = t('auth.register.errors.passwordMin');
     } else if (!/[A-Z]/.test(form.password)) {
-      e.password = 'Password must contain at least one uppercase letter.';
+      e.password = t('auth.register.errors.passwordUpper');
     } else if (!/[0-9]/.test(form.password)) {
-      e.password = 'Password must contain at least one number.';
+      e.password = t('auth.register.errors.passwordNumber');
     }
-    if (!form.terms) e.terms = 'You must agree to the terms.';
+    if (!form.terms) e.terms = t('auth.register.errors.termsRequired');
     return e;
   };
 
@@ -77,11 +79,11 @@ export default function RegisterPage() {
         password_confirmation: form.password,
         role: backendRole,
       });
-      addToast({ title: 'Account Created!', message: 'Please check your email for verification.', type: 'success' });
+      addToast({ title: t('auth.register.toastSuccessTitle'), message: t('auth.register.toastSuccessMessage'), type: 'success' });
       navigate(ROUTES.LOGIN);
     } catch (err) {
       setServerError(normalizeApiError(err));
-      addToast({ title: 'Registration Failed', message: 'Something went wrong. Please try again.', type: 'error' });
+      addToast({ title: t('auth.register.toastErrorTitle'), message: t('errors.generic'), type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -111,13 +113,13 @@ export default function RegisterPage() {
           />
           <Stagger className="relative z-10 max-w-sm mx-auto text-center" delayChildren={0.1} staggerChildren={0.1}>
             <Stagger.Item className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-stack-lg">
-              <img src={icon} alt="Smart Job Portal" className="w-full h-full object-contain" />
+              <img src={icon} alt={t('app.productName')} className="w-full h-full object-contain" />
             </Stagger.Item>
             <Stagger.Item as="h2" className="font-h1 text-h1 text-primary mb-stack-sm">
-              <span>Intelligence in Recruitment.</span>
+              <span>{t('auth.register.heroTitle')}</span>
             </Stagger.Item>
             <Stagger.Item as="p" className="font-body-lg text-body-lg text-on-surface-variant">
-              <span>Join Smart Job Portal to connect with top opportunities or find exceptional talent using advanced data-driven matching.</span>
+              <span>{t('auth.register.heroDescription')}</span>
             </Stagger.Item>
           </Stagger>
         </Reveal>
@@ -137,10 +139,10 @@ export default function RegisterPage() {
                 animate={{ rotate: 0, opacity: 1 }}
                 transition={{ duration: 0.6, ease: EASE }}
               >
-                <img src={icon} alt="Logo" className="w-10 h-10 object-contain" />
+                <img src={icon} alt={t('app.productName')} className="w-10 h-10 object-contain" />
               </motion.div>
-              <h1 className="font-h2 text-h2 text-primary tracking-tight">Create an Account</h1>
-              <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">Join thousands of professionals and companies.</p>
+              <h1 className="font-h2 text-h2 text-primary tracking-tight">{t('auth.register.title')}</h1>
+              <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">{t('auth.register.subtitle')}</p>
             </div>
             
             {/* Role Selection */}
@@ -153,7 +155,7 @@ export default function RegisterPage() {
                   onClick={() => setRole('seeker')}
                 >
                   <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: role === 'seeker' ? '"FILL" 1' : '"FILL" 0' }}>person_search</span>
-                  <span className="font-body-md text-body-md font-semibold text-center">Job Seeker</span>
+                  <span className="font-body-md text-body-md font-semibold text-center">{t('auth.register.roleSeeker')}</span>
                 </motion.button>
                 <motion.button
                   whileTap={reduce ? undefined : { scale: 0.95, transition: SPRING_PRESS }}
@@ -162,7 +164,7 @@ export default function RegisterPage() {
                   onClick={() => setRole('recruiter')}
                 >
                   <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: role === 'recruiter' ? '"FILL" 1' : '"FILL" 0' }}>business_center</span>
-                  <span className={`font-body-md text-body-md font-semibold text-center ${role === 'recruiter' ? '' : 'text-on-surface'}`}>Recruiter</span>
+                  <span className={`font-body-md text-body-md font-semibold text-center ${role === 'recruiter' ? '' : 'text-on-surface'}`}>{t('auth.register.roleCompany')}</span>
                 </motion.button>
               </div>
             </div>
@@ -184,21 +186,21 @@ export default function RegisterPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Full Name */}
                   <Stagger.Item>
-                    <label className="font-label-sm text-label-sm text-on-surface uppercase tracking-wider" htmlFor="fullName">Full Name</label>
+                    <label className="font-label-sm text-label-sm text-on-surface uppercase tracking-wider" htmlFor="fullName">{t('auth.register.nameLabel')}</label>
                     <input
                       className={`mt-1 w-full rounded-lg border ${showError('fullName') ? 'bg-error-container/20 border-error' : 'bg-surface-container-lowest border-outline-variant'} px-3 py-2 text-on-surface focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all`}
-                      id="fullName" name="fullName" placeholder="Jane Doe" type="text"
+                      id="fullName" name="fullName" placeholder={t('auth.register.namePlaceholder')} type="text"
                       value={form.fullName} onChange={handleChange} onBlur={handleBlur}
                     />
                     {showError('fullName') && <p className="mt-1 font-body-sm text-error">{errors.fullName}</p>}
                   </Stagger.Item>
-                  
+
                   {/* Email */}
                   <Stagger.Item>
-                    <label className="font-label-sm text-label-sm text-on-surface uppercase tracking-wider" htmlFor="email">Email Address</label>
+                    <label className="font-label-sm text-label-sm text-on-surface uppercase tracking-wider" htmlFor="email">{t('auth.register.emailLabel')}</label>
                     <input
                       className={`mt-1 w-full rounded-lg border ${showError('email') ? 'bg-error-container/20 border-error' : 'bg-surface-container-lowest border-outline-variant'} px-3 py-2 text-on-surface focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all`}
-                      id="email" name="email" type="email" placeholder="jane@example.com"
+                      id="email" name="email" type="email" placeholder={t('auth.register.emailPlaceholder')}
                       value={form.email} onChange={handleChange} onBlur={handleBlur}
                     />
                     {showError('email') && <p className="mt-1 font-body-sm text-error">{errors.email}</p>}
@@ -207,10 +209,10 @@ export default function RegisterPage() {
 
                 {/* Password */}
                 <Stagger.Item className="mt-4">
-                  <label className="font-label-sm text-label-sm text-on-surface uppercase tracking-wider" htmlFor="password">Password</label>
+                  <label className="font-label-sm text-label-sm text-on-surface uppercase tracking-wider" htmlFor="password">{t('auth.register.passwordLabel')}</label>
                   <input
                     className={`mt-1 w-full rounded-lg border ${showError('password') ? 'bg-error-container/20 border-error' : 'bg-surface-container-lowest border-outline-variant'} px-3 py-2 text-on-surface focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all`}
-                    id="password" name="password" placeholder="••••••••" type="password"
+                    id="password" name="password" placeholder={t('auth.register.passwordPlaceholder')} type="password"
                     value={form.password} onChange={handleChange} onBlur={handleBlur}
                   />
                   {/* Password Strength Indicator */}
@@ -250,7 +252,7 @@ export default function RegisterPage() {
                       <input className="w-4 h-4 rounded border-outline-variant text-secondary focus:ring-secondary/50 bg-surface-container-lowest" id="terms" name="terms" type="checkbox" checked={form.terms} onChange={handleChange} />
                     </div>
                     <label className="font-body-sm text-body-sm text-on-surface-variant leading-tight" htmlFor="terms">
-                      I agree to the <Link className="text-secondary hover:underline" to={ROUTES.TERMS}>Terms of Service</Link> and <Link className="text-secondary hover:underline" to={ROUTES.PRIVACY}>Privacy Policy</Link>.
+                      {t('auth.register.termsAgree')}
                     </label>
                   </div>
                   {showError('terms') && <p className="mt-1 font-body-sm text-error">{errors.terms}</p>}
@@ -264,7 +266,7 @@ export default function RegisterPage() {
                     whileTap={reduce || loading ? undefined : { scale: 0.97, transition: SPRING_PRESS }}
                   >
                     {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
-                    {loading ? 'Creating Account...' : 'Create Account'}
+                    {loading ? t('auth.register.creating') : t('auth.register.submit')}
                   </motion.button>
                 </Stagger.Item>
               </Stagger>
@@ -277,7 +279,7 @@ export default function RegisterPage() {
               className="mt-6 text-center border-t border-outline-variant pt-4"
             >
               <p className="font-body-sm text-body-sm text-on-surface-variant">
-                Already have an account? <Link className="text-secondary font-semibold hover:underline" to={ROUTES.LOGIN}>Sign In</Link>
+                {t('auth.register.haveAccount')} <Link className="text-secondary font-semibold hover:underline" to={ROUTES.LOGIN}>{t('auth.register.signIn')}</Link>
               </p>
             </motion.div>
           </motion.div>

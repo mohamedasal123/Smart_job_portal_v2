@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PageTransition from '../motion/PageTransition';
 import ThemeToggle from '../components/ThemeToggle';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import { useAuth } from '../context/useAuth';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { ROUTES } from '../utils/constants';
@@ -9,12 +11,12 @@ import { adminDataService } from '../services/adminDataService';
 import icon from '../assets/icon.png';
 
 const navItems = [
-  { label: 'Dashboard', icon: 'dashboard', to: ROUTES.ADMIN_DASHBOARD },
-  { label: 'Users Management', icon: 'group', to: ROUTES.ADMIN_USERS },
-  { label: 'Jobs Management', icon: 'work', to: ROUTES.ADMIN_JOBS },
-  { label: 'Activity Log', icon: 'history', to: ROUTES.ADMIN_ACTIVITY_LOG },
-  { label: 'Settings', icon: 'settings', to: ROUTES.ADMIN_SETTINGS },
-  { label: 'View Public Site', icon: 'public', to: ROUTES.HOME },
+  { labelKey: 'adminNav.dashboard', icon: 'dashboard', to: ROUTES.ADMIN_DASHBOARD },
+  { labelKey: 'adminNav.users', icon: 'group', to: ROUTES.ADMIN_USERS },
+  { labelKey: 'adminNav.jobs', icon: 'work', to: ROUTES.ADMIN_JOBS },
+  { labelKey: 'adminNav.activity', icon: 'history', to: ROUTES.ADMIN_ACTIVITY_LOG },
+  { labelKey: 'adminNav.settings', icon: 'settings', to: ROUTES.ADMIN_SETTINGS },
+  { labelKey: 'seekerNav.publicSite', icon: 'public', to: ROUTES.HOME },
 ];
 
 const navClass = ({ isActive }) =>
@@ -26,6 +28,7 @@ const navClass = ({ isActive }) =>
   ].join(' ');
 
 export default function AdminLayout() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -97,19 +100,19 @@ export default function AdminLayout() {
     <>
       <Link to={ROUTES.ADMIN_DASHBOARD} className="mb-stack-lg flex items-center gap-stack-sm px-stack-sm shrink-0 hover:opacity-80 transition-opacity" onClick={onNavigate}>
         <div className="w-10 h-10 flex items-center justify-center shrink-0">
-          <img src={icon} alt="Smart Job Portal" className="w-full h-full object-contain" />
+          <img src={icon} alt={t('app.productName')} className="w-full h-full object-contain" />
         </div>
         <div>
-          <h1 className="font-h3 text-h3 font-bold text-primary">Smart Job Portal</h1>
-          <p className="font-label-sm text-label-sm text-on-surface-variant">Admin Console</p>
+          <h1 className="font-h3 text-h3 font-bold text-primary">{t('app.productName')}</h1>
+          <p className="font-label-sm text-label-sm text-on-surface-variant">{t('adminNav.workspaceLabel')}</p>
         </div>
       </Link>
 
-      <nav className="flex-1 min-h-0 flex flex-col gap-unit overflow-y-auto pr-unit">
+      <nav className="flex-1 min-h-0 flex flex-col gap-unit overflow-y-auto pe-unit">
         {navItems.map((item) => (
           <NavLink className={navClass} end={item.to === ROUTES.ADMIN_DASHBOARD} key={item.to} onClick={onNavigate} to={item.to}>
             <span className="material-symbols-outlined">{item.icon}</span>
-            <span>{item.label}</span>
+            <span>{t(item.labelKey)}</span>
           </NavLink>
         ))}
       </nav>
@@ -117,11 +120,11 @@ export default function AdminLayout() {
       <div className="mt-auto pt-stack-md border-t border-outline-variant flex flex-col gap-unit shrink-0 bg-surface-container-low">
         <NavLink className="flex items-center gap-stack-md text-on-surface-variant hover:bg-surface-container-highest rounded-lg px-stack-md py-stack-sm transition-colors" onClick={onNavigate} to={ROUTES.CONTACT}>
           <span className="material-symbols-outlined">help</span>
-          <span>Help</span>
+          <span>{t('seekerNav.help')}</span>
         </NavLink>
-        <button className="flex items-center gap-stack-md text-on-surface-variant hover:bg-surface-container-highest rounded-lg px-stack-md py-stack-sm transition-colors text-left" onClick={handleLogout} type="button">
+        <button className="flex items-center gap-stack-md text-on-surface-variant hover:bg-surface-container-highest rounded-lg px-stack-md py-stack-sm transition-colors text-start" onClick={handleLogout} type="button">
           <span className="material-symbols-outlined">logout</span>
-          <span>Logout</span>
+          <span>{t('seekerNav.logout')}</span>
         </button>
       </div>
     </>
@@ -180,6 +183,7 @@ export default function AdminLayout() {
           </div>
 
           <div className="flex items-center gap-stack-md">
+            <LanguageSwitcher compact />
             <ThemeToggle compact />
 
             {/* Notifications Dropdown */}

@@ -1,9 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import PublicNavBar from '../../components/PublicNavBar';
 import PublicFooter from '../../components/PublicFooter';
 import { getPublicJobs } from '../../services/publicDataService';
 
 export default function SalariesPage() {
+  const { t } = useTranslation();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,7 +22,6 @@ export default function SalariesPage() {
   }, []);
 
   const salaryData = useMemo(() => {
-    // 1. Filter jobs
     const filtered = jobs.filter(job => {
       if (searchQuery) {
         const s = searchQuery.toLowerCase();
@@ -35,47 +36,46 @@ export default function SalariesPage() {
       return true;
     });
 
-    // 2. Extract and group by normalized job title
     const groups = {};
     filtered.forEach(job => {
       if (!job.salaryMin && !job.salaryMax) return;
-      
+
       const role = job.title?.trim() || 'Other';
       const roleKey = role.toLowerCase();
-      
+
       if (!groups[roleKey]) {
         groups[roleKey] = { role, minSum: 0, maxSum: 0, count: 0 };
       }
-      
+
       const min = job.salaryMin || job.salaryMax;
       const max = job.salaryMax || job.salaryMin;
-      
+
       groups[roleKey].minSum += min;
       groups[roleKey].maxSum += max;
       groups[roleKey].count += 1;
     });
 
-    // 3. Map to card format and sort
     const result = Object.values(groups).map(g => {
       const avgMin = Math.round(g.minSum / g.count);
       const avgMax = Math.round(g.maxSum / g.count);
-      
+
       const formatNum = (num) => {
         if (num >= 1000) return `$${(num / 1000).toFixed(0)}k`;
         return `$${num}`;
       };
 
+      const trendKey = g.count > 2 ? 'highDemand' : (g.count === 1 ? 'new' : 'stable');
+
       return {
         role: g.role,
         range: `${formatNum(avgMin)} - ${formatNum(avgMax)}`,
-        trend: g.count > 2 ? 'High Demand' : (g.count === 1 ? 'New' : 'Stable'),
+        trend: t(`salariesPage.trends.${trendKey}`),
         count: g.count
       };
     });
 
-    // Sort by count descending, then alphabetically
     return result.sort((a, b) => b.count - a.count || a.role.localeCompare(b.role));
-  }, [jobs, searchQuery, locationQuery]);
+  }, [jobs, searchQuery, locationQuery, t]);
 
   return (
     <div className="stitch-page bg-background text-on-background font-body-md text-body-md min-h-screen">
@@ -83,27 +83,27 @@ export default function SalariesPage() {
 
       <main className="max-w-container mx-auto px-gutter py-margin-desktop space-y-gutter">
         <section className="bg-surface-container-lowest rounded-xl p-stack-lg shadow-ambient border border-outline-variant">
-          <p className="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-stack-sm">Salary Guide</p>
-          <h1 className="font-display text-display text-primary mb-stack-sm">Compare pay by role and market</h1>
+          <p className="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-stack-sm">{t('salariesPage.eyebrow')}</p>
+          <h1 className="font-display text-display text-primary mb-stack-sm">{t('salariesPage.title')}</h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">
-            Explore compensation benchmarks based on active job listings.
+            {t('salariesPage.description')}
           </p>
           <div className="mt-gutter grid grid-cols-1 md:grid-cols-[1fr_220px] gap-stack-md">
             <label className="relative">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-              <input 
-                className="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary" 
-                placeholder="Job title or skill" 
+              <span className="material-symbols-outlined absolute start-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+              <input
+                className="w-full bg-surface-container-low border border-outline-variant rounded-lg ps-12 pe-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
+                placeholder={t('salariesPage.searchJobPlaceholder')}
                 type="search"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
               />
             </label>
             <label className="relative">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">location_on</span>
-              <input 
-                className="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary" 
-                placeholder="Location" 
+              <span className="material-symbols-outlined absolute start-4 top-1/2 -translate-y-1/2 text-on-surface-variant">location_on</span>
+              <input
+                className="w-full bg-surface-container-low border border-outline-variant rounded-lg ps-12 pe-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
+                placeholder={t('salariesPage.searchLocationPlaceholder')}
                 type="search"
                 value={locationQuery}
                 onChange={e => setLocationQuery(e.target.value)}
@@ -119,8 +119,8 @@ export default function SalariesPage() {
         ) : salaryData.length === 0 ? (
           <div className="text-center py-16">
             <span className="material-symbols-outlined text-outline text-[48px] mb-4">analytics</span>
-            <h3 className="font-h3 text-h3 text-primary mb-2">No salary data found</h3>
-            <p className="text-on-surface-variant">Try adjusting your search criteria or check back later.</p>
+            <h3 className="font-h3 text-h3 text-primary mb-2">{t('salariesPage.emptyTitle')}</h3>
+            <p className="text-on-surface-variant">{t('salariesPage.emptyHelp')}</p>
           </div>
         ) : (
           <section className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
@@ -132,7 +132,7 @@ export default function SalariesPage() {
                 </div>
                 <h2 className="font-h2 text-h2 text-primary">{item.role}</h2>
                 <p className="font-display text-[32px] leading-tight text-primary mt-stack-md">{item.range}</p>
-                <p className="font-body-sm text-body-sm text-on-surface-variant mt-unit">Based on {item.count} {item.count === 1 ? 'job' : 'jobs'}</p>
+                <p className="font-body-sm text-body-sm text-on-surface-variant mt-unit">{t('salariesPage.basedOn', { count: item.count })}</p>
               </article>
             ))}
           </section>

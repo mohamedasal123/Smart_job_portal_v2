@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PublicNavBar from '../../components/PublicNavBar';
 import PublicFooter from '../../components/PublicFooter';
 import { getPublicCompanies } from '../../services/publicDataService';
 
 export default function CompaniesPage() {
+  const { t } = useTranslation();
   const [allCompanies, setAllCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,28 +40,28 @@ export default function CompaniesPage() {
 
       <main className="max-w-container mx-auto px-gutter py-margin-desktop space-y-gutter">
         <section className="bg-surface-container-lowest rounded-xl p-stack-lg shadow-ambient border border-outline-variant">
-          <p className="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-stack-sm">Company Directory</p>
-          <h1 className="font-display text-display text-primary mb-stack-sm">Explore companies hiring now</h1>
+          <p className="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-stack-sm">{t('companiesPage.eyebrow')}</p>
+          <h1 className="font-display text-display text-primary mb-stack-sm">{t('companiesPage.title')}</h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">
-            Search organizations by industry, location, and open roles to find teams that match your career goals.
+            {t('companiesPage.description')}
           </p>
           <div className="mt-gutter grid grid-cols-1 md:grid-cols-[1fr_auto] gap-stack-md">
             <label className="relative">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-              <input 
-                className="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary" 
-                placeholder="Search by company, industry, or city" 
-                type="search" 
+              <span className="material-symbols-outlined absolute start-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+              <input
+                className="w-full bg-surface-container-low border border-outline-variant rounded-lg ps-12 pe-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
+                placeholder={t('companiesPage.searchPlaceholder')}
+                type="search"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSearch()}
               />
             </label>
-            <button 
+            <button
               className="bg-secondary text-on-secondary font-h3 text-h3 px-gutter py-stack-sm rounded-lg shadow-sm hover:opacity-90 transition-opacity"
               onClick={handleSearch}
             >
-              Search Companies
+              {t('companiesPage.searchButton')}
             </button>
           </div>
         </section>
@@ -71,7 +73,7 @@ export default function CompaniesPage() {
         ) : filteredCompanies.length === 0 ? (
           <div className="text-center py-16">
             <span className="material-symbols-outlined text-outline text-[48px] mb-4">domain_disabled</span>
-            <h3 className="font-h3 text-h3 text-primary mb-2">No companies match your search</h3>
+            <h3 className="font-h3 text-h3 text-primary mb-2">{t('companiesPage.emptyTitle')}</h3>
           </div>
         ) : (
           <>
@@ -90,25 +92,25 @@ export default function CompaniesPage() {
                     )}
                   </div>
                   <h2 className="font-h2 text-h2 text-primary mb-unit">{company.name}</h2>
-                  <p className="font-body-md text-body-md text-on-surface-variant">{company.industry || 'Tech'}</p>
+                  <p className="font-body-md text-body-md text-on-surface-variant">{company.industry || t('companiesPage.defaultIndustry')}</p>
                   <div className="mt-stack-md flex items-center justify-between text-on-surface-variant">
-                    <span>{company.location || 'Remote'}</span>
-                    <span className="font-label-md text-label-md text-secondary">{company.openPositions} jobs</span>
+                    <span>{company.location || t('companiesPage.defaultLocation')}</span>
+                    <span className="font-label-md text-label-md text-secondary">{t('companiesPage.openJobs', { count: company.openPositions || 0 })}</span>
                   </div>
                 </Link>
               ))}
             </section>
-            
+
             {filteredCompanies.length > itemsPerPage && (
               <div className="flex justify-between items-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant mt-4">
-                <button className="px-4 py-2 border border-outline-variant rounded-lg text-primary disabled:opacity-50" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Previous</button>
-                <span className="text-on-surface-variant font-label-md">Page {page} of {Math.ceil(filteredCompanies.length / itemsPerPage)}</span>
-                <button className="px-4 py-2 border border-outline-variant rounded-lg text-primary disabled:opacity-50" disabled={page * itemsPerPage >= filteredCompanies.length} onClick={() => setPage(p => p + 1)}>Next</button>
+                <button className="px-4 py-2 border border-outline-variant rounded-lg text-primary disabled:opacity-50" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>{t('companiesPage.pagination.previous')}</button>
+                <span className="text-on-surface-variant font-label-md">{t('companiesPage.pagination.page', { current: page, total: Math.ceil(filteredCompanies.length / itemsPerPage) })}</span>
+                <button className="px-4 py-2 border border-outline-variant rounded-lg text-primary disabled:opacity-50" disabled={page * itemsPerPage >= filteredCompanies.length} onClick={() => setPage(p => p + 1)}>{t('companiesPage.pagination.next')}</button>
               </div>
             )}
           </>
         )}
-        
+
       </main>
       <PublicFooter />
     </div>

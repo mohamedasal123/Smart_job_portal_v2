@@ -14,6 +14,7 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\EnsureEmailVerified;
 use App\Http\Middleware\EnsureCVUploaded;
 use App\Http\Middleware\BanCheck;
+use App\Http\Middleware\SetLocale;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,10 +26,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
 
+        $middleware->api(prepend: [SetLocale::class]);
+        $middleware->web(prepend: [SetLocale::class]);
+
         $middleware->redirectGuestsTo(fn() => response()->json([
             'success' => false,
             'data' => null,
-            'message' => 'Unauthenticated.',
+            'message' => __('messages.unauthenticated'),
             'errors' => null,
         ], 401));
 
@@ -48,7 +52,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'success' => false,
                     'data' => null,
-                    'message' => 'Validation failed.',
+                    'message' => __('messages.validation_failed'),
                     'errors' => $e->errors(),
                 ], 422);
             }
@@ -59,7 +63,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'success' => false,
                     'data' => null,
-                    'message' => 'Unauthenticated.',
+                    'message' => __('messages.unauthenticated'),
                     'errors' => null,
                 ], 401);
             }
@@ -70,7 +74,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'success' => false,
                     'data' => null,
-                    'message' => 'Forbidden.',
+                    'message' => __('messages.forbidden'),
                     'errors' => null,
                 ], 403);
             }
@@ -81,7 +85,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'success' => false,
                     'data' => null,
-                    'message' => 'Resource not found.',
+                    'message' => __('messages.not_found'),
                     'errors' => null,
                 ], 404);
             }
@@ -92,7 +96,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'success' => false,
                     'data' => null,
-                    'message' => 'A database error occurred.',
+                    'message' => __('messages.database_error'),
                     'errors' => null,
                 ], 500);
             }
@@ -103,7 +107,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'success' => false,
                     'data' => null,
-                    'message' => $e->getMessage() ?: 'HTTP error.',
+                    'message' => $e->getMessage() ?: __('messages.http_error'),
                     'errors' => null,
                 ], $e->getStatusCode());
             }

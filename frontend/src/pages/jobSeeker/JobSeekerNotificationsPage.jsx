@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import SeekerEmptyState from '../../components/jobSeeker/SeekerEmptyState';
 import SeekerPageHeader from '../../components/jobSeeker/SeekerPageHeader';
 import { useToast } from '../../components/useToast';
@@ -10,13 +11,7 @@ import {
   markNotificationRead,
 } from '../../services/jobSeekerDataService';
 
-const filters = [
-  { id: 'all', label: 'All' },
-  { id: 'unread', label: 'Unread' },
-  { id: 'interviews', label: 'Interviews' },
-  { id: 'messages', label: 'Messages' },
-  { id: 'applications', label: 'Applications' },
-];
+const FILTER_IDS = ['all', 'unread', 'interviews', 'messages', 'applications'];
 
 function notificationTone(type) {
   switch (type) {
@@ -38,16 +33,17 @@ function notificationTone(type) {
   }
 }
 
-function NotificationSpinner() {
+function NotificationSpinner({ loadingLabel }) {
   return (
     <div className="flex min-h-[320px] items-center justify-center" role="status" aria-live="polite">
       <span className="material-symbols-outlined animate-spin text-[48px] text-secondary" aria-hidden="true">progress_activity</span>
-      <span className="sr-only">Loading your notifications...</span>
+      <span className="sr-only">{loadingLabel}</span>
     </div>
   );
 }
 
 export default function JobSeekerNotificationsPage() {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
@@ -60,10 +56,10 @@ export default function JobSeekerNotificationsPage() {
       .then(setNotifications)
       .catch((error) => {
         console.error(error);
-        addToast({ title: 'Notifications unavailable', message: 'Could not load your notifications.', type: 'error' });
+        addToast({ title: t('seekerNotifications.errors.loadTitle'), message: t('seekerNotifications.errors.loadMessage'), type: 'error' });
       })
       .finally(() => setLoading(false));
-  }, [addToast]);
+  }, [addToast, t]);
 
   useEffect(() => {
     refresh();
@@ -91,7 +87,7 @@ export default function JobSeekerNotificationsPage() {
       refresh();
     } catch (error) {
       console.error(error);
-      addToast({ title: 'Update failed', message: 'Could not mark notifications as read.', type: 'error' });
+      addToast({ title: t('seekerNotifications.errors.markAllFailedTitle'), message: t('seekerNotifications.errors.markAllFailedMessage'), type: 'error' });
     }
   };
 
@@ -103,7 +99,7 @@ export default function JobSeekerNotificationsPage() {
       }
     } catch (error) {
       console.error(error);
-      addToast({ title: 'Update failed', message: 'Could not mark this notification as read.', type: 'error' });
+      addToast({ title: t('seekerNotifications.errors.markAllFailedTitle'), message: t('seekerNotifications.errors.markFailedMessage'), type: 'error' });
     }
 
     const type = notification.type || notification.data?.type;
@@ -123,29 +119,29 @@ export default function JobSeekerNotificationsPage() {
   return (
     <div className="px-4 sm:px-6 lg:px-margin-desktop py-6 lg:py-margin-desktop w-full max-w-7xl mx-auto flex flex-col h-full space-y-gutter">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <SeekerPageHeader title="Notifications" subtitle="Stay updated on your applications, messages, and interviews." icon="notifications" />
+        <SeekerPageHeader title={t('seekerNotifications.title')} subtitle={t('seekerNotifications.subtitle')} icon="notifications" />
         <button className="inline-flex items-center justify-center gap-2 rounded-lg border border-outline-variant px-4 py-2 font-label-md text-primary transition-colors hover:bg-surface-container-low disabled:opacity-50" disabled={!unreadCount} onClick={markAll} type="button">
           <span className="material-symbols-outlined text-[18px]">done_all</span>
-          Mark all as read
+          {t('seekerNotifications.markAll')}
         </button>
       </div>
 
       <div className="flex flex-wrap gap-unit">
-        {filters.map((item) => (
-          <button className={`${filter === item.id ? 'bg-secondary text-on-secondary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'} rounded-lg px-stack-md py-stack-sm font-label-md text-label-md transition-colors`} key={item.id} onClick={() => setFilter(item.id)} type="button">
-            {item.label}
+        {FILTER_IDS.map((id) => (
+          <button className={`${filter === id ? 'bg-secondary text-on-secondary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'} rounded-lg px-stack-md py-stack-sm font-label-md text-label-md transition-colors`} key={id} onClick={() => setFilter(id)} type="button">
+            {t(`seekerNotifications.filters.${id}`)}
           </button>
         ))}
       </div>
 
-      <section className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient overflow-hidden" aria-live="polite" aria-label={`${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}`}>
-        {loading ? <NotificationSpinner /> : (
+      <section className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient overflow-hidden" aria-live="polite" aria-label={t('seekerNotifications.unreadCount', { count: unreadCount })}>
+        {loading ? <NotificationSpinner loadingLabel={t('seekerNotifications.loading')} /> : (
           visibleNotifications.length ? visibleNotifications.map((notification) => {
             const unread = !notification.read_at && !notification.read;
             const tone = notificationTone(notification.type || notification.data?.type);
             return (
               <button
-                className={`w-full border-b border-outline-variant p-stack-lg text-left transition-colors last:border-b-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary ${unread ? 'bg-secondary-container/10 hover:bg-secondary-container/20' : 'hover:bg-surface-container-low'}`}
+                className={`w-full border-b border-outline-variant p-stack-lg text-start transition-colors last:border-b-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary ${unread ? 'bg-secondary-container/10 hover:bg-secondary-container/20' : 'hover:bg-surface-container-low'}`}
                 key={notification.id}
                 onClick={() => openNotification(notification)}
                 type="button"
@@ -165,7 +161,7 @@ export default function JobSeekerNotificationsPage() {
                 </div>
               </button>
             );
-          }) : <SeekerEmptyState icon="notifications_off" title="No notifications" description="No notifications match this filter." />
+          }) : <SeekerEmptyState icon="notifications_off" title={t('seekerNotifications.emptyTitle')} description={t('seekerNotifications.emptyDescription')} />
         )}
       </section>
     </div>

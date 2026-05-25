@@ -36,7 +36,1548 @@
     "save": "Save",
     "searchJobs": "Search Jobs",
     "submit": "Submit",
-    "upload": "Upload"
+    "upload": "Upload",
+    "signIn": "Sign In",
+    "dashboard": "Dashboard",
+    "viewAll": "View all",
+    "help": "Help"
+  },
+  "a11y": {
+    "primaryNav": "Primary navigation",
+    "toggleSidebar": "Toggle sidebar",
+    "openMenu": "Open menu"
+  },
+  "footer": {
+    "about": "About",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "support": "Support",
+    "help": "Help Center",
+    "security": "Security",
+    "api": "API",
+    "faq": "FAQ",
+    "copyrightShort": "© 2024 Smart Job Portal.",
+    "copyrightLong": "© 2024 Smart Job Portal. Intelligence in Recruitment."
+  },
+  "companiesPage": {
+    "eyebrow": "Company Directory",
+    "title": "Explore companies hiring now",
+    "description": "Search organizations by industry, location, and open roles to find teams that match your career goals.",
+    "searchPlaceholder": "Search by company, industry, or city",
+    "searchButton": "Search Companies",
+    "emptyTitle": "No companies match your search",
+    "defaultIndustry": "Tech",
+    "defaultLocation": "Remote",
+    "openJobs_one": "{{count}} job",
+    "openJobs_other": "{{count}} jobs",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {{current}} of {{total}}"
+    }
+  },
+  "salariesPage": {
+    "eyebrow": "Salary Guide",
+    "title": "Compare pay by role and market",
+    "description": "Explore compensation benchmarks based on active job listings.",
+    "searchJobPlaceholder": "Job title or skill",
+    "searchLocationPlaceholder": "Location",
+    "emptyTitle": "No salary data found",
+    "emptyHelp": "Try adjusting your search criteria or check back later.",
+    "trends": {
+      "highDemand": "High Demand",
+      "stable": "Stable",
+      "new": "New"
+    },
+    "basedOn_one": "Based on {{count}} job",
+    "basedOn_other": "Based on {{count}} jobs"
+  },
+  "seekerCv": {
+    "uploadTitle": "Upload Resume",
+    "uploadSubtitle": "Upload your CV and let our AI instantly extract your skills, experience, and education to build your profile.",
+    "documentUpload": "Document Upload",
+    "dragDrop": "Drag & drop your CV here",
+    "orClickBrowse": "or click to browse from your device",
+    "uploadAria": "Upload your CV — PDF or DOCX, up to 5 MB",
+    "chooseFileAria": "Choose a CV file to upload",
+    "parsingTitle": "AI is parsing your resume...",
+    "parsingExtracting": "Extracting structured data from \"{{name}}\"",
+    "identifyingCompetencies": "Identifying core competencies ({{percent}}%)",
+    "parsingCompleteTitle": "Parsing Complete!",
+    "parsingCompleteMessage": "Your resume has been successfully analyzed. Review your profile preview.",
+    "uploadAnalyze": "Upload & Analyze CV",
+    "parsing": "Parsing...",
+    "reupload": "Re-upload CV",
+    "livePreviewTitle": "Live Profile Preview",
+    "livePreviewSubtitle": "Review and edit the AI-extracted CV data before saving it to your profile.",
+    "reviewTitle": "Review Parsed CV Data",
+    "reviewSubtitle": "We've extracted the following information from your CV. Review and edit the AI-extracted CV data before using it for job matching.",
+    "uploadedOn": "Uploaded on {{date}}",
+    "noCv": "No CV uploaded yet.",
+    "uploadCv": "Upload CV",
+    "aiExtractedBadge": "AI Extracted",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "saveSection": "Save Section",
+    "discard": "Discard & Start Over",
+    "confirm": "Confirm & Save Profile",
+    "confirming": "Confirming...",
+    "sections": {
+      "personal": "Personal Information",
+      "summary": "Summary",
+      "experience": "Experience History",
+      "education": "Education",
+      "skills": "Skills"
+    },
+    "fields": {
+      "firstName": "First Name *",
+      "lastName": "Last Name *",
+      "title": "Professional Title *",
+      "email": "Email *",
+      "phone": "Phone",
+      "location": "Location",
+      "fullName": "Full Name",
+      "jobTitle": "Job Title *",
+      "company": "Company *",
+      "startYear": "Start Year",
+      "endYear": "End Year",
+      "description": "Description",
+      "degree": "Degree *",
+      "institution": "Institution *"
+    },
+    "addExperience": "Add Experience",
+    "addEducation": "Add Education",
+    "noExperience": "No experience extracted.",
+    "noEducation": "No education extracted.",
+    "noSkills": "No skills extracted.",
+    "noSummary": "No summary provided.",
+    "skillCategories": {
+      "hard": "Hard Skills",
+      "soft": "Soft Skills",
+      "tools": "Tools Skills"
+    },
+    "addSkillPlaceholder": "Add new {{category}} skill...",
+    "addSkill": "Add",
+    "errors": {
+      "invalidFileType": "Invalid file type. Please upload a PDF or DOCX file.",
+      "fileTooLarge": "File size exceeds 5MB ({{size}}MB).",
+      "uploadFailedTitle": "Upload failed",
+      "uploadFailedMessage": "Could not upload your CV. Please try again.",
+      "rateLimitTitle": "Too Many Requests",
+      "rateLimitMessage": "Please wait a minute before trying again.",
+      "parsingFailedTitle": "Parsing failed",
+      "parsingFailedMessage": "The AI could not parse your CV. Please ensure the file contains valid text.",
+      "parsingTimeoutTitle": "Parsing timed out",
+      "parsingTimeoutMessage": "The CV parsing is taking too long. Please refresh the page and try again.",
+      "dataFetchTitle": "Data Fetch Error",
+      "dataFetchMessage": "The CV was parsed, but we could not load the data. Please refresh.",
+      "validationTitle": "Validation Error",
+      "personalValidation": "First name, last name, title, and email are required.",
+      "experienceValidation": "Job title and company are required for all experience entries.",
+      "educationValidation": "Degree and institution are required for all education entries.",
+      "unsavedTitle": "Unsaved Changes",
+      "unsavedMessage": "Please save or cancel your section edits before confirming."
+    },
+    "toasts": {
+      "profileSavedTitle": "Profile Created",
+      "profileSavedMessage": "Your AI-parsed CV has been confirmed and saved.",
+      "saveFailedTitle": "Error",
+      "saveFailedMessage": "Failed to save profile."
+    }
+  },
+  "seekerCvParsing": {
+    "title": "Analyzing your CV with AI",
+    "subtitle": "Our AI is extracting your skills and experience to match you with the perfect opportunities. This usually takes less than 30 seconds.",
+    "steps": {
+      "uploading": "Uploading file",
+      "extracting": "Extracting text",
+      "detecting": "Detecting skills",
+      "building": "Building profile",
+      "generating": "Generating job recommendations"
+    },
+    "estimated": "Estimated time remaining: {{seconds}} seconds",
+    "completed": "Completed"
+  },
+  "seekerApplicationDetails": {
+    "loading": "Loading application…",
+    "back": "Back to profile applications",
+    "title": "Application Details",
+    "subtitle": "Review the status and details of your application.",
+    "unknownRole": "Unknown Role",
+    "unknownCompany": "Unknown Company",
+    "remote": "Remote",
+    "fullTime": "Full-time",
+    "appliedOn": "Applied {{date}}",
+    "interviewScheduledTitle": "Interview scheduled by the company",
+    "openConversation": "Open conversation",
+    "statusTitle": "Application Status",
+    "matchTitle": "Smart Match Analysis",
+    "matchScore": "{{score}}% Match Score",
+    "matchDescription": "This score reflects how well your skills and experience align with the requirements of this role.",
+    "requiredSkills": "Required Skills",
+    "notSpecified": "Not specified",
+    "actions": "Actions",
+    "viewOriginal": "View Original Job Post",
+    "viewRejection": "View Rejection Feedback",
+    "statusMessages": {
+      "interview": "The company scheduled your interview for {{date}}.",
+      "under_review": "Your application is currently being reviewed by the hiring team. We'll notify you when there's an update.",
+      "shortlisted": "Congratulations! You've been shortlisted for this role. The company will contact you when they schedule the next step.",
+      "approved": "Your application has been approved. Watch your messages for the company interview time.",
+      "interview_scheduled": "The company will share the interview time here once it is scheduled.",
+      "waiting_interview": "The company will share the interview time here once it is scheduled.",
+      "rejected": "Unfortunately, the company has decided to move forward with other candidates at this time.",
+      "hired": "Congratulations! You've been hired for this position.",
+      "default": "Your application has been received."
+    }
+  },
+  "seekerMessages": {
+    "title": "Messages",
+    "subtitle": "Communicate directly with recruiters and hiring managers.",
+    "loadingMessages": "Loading messages...",
+    "muteAll": "Mute all messages",
+    "unmuteAll": "Unmute all messages",
+    "muteChat": "Mute Chat",
+    "unmuteChat": "Unmute Chat",
+    "inbox": "Inbox",
+    "chatsCount": "{{count}} chats",
+    "searchPlaceholder": "Search companies, roles, messages",
+    "emptyTitle": "No messages",
+    "emptyDescription": "Recruiter conversations will appear here.",
+    "emptySearchDescription": "No conversations match your search.",
+    "noMessagesYet": "No messages yet",
+    "noMessagesInChat": "No messages yet.",
+    "messagePlaceholder": "Type your message...",
+    "sending": "Sending...",
+    "send": "Send",
+    "selectChat": "Select a conversation.",
+    "fallbackCompany": "Company conversation",
+    "fallbackContact": "Recruiter",
+    "jobConversation": "Job conversation",
+    "generalConversation": "General conversation",
+    "newLabel": "New",
+    "nowLabel": "Now",
+    "youLabel": "You",
+    "aboutRole": "{{contact}} about {{role}}",
+    "deleteChat": "Delete Chat",
+    "deletedToast": "Chat with {{name}} deleted.",
+    "undo": "Undo",
+    "errors": {
+      "loadConversationsTitle": "Messages unavailable",
+      "loadConversationsMessage": "Could not load your conversations.",
+      "loadConversationTitle": "Conversation unavailable",
+      "loadConversationMessage": "Could not load this conversation.",
+      "sendFailedTitle": "Message not sent",
+      "sendFailedMessage": "Please try again.",
+      "deleteFailedTitle": "Error",
+      "deleteFailedMessage": "Failed to delete chat."
+    }
+  },
+  "seekerJobDetails": {
+    "loading": "Loading job…",
+    "notFound": "Job not found or is no longer available.",
+    "backToJobs": "Back to Jobs",
+    "browseJobs": "Browse Jobs",
+    "breadcrumb": "Jobs",
+    "applyNow": "Apply Now",
+    "oneClickApply": "Apply with One Click",
+    "applying": "Applying...",
+    "alreadyApplied": "Already Applied",
+    "appliedBanner": "You applied for this job. Your application is under review.",
+    "saved": "Saved",
+    "saveJob": "Save Job",
+    "jobDescription": "Job Description",
+    "responsibilities": "Responsibilities",
+    "requirements": "Requirements",
+    "skillsNeeded": "Skills Needed",
+    "yourSkillsMatch": "Your Skills Match",
+    "aboutCompany": "About {{name}}",
+    "employees": "{{count}} Employees",
+    "noCompanyInfo": "No company info available.",
+    "viewCompanyProfile": "View Company Profile",
+    "aiMatchAnalysis": "AI Match Analysis",
+    "percentMatch": "{{score}}% Match",
+    "basedOnSkills": "Based on your skills",
+    "aiMatchDisclaimer": "AI match score is based on your skills and the job requirements.",
+    "toasts": {
+      "appliedTitle": "Application Submitted",
+      "appliedMessageWithCompany": "Your application has been sent to {{company}}.",
+      "applyFailedTitle": "Application failed",
+      "applyFailedMessage": "Could not submit your application.",
+      "cvRequiredTitle": "CV Required",
+      "cvRequiredMessage": "You must upload and parse your CV before applying.",
+      "alreadyAppliedTitle": "Already Applied",
+      "alreadyAppliedMessage": "You have already applied to this job.",
+      "savedTitle": "Job Saved",
+      "savedMessage": "Added to saved.",
+      "unsavedTitle": "Job Unsaved",
+      "unsavedMessage": "Removed from saved.",
+      "saveErrorTitle": "Error",
+      "saveErrorMessage": "Could not update saved status."
+    }
+  },
+  "seekerProfile": {
+    "title": "My Profile",
+    "subtitle": "Your career profile, applications, saved jobs, and skills in one place.",
+    "loading": "Loading profile...",
+    "fallbackName": "Job Seeker",
+    "errorLoadTitle": "Error",
+    "errorLoadMessage": "Failed to load your profile.",
+    "savedToastTitle": "Profile updated",
+    "savedToastMessage": "Your changes were saved.",
+    "saveErrorTitle": "Error",
+    "saveErrorMessage": "Failed to save profile.",
+    "uploadingCover": "Uploading...",
+    "changeCover": "Change Cover",
+    "changePhoto": "Change profile photo",
+    "imageUpdatedTitle": "Image updated",
+    "coverUpdated": "Cover image updated.",
+    "photoUpdated": "Profile photo updated.",
+    "uploadFailedTitle": "Upload failed",
+    "uploadFailedMessage": "Please upload a valid image under 2MB.",
+    "headlineLabel": "Professional headline",
+    "headlinePlaceholder": "Add your professional headline",
+    "noEmail": "No email available",
+    "stats": {
+      "completion": "Profile completion",
+      "applications": "Applications",
+      "interviews": "Interviews",
+      "saved": "Saved jobs",
+      "skills": "Skills"
+    },
+    "topSkills": "Top Skills",
+    "noSkills": "No skills listed yet.",
+    "healthTitle": "Profile health",
+    "healthHint": "Complete your summary, skills, CV, and contact data to improve AI matching.",
+    "tabs": {
+      "overview": "Overview",
+      "saved": "Saved Jobs",
+      "applications": "Applications",
+      "skills": "Skills"
+    },
+    "applicationTabs": {
+      "all": "All Applications",
+      "under_review": "Under Review",
+      "shortlisted": "Shortlisted",
+      "approved": "Approved",
+      "interview": "Interview",
+      "rejected": "Rejected"
+    },
+    "skillCategoryFilters": {
+      "all": "All",
+      "technical": "Technical",
+      "soft_skill": "Soft Skills",
+      "tool": "Tools"
+    },
+    "skillCategoryOptions": {
+      "technical": "Technical Skill",
+      "soft_skill": "Soft Skill",
+      "tool": "Tool / Platform"
+    },
+    "name": {
+      "firstPlaceholder": "First name",
+      "lastPlaceholder": "Last name",
+      "cancel": "Cancel",
+      "save": "Save Name",
+      "saving": "Saving..."
+    },
+    "inline": {
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving...",
+      "addInformation": "Add information"
+    },
+    "skillChip": {
+      "fromCv": "Extracted from CV",
+      "manual": "Added manually"
+    },
+    "skills": {
+      "addPlaceholder": "Add a new skill...",
+      "cancelEdit": "Cancel",
+      "save": "Save",
+      "add": "Add",
+      "duplicateTitle": "Duplicate skill",
+      "duplicateMessage": "This skill is already listed.",
+      "updatedTitle": "Skill updated",
+      "updatedMessage": "{{name}} was saved.",
+      "addedTitle": "Skill added",
+      "addedMessage": "{{name}} was added to your profile.",
+      "errorTitle": "Error",
+      "errorMessage": "Could not save this skill.",
+      "couldNotAdd": "Could not add this skill.",
+      "removedTitle": "Skill removed",
+      "removedMessage": "{{name}} was removed.",
+      "removeError": "Could not remove this skill.",
+      "sections": {
+        "technical": "Technical Skills",
+        "soft": "Soft Skills",
+        "tools": "Tools & Platforms"
+      },
+      "emptySection": "No {{section}} added yet.",
+      "suggestedTitle": "Suggested for You",
+      "suggestedHelp": "Use the filters to add Technical Skills, Soft Skills, or Tools & Platforms to the matching section.",
+      "allSuggestedAdded": "You've added all suggested skills.",
+      "suggestedCategory": {
+        "soft": "Soft Skill",
+        "tool": "Tool",
+        "technical": "Technical"
+      }
+    },
+    "savedSection": {
+      "emptyTitle": "Your wishlist is empty",
+      "emptyDescription": "Browse jobs and use the bookmark action to keep them here."
+    },
+    "applicationsSection": {
+      "emptyTitle": "No applications found",
+      "emptyAll": "You haven't applied to any jobs yet.",
+      "emptyFiltered": "You don't have any {{status}} applications."
+    },
+    "fields": {
+      "summaryLabel": "Professional summary",
+      "summaryPlaceholder": "Tell recruiters about yourself",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Add email",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "Add phone",
+      "locationLabel": "Location",
+      "locationPlaceholder": "Add location",
+      "expectedSalaryLabel": "Expected salary",
+      "expectedSalaryPlaceholder": "Add expected salary",
+      "portfolioLabel": "Portfolio",
+      "linkedinLabel": "LinkedIn",
+      "yearsLabel": "Years of experience",
+      "yearsPlaceholder": "Add years of experience",
+      "educationLabel": "Education level",
+      "educationPlaceholder": "Add education level"
+    },
+    "sections": {
+      "aboutContact": "About & Contact",
+      "experienceEducation": "Experience & Education",
+      "skills": "Skills",
+      "savedJobs": "Saved Jobs",
+      "applications": "Applications"
+    },
+    "confirmRemove": {
+      "title": "Remove skill?",
+      "message": "Remove \"{{name}}\" from your skills? This may affect AI recommendations.",
+      "confirm": "Remove",
+      "cancel": "Keep"
+    }
+  },
+  "seekerSkills": {
+    "title": "My Skills",
+    "subtitle": "Manage your skills to improve your AI job recommendations.",
+    "loading": "Loading your skills…",
+    "searchPlaceholder": "Add a new skill (e.g., GraphQL, Agile)...",
+    "addButton": "Add",
+    "sections": {
+      "technical": "Technical Skills",
+      "soft": "Soft Skills",
+      "tools": "Tools & Platforms"
+    },
+    "emptySection": "No {{section}} added yet.",
+    "suggestedTitle": "Suggested for You",
+    "suggestedDescription": "Based on skills frequently required by your target roles and recommended jobs.",
+    "suggestedCategory": {
+      "soft": "Soft Skill",
+      "tool": "Tool",
+      "technical": "Technical"
+    },
+    "allAdded": "You've added all suggested skills!",
+    "tooltips": {
+      "fromCv": "Extracted from CV",
+      "manual": "Added manually",
+      "removeAria": "Remove {{name}} from your skills"
+    },
+    "toasts": {
+      "removedTitle": "Skill removed",
+      "removedMessage": "{{name}} has been removed.",
+      "removeFailedTitle": "Error",
+      "removeFailedMessage": "Could not remove this skill.",
+      "duplicateTitle": "Duplicate",
+      "duplicateMessage": "This skill is already in your list.",
+      "notFoundTitle": "Skill not found",
+      "notFoundMessage": "Choose a skill from the backend suggestions list.",
+      "addedTitle": "Skill added",
+      "addedMessage": "{{name}} has been added.",
+      "addFailedTitle": "Error",
+      "addFailedMessage": "Could not add this skill."
+    },
+    "confirm": {
+      "title": "Remove skill?",
+      "message": "Remove \"{{name}}\" from your skills? This may affect your AI job recommendations.",
+      "confirm": "Remove",
+      "cancel": "Keep"
+    }
+  },
+  "seekerSettings": {
+    "title": "Settings",
+    "subtitle": "Manage your account name, email, and password security.",
+    "accountTitle": "Account Details",
+    "accountSubtitle": "Email and password changes require your current password before saving.",
+    "fields": {
+      "name": "Account Name",
+      "email": "Email Address",
+      "password": "Password",
+      "newPassword": "New Password",
+      "confirm": "Confirm Password"
+    },
+    "newPasswordSection": "New Password",
+    "passwordMask": "••••••••",
+    "change": "Change",
+    "save": "Save Settings",
+    "saving": "Saving...",
+    "security": {
+      "title": "Security Check Required",
+      "subtitle": "Enter your current password to unlock {{target}} changes.",
+      "targetEmail": "email",
+      "targetPassword": "password",
+      "placeholder": "Current password",
+      "cancel": "Cancel",
+      "unlock": "Unlock",
+      "verifying": "Verifying...",
+      "incorrect": "Incorrect password. Please try again."
+    },
+    "errors": {
+      "nameRequired": "Name is required.",
+      "emailInvalid": "Enter a valid email.",
+      "passwordMin": "Password must be at least 8 characters.",
+      "passwordMatch": "Passwords must match."
+    },
+    "toasts": {
+      "savedTitle": "Settings saved",
+      "savedMessage": "Your account settings were updated successfully.",
+      "failedTitle": "Update failed",
+      "failedMessage": "Could not update settings."
+    }
+  },
+  "seekerNotifications": {
+    "title": "Notifications",
+    "subtitle": "Stay updated on your applications, messages, and interviews.",
+    "loading": "Loading your notifications...",
+    "markAll": "Mark all as read",
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "interviews": "Interviews",
+      "messages": "Messages",
+      "applications": "Applications"
+    },
+    "unreadCount_one": "{{count}} unread notification",
+    "unreadCount_other": "{{count}} unread notifications",
+    "emptyTitle": "No notifications",
+    "emptyDescription": "No notifications match this filter.",
+    "errors": {
+      "loadTitle": "Notifications unavailable",
+      "loadMessage": "Could not load your notifications.",
+      "markAllFailedTitle": "Update failed",
+      "markAllFailedMessage": "Could not mark notifications as read.",
+      "markFailedMessage": "Could not mark this notification as read."
+    }
+  },
+  "seekerInterviews": {
+    "title": "Interviews",
+    "subtitle": "Track interview dates from every company in one place.",
+    "loading": "Loading interviews...",
+    "stats": {
+      "total": "Total interviews",
+      "upcoming": "Upcoming",
+      "past": "Past"
+    },
+    "fallbackCompany": "Company",
+    "fallbackRole": "Interview",
+    "pastTag": "Past interview",
+    "upcomingTag": "Upcoming interview",
+    "openConversation": "Open conversation",
+    "viewApplication": "View application",
+    "emptyTitle": "No interviews scheduled",
+    "emptyDescription": "When a company schedules an interview, it will appear here with the role, company, and time."
+  },
+  "seekerSavedJobs": {
+    "title": "Saved Jobs",
+    "subtitle": "Keep track of jobs you're interested in applying for later.",
+    "searchPlaceholder": "Search saved jobs...",
+    "searchButton": "Search",
+    "showingPrefix": "Showing",
+    "showingSuffix": "saved jobs",
+    "sortLabel": "Sort by:",
+    "sortNewest": "Newest",
+    "sortSalary": "Salary high to low",
+    "loading": "Loading saved jobs…",
+    "fallbackCompany": "Company",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {{current}} of {{total}}"
+    },
+    "emptyNoMatchesTitle": "No saved jobs found",
+    "emptyNoMatchesDescription": "No saved jobs match your search criteria.",
+    "emptyTitle": "Your wishlist is empty",
+    "emptyDescription": "You haven't saved any jobs yet. Browse jobs and click the bookmark icon to save them here.",
+    "clearFilters": "Clear Filters"
+  },
+  "seekerEditProfile": {
+    "title": "Edit Profile",
+    "subtitle": "Update your personal details and professional summary.",
+    "personalTitle": "Personal Information",
+    "additionalTitle": "Additional Details",
+    "fields": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "title": "Professional Headline",
+      "titlePlaceholder": "e.g., Senior Developer",
+      "bio": "Professional Summary",
+      "bioPlaceholder": "Tell recruiters about yourself...",
+      "location": "Location",
+      "locationPlaceholder": "City, Country",
+      "expectedSalary": "Expected Salary",
+      "expectedSalaryPlaceholder": "e.g., $30k - $45k",
+      "portfolio": "Portfolio URL",
+      "portfolioPlaceholder": "https://",
+      "linkedin": "LinkedIn URL",
+      "linkedinPlaceholder": "https://linkedin.com/in/..."
+    },
+    "cancel": "Cancel",
+    "save": "Save Profile",
+    "saving": "Saving...",
+    "toasts": {
+      "validationTitle": "Validation Error",
+      "validationMessage": "First and last name are required.",
+      "successTitle": "Profile Updated",
+      "successMessage": "Your profile has been saved successfully.",
+      "errorTitle": "Error",
+      "errorMessage": "Failed to save."
+    }
+  },
+  "seekerRejectionFeedback": {
+    "back": "Back to Applications",
+    "title": "Application Feedback",
+    "subtitleWithRole": "Feedback for {{role}}",
+    "noFeedback": "No rejection feedback available.",
+    "assessmentTitle": "Overall Assessment",
+    "assessmentDescription": "Based on the AI analysis of your application against the job requirements, here is the breakdown.",
+    "missingSkillsTitle": "Missing Skills",
+    "noMissingSkills": "No missing skills were explicitly identified.",
+    "findSimilar": "Find Similar Jobs"
+  },
+  "seekerDashboard": {
+    "welcome": "Welcome back!",
+    "subtitle": "Your profile is {{percent}}% complete. Let's find your next opportunity.",
+    "loading": "Loading dashboard…",
+    "cv": {
+      "uploadedTitle": "CV Uploaded Successfully",
+      "uploadedAt": "Uploaded on {{date}}",
+      "parsedBadge": "Parsed",
+      "extractedSkills": "Extracted {{count}} skills",
+      "reupload": "Re-upload CV",
+      "review": "Review Extracted Data",
+      "missingTitle": "Upload your CV",
+      "missingDescription": "Upload your CV to unlock AI matching and personalized job recommendations.",
+      "uploadButton": "Upload CV"
+    },
+    "stats": {
+      "applied": "Applied",
+      "underReview": "Under Review",
+      "shortlisted": "Shortlisted",
+      "profileSkills": "Profile Skills"
+    },
+    "topMatches": "Top Matches for You",
+    "recentApplications": "Recent Applications",
+    "viewAll": "View all",
+    "emptyMatches": "No recommended jobs found. Try adding more skills.",
+    "updateSkills": "Update Skills",
+    "emptyApplications": "You haven't applied to any jobs yet.",
+    "browseJobs": "Browse Jobs"
+  },
+  "seekerNav": {
+    "dashboard": "Dashboard",
+    "browseJobs": "Browse Jobs",
+    "profile": "Profile",
+    "interviews": "Interviews",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "publicSite": "View Public Site",
+    "workspaceLabel": "Candidate Workspace",
+    "help": "Help",
+    "logout": "Logout",
+    "accountSettings": "Account Settings"
+  },
+  "companyFlow": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{page}}",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "errorTitle": "Error",
+    "missingInfoTitle": "Missing information",
+    "shortlistTargetTitle": "Shortlist candidate",
+    "unshortlistTargetTitle": "Unshortlist candidate",
+    "shortlistConfirm": "Shortlist Candidate",
+    "unshortlistConfirm": "Unshortlist Candidate",
+    "shortlistMessage": "Move {{name}} to the shortlist for recruiter follow-up?",
+    "unshortlistMessage": "Move {{name}} back to under review?",
+    "shortlistedToastTitle": "Candidate shortlisted",
+    "unshortlistedToastTitle": "Candidate moved back",
+    "rejectedToastTitle": "Candidate rejected",
+    "statusMovedMessage": "{{name}} was moved to {{status}}.",
+    "updateStatusError": "Failed to update applicant status.",
+    "rejectTitle": "Reject candidate",
+    "rejectReviewText": "Review the rejection details for {{name}} on {{job}}.",
+    "thisJob": "this job",
+    "noMissingSkills": "No missing skills",
+    "sendRejectionEmail": "Send automated rejection email",
+    "emailPreview": "Email preview",
+    "rejectEmailBody": "Hi {{name}}, thank you for applying to {{job}}. After review, we will not move forward at this time. We were specifically looking for stronger coverage in {{skills}}.",
+    "ourRole": "our role",
+    "roleCriteria": "the required role criteria",
+    "addRecruiterNote": "Add an optional recruiter note",
+    "rejecting": "Rejecting...",
+    "confirmReject": "Confirm Reject",
+    "approveConfirm": "Approve Candidate",
+    "approveMessage": "Approve {{name}} for this role?",
+    "approvedToastTitle": "Candidate approved",
+    "approvedToastMessage": "{{name}} was approved for this role.",
+    "approveError": "Failed to approve applicant.",
+    "approveTitle": "Approve candidate",
+    "itemNotFound": "Item not found",
+    "itemNotFoundMessage": "The record may have been removed or is unavailable.",
+    "form": {
+      "basicInfo": "Basic info",
+      "jobTitle": "Job title",
+      "category": "Category",
+      "selectCategory": "Select category",
+      "jobType": "Job type",
+      "selectType": "Select type",
+      "location": "Location",
+      "workMode": "Work mode",
+      "description": "Description",
+      "jobDescription": "Job description",
+      "responsibilities": "Responsibilities",
+      "responsibilitiesHint": "One responsibility per line",
+      "requiredSkills": "Required skills",
+      "skillsHint": "Enter skills separated by commas or new lines",
+      "salaryExpEdu": "Salary, experience, and education",
+      "salaryMin": "Salary min",
+      "salaryMax": "Salary max",
+      "experienceLevel": "Experience level",
+      "selectLevel": "Select level",
+      "education": "Education",
+      "salaryMinPlaceholder": "e.g. 90,000",
+      "salaryMaxPlaceholder": "e.g. 130,000",
+      "errors": {
+        "titleRequired": "Job title is required.",
+        "categoryRequired": "Category is required.",
+        "locationRequired": "Location is required.",
+        "typeRequired": "Job type is required.",
+        "descriptionRequired": "Description is required.",
+        "skillsRequired": "Add at least one required skill."
+      },
+      "jobUpdatedTitle": "Job updated",
+      "jobUpdatedMessage": "{{title}} was saved.",
+      "draftSavedTitle": "Draft saved",
+      "jobPublishedTitle": "Job published",
+      "jobSavedMessage": "{{title}} is now saved.",
+      "saveDraft": "Save Draft",
+      "loading": "Loading...",
+      "preview": "Preview",
+      "publishing": "Publishing...",
+      "publishChanges": "Publish Changes",
+      "publishJob": "Publish Job"
+    },
+    "workModes": {
+      "Remote": "Remote",
+      "Hybrid": "Hybrid",
+      "On-site": "On-site"
+    },
+    "jobTypeOptions": {
+      "full_time": "Full time",
+      "part_time": "Part time",
+      "contract": "Contract",
+      "internship": "Internship"
+    },
+    "undoChatDeleted": "Chat with {{name}} deleted.",
+    "undo": "Undo",
+    "dashboard": {
+      "createJob": "Create Job",
+      "eyebrow": "Company Dashboard",
+      "title": "Welcome back",
+      "description": "Track job performance, applicant quality, and recruiter actions from one connected workspace.",
+      "totalJobs": "Total jobs",
+      "activeJobs": "Active jobs",
+      "totalApplicants": "Total applicants",
+      "newThisWeek": "New this week",
+      "recentApplicants": "Recent applicants",
+      "percentMatch": "{{percent}}% Match",
+      "jobApplication": "Job Application",
+      "shortlistButton": "Shortlist Candidate",
+      "unshortlistButton": "Unshortlist",
+      "noRecentApplicants": "No recent applicants.",
+      "topPerformingJobs": "Top performing jobs",
+      "applicantsCount": "{{count}} Applicants",
+      "noTopJobs": "No top jobs.",
+      "hiringPipeline": "Hiring Pipeline",
+      "underReview": "Under review",
+      "shortlisted": "Shortlisted",
+      "rejected": "Rejected",
+      "errorTitle": "Error loading dashboard"
+    },
+    "profile": {
+      "publicPreview": "Public Preview",
+      "editProfile": "Edit Profile",
+      "eyebrow": "Company Profile",
+      "details": "Company details",
+      "industry": "Industry",
+      "website": "Website",
+      "location": "Location",
+      "contactEmail": "Contact email",
+      "phone": "Phone",
+      "founded": "Founded",
+      "companySize": "Company size",
+      "activeJobs": "Active jobs",
+      "profileNotFound": "Profile not found",
+      "editEyebrow": "Company Profile",
+      "editTitle": "Edit company profile",
+      "editDescription": "Keep your public employer brand and recruiter contact information current.",
+      "profileSavedTitle": "Profile saved",
+      "profileSavedMessage": "Company profile changes were saved.",
+      "profileInformation": "Profile information",
+      "fields": {
+        "companyName": "Company name",
+        "industry": "Industry",
+        "website": "Website",
+        "location": "Location",
+        "contactEmail": "Contact email",
+        "phone": "Phone",
+        "foundedYear": "Founded year",
+        "companySize": "Company size",
+        "description": "Description",
+        "logoUpload": "Logo upload"
+      },
+      "logoUploadedTitle": "Logo uploaded",
+      "logoUploadedMessage": "Logo was updated successfully.",
+      "logoUploadError": "Failed to upload logo.",
+      "selectedFile": "Selected: {{name}}",
+      "saveChanges": "Save Changes",
+      "errors": {
+        "nameRequired": "Company name is required.",
+        "industryRequired": "Industry is required.",
+        "locationRequired": "Location is required."
+      },
+      "preview": {
+        "backToProfile": "Back to Profile",
+        "eyebrow": "Public Preview",
+        "employerProfile": "Employer profile",
+        "foundedPrefix": "Founded",
+        "openJobs": "Open jobs"
+      }
+    },
+    "manageJobs": {
+      "eyebrow": "Manage Jobs",
+      "title": "Job board",
+      "description": "Search, filter, publish, pause, edit, preview, and remove job posts.",
+      "searchPlaceholder": "Search jobs by title, location, skill, work mode, or status...",
+      "statusOptions": {
+        "all": "All Status",
+        "active": "Active",
+        "draft": "Draft",
+        "paused": "Paused",
+        "closed": "Closed"
+      },
+      "sortOptions": {
+        "newest": "Newest",
+        "applicants": "Most applicants",
+        "views": "Most views"
+      },
+      "statusUpdatedTitle": "Job status updated",
+      "statusUpdatedMessage": "{{title}} is now {{status}}.",
+      "statusUpdateError": "Failed to update job status.",
+      "deletingButton": "Deleting...",
+      "deleteJob": "Delete Job",
+      "deleteMessage": "Delete {{title}}? Applicants for this job will also be removed.",
+      "deletedTitle": "Job deleted",
+      "deletedMessage": "{{title}} was removed.",
+      "deleteError": "Failed to delete job.",
+      "deleteTitle": "Delete job"
+    },
+    "createPost": {
+      "eyebrow": "Create Job",
+      "title": "Create job post",
+      "description": "Build a complete job post and save it as a draft or publish it immediately."
+    },
+    "editPost": {
+      "eyebrow": "Edit Job",
+      "description": "Update job details, requirements, and hiring expectations.",
+      "notFoundTitle": "Job not found",
+      "notFoundMessage": "This job post is unavailable."
+    },
+    "preview": {
+      "backToEdit": "Back to Edit",
+      "pause": "Pause",
+      "publish": "Publish",
+      "viewApplicants": "View Applicants",
+      "statusUpdateError": "Failed to update status.",
+      "eyebrow": "Job Preview",
+      "previewTitle": "Preview",
+      "notFoundTitle": "Preview unavailable",
+      "notFoundMessage": "This job post could not be found."
+    },
+    "jobDetails": {
+      "viewApplicants": "View Applicants",
+      "editJob": "Edit Job",
+      "preview": "Preview",
+      "pause": "Pause",
+      "publish": "Publish",
+      "delete": "Delete",
+      "eyebrow": "Job Details",
+      "views": "Views",
+      "applicants": "Applicants",
+      "avgMatch": "Avg. match",
+      "status": "Status",
+      "jobOverview": "Job overview",
+      "experiencePrefix": "Experience",
+      "educationPrefix": "Education",
+      "recentApplicants": "Recent applicants",
+      "noApplicants": "No applicants yet.",
+      "deleteConfirm": "Delete Job",
+      "deleteMessage": "Delete {{title}}?",
+      "deletedTitle": "Job deleted",
+      "deletedMessage": "{{title}} was removed.",
+      "deleteTitle": "Delete job",
+      "notFoundTitle": "Job not found",
+      "notFoundMessage": "This job post is unavailable."
+    },
+    "applicants": {
+      "eyebrow": "Smart ATS",
+      "title": "Applicants for {{title}}",
+      "description": "Review AI match scores, skill gaps, and candidate status.",
+      "allJobsLabel": "All Jobs",
+      "searchPlaceholder": "Search by name, title, skill, or status",
+      "statusOptions": {
+        "all": "All",
+        "new": "New",
+        "under_review": "Under Review",
+        "shortlisted": "Shortlisted",
+        "rejected": "Rejected"
+      },
+      "sortOptions": {
+        "match": "Match score",
+        "newest": "Newest",
+        "experience": "Years experience"
+      },
+      "notFoundTitle": "Job not found",
+      "notFoundMessage": "Applicants cannot be loaded for this job."
+    },
+    "applicantProfile": {
+      "notFoundTitle": "Applicant not found",
+      "notFoundMessage": "This candidate record is unavailable.",
+      "approve": "Approve",
+      "shortlist": "Shortlist",
+      "unshortlist": "Unshortlist",
+      "messageCandidate": "Message Candidate",
+      "reject": "Reject",
+      "downloadCv": "Download CV",
+      "backToApplicants": "Back to Applicants",
+      "eyebrow": "Applicant Profile",
+      "selectedRole": "selected role",
+      "applicantSubtitle": "{{title}} for {{job}}",
+      "applicationStatus": "Application status",
+      "experience": "Experience",
+      "yearsLabel": "{{years}} years",
+      "education": "Education",
+      "topSkills": "Top Skills",
+      "noSkills": "No skills listed.",
+      "aiMatch": "AI match",
+      "missingSkills": "Missing skills",
+      "noMissingDetected": "No missing skills detected",
+      "noEmail": "No email available"
+    },
+    "cvViewer": {
+      "title": "CV Viewer unavailable",
+      "message": "CV viewing is partially mocked and relies on download right now."
+    },
+    "matching": {
+      "approve": "Approve",
+      "shortlist": "Shortlist",
+      "reject": "Reject",
+      "viewProfile": "View Profile",
+      "eyebrow": "AI Matching Details",
+      "strong": "Strong candidate",
+      "needsReview": "Needs review",
+      "low": "Low match",
+      "evaluatedAgainst": "Evaluated against {{title}}.",
+      "matchScore": "Match Score",
+      "requiredChecklist": "Required skills checklist",
+      "noRequiredTitle": "No required skills",
+      "noRequiredMessage": "This job does not have required skills configured yet.",
+      "expMatch": "Experience match:",
+      "expValue": "{{years}} years",
+      "expSuffix": "for a {{level}} role.",
+      "eduMatch": "Education match:",
+      "recommendation": "Recommendation:",
+      "notFoundTitle": "Matching details unavailable",
+      "notFoundMessage": "Applicant or job data could not be found."
+    },
+    "notifications": {
+      "errorTitle": "Notifications unavailable",
+      "errorMessage": "Could not load company notifications.",
+      "markAllError": "Could not mark notifications as read.",
+      "markAll": "Mark all as read",
+      "eyebrow": "Notifications",
+      "title": "Company notifications",
+      "description": "Monitor applicant, job, message, and view updates.",
+      "filters": {
+        "all": "all",
+        "unread": "unread",
+        "messages": "messages",
+        "applications": "applications",
+        "views": "views"
+      },
+      "emptyTitle": "No notifications",
+      "emptyMessage": "No notifications match this filter.",
+      "fallbackTitle": "Notification"
+    },
+    "messages": {
+      "eyebrow": "Messages",
+      "title": "Candidate conversations",
+      "muteAll": "Mute all messages",
+      "unmuteAll": "Unmute all messages",
+      "muteChat": "Mute Chat",
+      "unmuteChat": "Unmute Chat",
+      "inbox": "Inbox",
+      "chatsCount": "{{count}} chats",
+      "searchPlaceholder": "Search candidates, roles, messages",
+      "selectedCandidate": "Selected candidate",
+      "jobConversation": "Job conversation",
+      "generalConversation": "General conversation",
+      "shortlistedFallback": "Shortlisted",
+      "newTag": "New",
+      "emptyTitle": "No messages",
+      "emptyMessage": "You have no messages yet.",
+      "emptySearchMessage": "No conversations match your search.",
+      "noMessagesYet": "No messages yet",
+      "mutedTitle": "Muted conversation",
+      "interviewScheduledTitle": "Interview scheduled",
+      "interviewPassedTitle": "Interview passed",
+      "interviewScheduledText": "Interview scheduled for {{date}}. Please confirm your availability.",
+      "noInterview": "No interview scheduled yet.",
+      "rescheduleLink": "Edit interview time",
+      "reinterviewLink": "Re-interview",
+      "reschedule": "Reschedule",
+      "schedule": "Schedule",
+      "selectChatPlaceholder": "Select a conversation from the left to start messaging.",
+      "noMessagesInChat": "No messages yet.",
+      "youLabel": "You",
+      "messagePlaceholder": "Type your message...",
+      "send": "Send",
+      "deleteChat": "Delete Chat",
+      "deleteError": "Failed to delete chat."
+    },
+    "settings": {
+      "eyebrow": "Settings",
+      "title": "Account Settings",
+      "description": "Manage your account profile, email, and password security.",
+      "incorrectPassword": "Incorrect password. Please try again.",
+      "nameRequired": "Name is required.",
+      "emailInvalid": "Enter a valid email.",
+      "passwordMin": "Password must be at least 8 characters.",
+      "passwordMatch": "Passwords must match.",
+      "savedTitle": "Settings saved",
+      "savedMessage": "Account settings were updated successfully.",
+      "updateFailedTitle": "Update failed",
+      "updateFailedMessage": "Could not update settings.",
+      "securityTitle": "Security Check Required",
+      "securityHint": "Please enter your current password to unlock {{target}} changes.",
+      "currentPassword": "Current password",
+      "verifying": "Verifying...",
+      "unlock": "Unlock",
+      "accountDetails": "Account Details",
+      "accountName": "Account Name",
+      "emailAddress": "Email Address",
+      "passwordLabel": "Password",
+      "passwordMask": "••••••••",
+      "change": "Change",
+      "newPasswordSection": "New Password",
+      "newPasswordField": "Password",
+      "confirmField": "Confirm Password",
+      "save": "Save Settings",
+      "saving": "Saving..."
+    }
+  },
+  "companyNav": {
+    "dashboard": "Dashboard",
+    "companyProfile": "Company Profile",
+    "manageJobs": "Manage Jobs",
+    "createJob": "Create Job",
+    "applicants": "Applicants",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "publicSite": "View Public Site",
+    "workspaceLabel": "Employer Workspace"
+  },
+  "adminNav": {
+    "dashboard": "Dashboard",
+    "users": "Users Management",
+    "jobs": "Jobs Management",
+    "activity": "Activity Log",
+    "settings": "Settings",
+    "workspaceLabel": "Admin Workspace"
+  },
+  "experienceLevels": {
+    "Internship": "Internship",
+    "Entry Level / Junior": "Entry Level / Junior",
+    "Mid Level": "Mid Level",
+    "Senior": "Senior",
+    "Lead / Manager": "Lead / Manager",
+    "Director / Executive": "Director / Executive"
+  },
+  "categories": {
+    "Engineering": "Engineering",
+    "Design": "Design",
+    "Marketing": "Marketing",
+    "Data Science": "Data Science",
+    "Finance": "Finance",
+    "Customer Success": "Customer Success",
+    "Operations": "Operations",
+    "Human Resources": "Human Resources",
+    "Other": "Other",
+    "General": "General"
+  },
+  "jobTypesLabels": {
+    "Full-time": "Full-time",
+    "Part-time": "Part-time",
+    "Contract": "Contract",
+    "Internship": "Internship",
+    "Remote": "Remote"
+  },
+  "publicJobs": {
+    "eyebrow": "Job Search",
+    "title": "Browse jobs that match your goals",
+    "description": "Search open positions or ask the AI filter to scan recommendations matched to your profile.",
+    "aiCard": {
+      "title": "Recommended Jobs",
+      "scanning": "AI is scanning your profile and skills...",
+      "cta": "Turn on AI matching to show jobs ranked for your profile.",
+      "notSeeker": "Sign in as a job seeker to use AI recommended jobs from the public browse page.",
+      "aiOn": "AI On",
+      "useAi": "Use AI"
+    },
+    "searchJobPlaceholder": "Job title, keywords, or company",
+    "searchLocationPlaceholder": "City, state, or remote",
+    "searchButton": "Search Jobs",
+    "popular": "Popular:",
+    "showFilters": "Show Filters",
+    "hideFilters": "Hide Filters",
+    "filters": {
+      "title": "Filters",
+      "category": "Category",
+      "jobType": "Job Type",
+      "experience": "Experience Level",
+      "clearAll": "Clear All Filters"
+    },
+    "loadingJobs": "Loading jobs...",
+    "results": {
+      "showing": "Showing",
+      "modes": {
+        "all": "jobs",
+        "recommended": "AI matches"
+      },
+      "recommendedTag": "Recommended Jobs",
+      "categoryTag": "Category: {{name}}"
+    },
+    "errors": {
+      "aiUnavailable": "AI recommendations are unavailable. Upload your CV and complete your seeker profile first.",
+      "loadFailed": "Failed to load jobs. Please try again."
+    },
+    "empty": {
+      "lockedTitle": "Recommendations Locked",
+      "lockedDescription": "Please upload your CV and fill your profile to unlock personalized AI job recommendations.",
+      "uploadCv": "Upload CV",
+      "noAiTitle": "No AI matches found",
+      "noAiDescription": "Try clearing filters or adding more skills to your profile.",
+      "noJobsTitle": "No jobs match your search",
+      "noJobsDescription": "Try adjusting your filters or search terms.",
+      "clearFilters": "Clear Filters"
+    },
+    "admin": {
+      "forceDelete": "Force Delete",
+      "confirmDelete": "Force delete {{title}}? This marks the job as permanently deleted.",
+      "deleted": "Job force deleted successfully",
+      "deleteFailed": "Failed to force delete job"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {{current}} of {{total}}"
+    }
+  },
+  "jobDetails": {
+    "notFound": "Job not found or is no longer available.",
+    "browseJobs": "Browse Jobs",
+    "breadcrumb": "Jobs",
+    "admin": {
+      "controls": "Admin Controls",
+      "forceDelete": "Force Delete Job",
+      "viewDashboard": "View in Dashboard",
+      "confirmDelete": "Force delete {{title}}? This marks the job as permanently deleted.",
+      "deleted": "Job force deleted successfully",
+      "deleteFailed": "Failed to force delete job"
+    },
+    "owner": {
+      "viewMode": "Public View Mode",
+      "editJob": "Edit Job",
+      "manageApplicants": "Manage Applicants"
+    },
+    "loginToApply": "Log in to Apply",
+    "saved": "Saved",
+    "saveJob": "Save Job",
+    "jobDescription": "Job Description",
+    "responsibilities": "Responsibilities",
+    "requirements": "Requirements",
+    "skillsNeeded": "Skills Needed",
+    "aboutCompany": "About {{name}}",
+    "noCompanyInfo": "No company info available.",
+    "employees": "{{count}} Employees",
+    "viewCompanyProfile": "View Company Profile"
+  },
+  "companyDetails": {
+    "notFound": "Company not found or is no longer available.",
+    "browseCompanies": "Browse Companies",
+    "breadcrumb": "Companies",
+    "admin": {
+      "controls": "Admin Controls",
+      "viewDashboard": "View Company in Dashboard"
+    },
+    "owner": {
+      "viewMode": "Public View Mode",
+      "editProfile": "Edit Profile",
+      "postJob": "Post a Job"
+    },
+    "toastHasJobs": "{{name}} has open jobs",
+    "toastNoJobs": "No jobs from {{name}}",
+    "toastHasJobsMessage_one": "{{name}} currently has {{count}} active position listed below.",
+    "toastHasJobsMessage_other": "{{name}} currently has {{count}} active positions listed below.",
+    "toastNoJobsMessage": "{{name}} has not posted active jobs right now.",
+    "checkUpdates": "Check company job updates",
+    "checkAria": "Check whether {{name}} has posted jobs",
+    "openPositions": "Open Positions",
+    "openPositionsCount": "{{count}} Open Positions",
+    "employeesCount": "{{count}} Employees",
+    "aboutTitle": "About {{name}}",
+    "noDescription": "No description provided.",
+    "hiringNow": "Hiring Now",
+    "openPositionsHeader": "Open Positions ({{count}})",
+    "manageJobs": "Manage Jobs",
+    "postedAt": "Posted {{date}}",
+    "recentlyPosted": "Recently posted",
+    "defaultCategory": "General",
+    "moreSkills": "+{{count}} more",
+    "noPositionsTitle": "No open positions right now",
+    "noPositionsHint": "Check back later for new roles from {{name}}.",
+    "snapshotTitle": "Company Snapshot",
+    "snapshot": {
+      "industry": "Industry",
+      "location": "Location",
+      "openRoles": "Open Roles",
+      "website": "Website"
+    },
+    "benefitsTitle": "Benefits"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "intro": "Your privacy is important to us. This policy explains how Smart Job Portal collects, uses, and protects your personal information.",
+    "sectionsHeader": "Sections",
+    "ctaTitle": "Have questions about your data?",
+    "ctaDescription": "Our privacy team is here to help. Contact us for any data-related inquiries.",
+    "ctaButton": "Contact Privacy Team",
+    "nav": {
+      "collection": "Information We Collect",
+      "usage": "How We Use It",
+      "sharing": "Data Sharing",
+      "security": "Data Security",
+      "rights": "Your Rights",
+      "cookies": "Cookies"
+    },
+    "sections": {
+      "collection": {
+        "heading": "Information We Collect",
+        "intro": "We collect information you provide directly when you create an account, upload your CV, apply for jobs, or contact us. This includes:",
+        "items": [
+          "Name, email address, and contact information",
+          "Professional experience, education, and skills",
+          "CV/resume documents you upload",
+          "Job applications and saved job preferences",
+          "Account settings and communication preferences",
+          "Usage data such as pages visited and features used"
+        ]
+      },
+      "usage": {
+        "heading": "How We Use Your Information",
+        "intro": "We use your information to provide and improve our services, including:",
+        "items": [
+          "Matching you with relevant job opportunities using our AI technology",
+          "Facilitating job applications between job seekers and companies",
+          "Personalizing your job search and recommendation experience",
+          "Analyzing your CV/resume to extract and structure professional data",
+          "Sending notifications about application status updates",
+          "Improving our platform and developing new features"
+        ]
+      },
+      "sharing": {
+        "heading": "Data Sharing",
+        "intro": "We share your information only in the following circumstances:",
+        "items": [
+          "<strong>With employers:</strong> When you apply for a job, the hiring company receives your application and profile data.",
+          "<strong>Service providers:</strong> We may share data with trusted third-party services that help us operate our platform.",
+          "<strong>Legal requirements:</strong> We may disclose information if required by law or to protect our rights."
+        ],
+        "note": "We never sell your personal data to third parties for advertising or marketing purposes."
+      },
+      "security": {
+        "heading": "Data Security",
+        "paragraph": "We implement industry-standard security measures to protect your personal information, including encryption in transit and at rest, secure authentication, and regular security audits. However, no method of transmission over the Internet is 100% secure, and we cannot guarantee absolute security."
+      },
+      "rights": {
+        "heading": "Your Rights",
+        "intro": "You have the following rights regarding your personal data:",
+        "items": [
+          "<strong>Access:</strong> Request a copy of your personal data.",
+          "<strong>Correction:</strong> Update or correct inaccurate information.",
+          "<strong>Deletion:</strong> Request deletion of your account and data.",
+          "<strong>Export:</strong> Download your data in a portable format.",
+          "<strong>Opt-out:</strong> Unsubscribe from marketing communications at any time."
+        ]
+      },
+      "cookies": {
+        "heading": "Cookies",
+        "paragraph": "We use cookies and similar technologies to maintain your session, remember your preferences, and improve your experience. Essential cookies are required for the platform to function. You can manage cookie preferences through your browser settings."
+      }
+    }
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last Updated: October 2023",
+    "sections": {
+      "account": {
+        "title": "1. Account Usage",
+        "p1": "By accessing or using Smart Job Portal, you agree to be bound by these Terms. You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password, whether your password is with our Service or a third-party service.",
+        "p2": "You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account."
+      },
+      "seeker": {
+        "title": "2. Job Seeker Responsibilities",
+        "p1": "As a job seeker, you agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete.",
+        "bullet1": "You will not misrepresent your identity or qualifications.",
+        "bullet2": "You will use the AI Matching features responsibly and not attempt to manipulate the scoring algorithms.",
+        "bullet3": "You acknowledge that Smart Job Portal does not guarantee job placement."
+      },
+      "company": {
+        "title": "3. Company Responsibilities",
+        "p1": "Employers and recruiters using the platform must ensure that all job postings comply with applicable local, state, national, and international laws, including labor and employment laws regarding non-discrimination.",
+        "p2": "Companies are solely responsible for their postings on the platform and any consequences that arise from them. The platform reserves the right to remove any posting that violates these terms without prior notice."
+      },
+      "postings": {
+        "title": "4. Job Posting Rules",
+        "p1": "To maintain the quality of our data-driven matching ecosystem, all job postings must:",
+        "bullet1": "Clearly describe the role, responsibilities, and required skills.",
+        "bullet2": "Not contain hidden fees, pyramid schemes, or inappropriate content.",
+        "bullet3": "Accurately reflect the compensation if provided."
+      },
+      "limitations": {
+        "title": "5. Platform Limitations",
+        "p1": "Smart Job Portal utilizes advanced machine learning algorithms to facilitate talent matching. However, we do not warrant that the Service will function uninterrupted, secure, or available at any particular time or location.",
+        "p2": "We are not responsible for the actions, content, information, or data of third parties, and you release us, our directors, officers, employees, and agents from any claims and damages, known and unknown, arising out of or in any way connected with any claim you have against any such third parties."
+      },
+      "termination": {
+        "title": "6. Termination Policy",
+        "p1": "We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.",
+        "p2": "Upon termination, your right to use the Service will immediately cease. If you wish to terminate your account, you may simply discontinue using the Service."
+      }
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "description": "Find answers to common questions about setting up your profile, applying for jobs, and understanding our AI matching technology.",
+    "searchPlaceholder": "Search FAQ...",
+    "clear": "Clear",
+    "categoriesHeader": "Categories",
+    "noResults": "No results found",
+    "noResultsHelp": "Try different keywords or browse categories.",
+    "ctaTitle": "Still can't find what you're looking for?",
+    "ctaDescription": "Our support team is available 24/7 to help you with any specific issues.",
+    "contactSupport": "Contact Support",
+    "categories": {
+      "account": "Account & Profile",
+      "ai": "AI Matching Tech"
+    },
+    "items": {
+      "verifyEmail": {
+        "q": "How do I verify my professional email?",
+        "a": "To verify your email, navigate to Settings > Account > Email Preferences. Click the \"Send Verification Link\" button next to your primary email address. You will receive an email from Smart Job Portal within 5 minutes containing a secure, time-sensitive link.",
+        "tip": "If you don't see the email, please check your spam folder or ensure your company's firewall allows emails from no-reply@smartjobportal.com."
+      },
+      "hideProfile": {
+        "q": "Can I hide my profile from my current employer?",
+        "a": "Yes! Go to Settings > Privacy and enable \"Stealth Mode.\" This will hide your profile from specific companies you list. Your profile will still be visible to other employers and recruiters."
+      },
+      "exportData": {
+        "q": "How do I export my profile data?",
+        "a": "Navigate to Settings > Account > Data & Privacy. Click \"Export My Data\" to download a full copy of your profile, applications, and activity history in JSON or PDF format."
+      },
+      "matchScore": {
+        "q": "How is the AI Matching Score calculated?",
+        "a": "Our AI analyzes over 50 factors including your skills, experience, education, location preferences, salary expectations, and career trajectory. It compares these against the job requirements using a proprietary weighted algorithm to generate a percentage match score."
+      }
+    }
+  },
+  "contact": {
+    "heroTitle": "Contact Us",
+    "heroDescription": "Whether you're a job seeker navigating your career or a company looking for top talent, our AI-driven platform is here to help. Reach out to our support team for assistance.",
+    "formTitle": "Send us a message",
+    "nameLabel": "FULL NAME",
+    "namePlaceholder": "Jane Doe",
+    "emailLabel": "EMAIL ADDRESS",
+    "emailPlaceholder": "jane@example.com",
+    "subjectLabel": "SUBJECT",
+    "subjects": {
+      "seeker": "Job Seeker Support",
+      "employer": "Employer Services",
+      "technical": "Technical Issue",
+      "billing": "Billing Inquiry",
+      "other": "Other"
+    },
+    "messageLabel": "MESSAGE",
+    "messagePlaceholder": "How can we help you?",
+    "sending": "Sending...",
+    "sendMessage": "Send Message",
+    "toastSuccessTitle": "Message Sent",
+    "toastSuccessMessage": "We'll get back to you shortly.",
+    "toastErrorTitle": "Error",
+    "toastErrorMessage": "Something went wrong. Please try again.",
+    "errors": {
+      "nameRequired": "Name is required.",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Enter a valid email.",
+      "messageRequired": "Message is required."
+    },
+    "info": {
+      "title": "Contact Information",
+      "emailLabel": "Email",
+      "emailValue": "support@smartjobportal.com",
+      "phoneLabel": "Phone",
+      "phoneValue": "+1 (555) 123-4567",
+      "phoneHours": "Mon-Fri, 9am-6pm PST",
+      "locationLabel": "Location",
+      "locationLine1": "100 Innovation Drive",
+      "locationLine2": "San Francisco, CA 94105"
+    },
+    "faqCard": {
+      "title": "Looking for quick answers?",
+      "description": "Check out our Frequently Asked Questions. You might find what you need without waiting.",
+      "browseFaq": "Browse FAQ"
+    }
+  },
+  "about": {
+    "heroTitle": "Our Mission: Bridging the Talent Gap with Intelligence",
+    "heroDescription": "We believe the future of work is built on human potential. By leveraging advanced AI, we remove bias and friction, creating a recruitment experience that is not only faster and more precise, but profoundly more human.",
+    "visionTitle": "Redefining the Future of Work",
+    "visionDescription": "Smart Job Portal isn't just a job board; it's a talent intelligence platform. We envision a world where every individual is perfectly matched to a role where they can thrive, and every company builds teams that drive transformative innovation.",
+    "scienceTitle": "The Science of Matching",
+    "scienceSubtitle": "Why we built an AI-first approach.",
+    "features": {
+      "fairness": {
+        "title": "Radical Fairness",
+        "description": "Our algorithms are trained to ignore demographic identifiers, focusing purely on skills, potential, and cultural alignment to eliminate unconscious bias."
+      },
+      "precision": {
+        "title": "Surgical Precision",
+        "description": "By analyzing millions of successful career trajectories, our AI identifies subtle skill overlaps that traditional keyword matching misses entirely."
+      },
+      "velocity": {
+        "title": "Accelerated Velocity",
+        "description": "Reduce time-to-hire from weeks to days. Instant intelligent shortlisting means hiring managers spend time interviewing, not filtering resumes."
+      }
+    },
+    "seekers": {
+      "title": "For Job Seekers: Find your potential.",
+      "description": "Stop throwing resumes into the void. Smart Job Portal acts as your personal career agent, matching your unique skills to roles you didn't even know existed, with full transparency on salary and expectations.",
+      "bullets": {
+        "parsing": "Automated profile parsing",
+        "scoring": "Transparent match scoring",
+        "privacy": "Privacy-first data control"
+      },
+      "demoCard": {
+        "title": "Senior Developer",
+        "company": "TechFlow Inc.",
+        "matchLabel": "Match"
+      }
+    },
+    "companies": {
+      "title": "For Companies: Build your future team.",
+      "description": "Move beyond the spray-and-pray approach. Access a pre-vetted, highly targeted talent pool. Our AI understands your culture and tech stack, delivering candidates ready to make an impact on day one.",
+      "bullets": {
+        "retention": "Predictive retention analytics",
+        "ats": "Seamless ATS integration",
+        "diversity": "Diversity metrics dashboard"
+      },
+      "stats": {
+        "fasterHire": "Faster Time-to-Hire",
+        "acceptance": "Offer Acceptance"
+      }
+    }
+  },
+  "home": {
+    "heroBadge": "AI-Powered Job Matching",
+    "heroTitleLine1": "Find Your Dream Job,",
+    "heroTitleLine2": "Smarter & Faster.",
+    "heroDescription": "Join the next-generation job platform. Smart Job Portal uses advanced AI to match your unique skills with the right opportunities at top companies worldwide.",
+    "searchJobPlaceholder": "Job title, keywords, or company",
+    "searchLocationPlaceholder": "City, state, or remote",
+    "searchSubmit": "Search Jobs",
+    "popular": "Popular:",
+    "stats": {
+      "activeJobs": "Active Jobs",
+      "topCompanies": "Top Companies",
+      "availableLocations": "Available Locations"
+    },
+    "howItWorks": {
+      "eyebrow": "How It Works",
+      "title": "Your Career, Simplified",
+      "description": "Three simple steps to find and land your next role with AI-powered precision.",
+      "stepLabel": "Step",
+      "steps": {
+        "upload": {
+          "title": "Upload Your CV",
+          "description": "Our AI instantly parses your resume, extracting your skills, experience, and qualifications into a smart profile."
+        },
+        "match": {
+          "title": "Get AI Matches",
+          "description": "Our matching algorithm analyzes hundreds of factors to surface the jobs that best fit your unique profile and goals."
+        },
+        "apply": {
+          "title": "Apply & Connect",
+          "description": "Apply with one click, track your applications in real-time, and connect directly with hiring managers."
+        }
+      }
+    },
+    "categories": {
+      "eyebrow": "Explore",
+      "title": "Popular Job Categories",
+      "description": "Browse jobs across the most in-demand fields and industries.",
+      "empty": "No categories available yet.",
+      "jobCount_one": "{{count}} job",
+      "jobCount_other": "{{count}} jobs"
+    },
+    "cta": {
+      "badge": "Ready to Begin?",
+      "title": "Your Next Career Move Starts Here",
+      "description": "Join thousands of professionals who found their perfect match through our AI-powered platform.",
+      "createAccount": "Create Free Account",
+      "browseJobs": "Browse Jobs"
+    }
+  },
+  "emptyStatesShort": {
+    "notifications": "No new notifications."
   },
   "forms": {
     "email": "Email",
@@ -135,5 +1676,141 @@
     "unauthorized": "Please log in to continue.",
     "forbidden": "You do not have permission to access this page.",
     "notFound": "The requested item could not be found."
+  },
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "auth": {
+    "login": {
+      "heroTitle": "Your next career move awaits.",
+      "heroDescription": "Log in to access personalized job matches, track your applications, and connect with top employers.",
+      "welcomeBack": "Welcome Back!",
+      "subtitle": "Log in to Smart Job Portal.",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "forgotPassword": "Forgot password?",
+      "signingIn": "Signing in...",
+      "submit": "Log In",
+      "newHere": "New to Smart Job Portal?",
+      "createAccount": "Create an account",
+      "toastTitle": "Welcome back!",
+      "toastMessage": "Login successful.",
+      "errors": {
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Enter a valid email.",
+        "passwordRequired": "Password is required."
+      }
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "description": "Enter the email address associated with your account and we'll send you a link to reset your password.",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "e.g. alex@example.com",
+      "submit": "Send Reset Link",
+      "sending": "Sending...",
+      "successMessage": "Reset link sent! Check your email for further instructions.",
+      "backToLogin": "Back to Login",
+      "errors": {
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Please enter a valid email address.",
+        "emailNotFound": "Email not found. Please check and try again."
+      }
+    },
+    "resetPassword": {
+      "headerSubtitle": "Reset your password to regain access",
+      "newPasswordLabel": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmLabel": "Confirm New Password",
+      "confirmPlaceholder": "Confirm new password",
+      "submit": "Reset Password",
+      "resetting": "Resetting...",
+      "strengthLabel": "Password Strength",
+      "strength": {
+        "characters": "8+ characters",
+        "uppercase": "Uppercase",
+        "number": "Number",
+        "symbol": "Symbol"
+      },
+      "passwordsMatch": "Passwords match",
+      "successTitle": "Password Reset Successful",
+      "successMessage": "Your password has been successfully updated. You can now use your new password to log in.",
+      "goToLogin": "Go to Login",
+      "toastSuccessTitle": "Password Updated",
+      "toastSuccessMessage": "Your password has been successfully reset.",
+      "toastErrorTitle": "Error",
+      "toastErrorMessage": "Something went wrong. Please try again.",
+      "errors": {
+        "invalidLink": "Reset link is invalid or missing required data.",
+        "passwordRequired": "Password is required.",
+        "passwordMin": "Password must be at least 8 characters.",
+        "passwordUpper": "Password must contain at least one uppercase letter.",
+        "passwordNumber": "Password must contain at least one number.",
+        "confirmRequired": "Please confirm your password.",
+        "confirmMatch": "Passwords do not match."
+      }
+    },
+    "emailVerification": {
+      "pageTitle": "Email Verification",
+      "verifying": "Verifying your email...",
+      "successTitle": "Email Verified!",
+      "successMessage": "Your email has been verified successfully. You can now login.",
+      "continueToLogin": "Continue to Login",
+      "errorTitle": "Verification Failed",
+      "errorMessage": "The verification link is invalid or has expired.",
+      "resendPlaceholder": "Enter your email to resend",
+      "resending": "Sending...",
+      "resendButton": "Resend Verification Email",
+      "resendSuccess": "Verification email sent!",
+      "resendFailed": "Failed to resend. Try again.",
+      "backToLogin": "Back to Login"
+    },
+    "sessionExpired": {
+      "title": "Session Expired",
+      "description": "For your security, your session has timed out due to inactivity. Please log in again to continue managing your career profile.",
+      "loginAgain": "Log In Again",
+      "returnHome": "Return to Home"
+    },
+    "register": {
+      "heroTitle": "Build a career you love.",
+      "heroDescription": "Create your account to discover roles tailored to your skills and apply with one click.",
+      "title": "Create your account",
+      "subtitle": "Join Smart Job Portal in seconds.",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "John Doe",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmLabel": "Confirm Password",
+      "confirmPlaceholder": "Re-enter your password",
+      "roleLabel": "I am a",
+      "roleSeeker": "Job seeker",
+      "roleCompany": "Company",
+      "termsAgree": "I agree to the Terms of Service and Privacy Policy.",
+      "submit": "Create account",
+      "creating": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "toastSuccessTitle": "Account Created!",
+      "toastSuccessMessage": "Please check your email for verification.",
+      "toastErrorTitle": "Registration Failed",
+      "errors": {
+        "nameRequired": "Full name is required.",
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Enter a valid email address.",
+        "passwordRequired": "Password is required.",
+        "passwordMin": "Password must be at least 8 characters.",
+        "passwordUpper": "Password must contain at least one uppercase letter.",
+        "passwordNumber": "Password must contain at least one number.",
+        "confirmRequired": "Please confirm your password.",
+        "confirmMatch": "Passwords do not match.",
+        "termsRequired": "You must agree to the terms.",
+        "roleRequired": "Please select a role."
+      }
+    }
   }
 }

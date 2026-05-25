@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PublicNavBar from '../../components/PublicNavBar';
 import PublicFooter from '../../components/PublicFooter';
 import SeekerEmptyState from '../../components/jobSeeker/SeekerEmptyState';
@@ -26,12 +27,7 @@ const TYPE_TO_BACKEND = {
   Remote: 'remote',
 };
 
-const modeLabels = {
-  all: 'jobs',
-  recommended: 'AI matches',
-};
-
-function JobListSkeleton() {
+function JobListSkeleton({ loadingLabel }) {
   return (
     <div className="flex flex-col gap-4" aria-busy="true" aria-live="polite">
       {[1, 2, 3].map((skeleton) => (
@@ -49,12 +45,13 @@ function JobListSkeleton() {
           </div>
         </div>
       ))}
-      <span className="sr-only">Loading jobs...</span>
+      <span className="sr-only">{loadingLabel}</span>
     </div>
   );
 }
 
 export default function PublicJobsPage() {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
@@ -159,7 +156,7 @@ export default function PublicJobsPage() {
           setMeta(null);
           setErrorStatus(500);
           setError(mode === 'recommended'
-            ? 'AI recommendations are unavailable. Upload your CV and complete your seeker profile first.'
+            ? t('publicJobs.errors.aiUnavailable')
             : normalizeApiError(err));
         }
       } finally {
@@ -172,7 +169,7 @@ export default function PublicJobsPage() {
     return () => {
       cancelled = true;
     };
-  }, [activeFilters, mode, page, selectedExperienceLevels, user?.role]);
+  }, [activeFilters, mode, page, selectedExperienceLevels, user?.role, t]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -247,7 +244,7 @@ export default function PublicJobsPage() {
     }
 
     if (!isJobSeeker) {
-      setRecommendationNotice('Sign in as a job seeker to use AI recommended jobs from the public browse page.');
+      setRecommendationNotice(t('publicJobs.aiCard.notSeeker'));
       return;
     }
 
@@ -292,14 +289,14 @@ export default function PublicJobsPage() {
   const handleForceDelete = async (event, job) => {
     event.preventDefault();
     event.stopPropagation();
-    if (!window.confirm(`Force delete ${job.title}? This marks the job as permanently deleted.`)) return;
+    if (!window.confirm(t('publicJobs.admin.confirmDelete', { title: job.title }))) return;
 
     try {
       await adminApi.forceDeleteJob(job.id);
       setJobs((prev) => prev.filter((item) => item.id !== job.id));
-      alert('Job force deleted successfully');
+      alert(t('publicJobs.admin.deleted'));
     } catch {
-      alert('Failed to force delete job');
+      alert(t('publicJobs.admin.deleteFailed'));
     }
   };
 
@@ -326,15 +323,15 @@ export default function PublicJobsPage() {
       <PublicNavBar />
       <main className="px-4 sm:px-6 lg:px-margin-desktop py-6 lg:py-margin-desktop max-w-7xl mx-auto flex flex-col w-full flex-grow space-y-gutter">
         <section className="bg-surface-container-lowest rounded-xl p-stack-lg shadow-ambient border border-outline-variant">
-          <p className="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-stack-sm">Job Search</p>
-          <h1 className="font-display text-display text-primary mb-stack-sm">Browse jobs that match your goals</h1>
+          <p className="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-stack-sm">{t('publicJobs.eyebrow')}</p>
+          <h1 className="font-display text-display text-primary mb-stack-sm">{t('publicJobs.title')}</h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl mb-gutter">
-            Search open positions or ask the AI filter to scan recommendations matched to your profile.
+            {t('publicJobs.description')}
           </p>
 
           <div className={`mb-gutter rounded-2xl border p-stack-md transition-all ${mode === 'recommended' ? 'border-secondary/40 bg-secondary/10 shadow-ambient' : 'border-outline-variant bg-surface-container-low'}`}>
             <button
-              className="group flex w-full flex-col gap-stack-md text-left sm:flex-row sm:items-center"
+              className="group flex w-full flex-col gap-stack-md text-start sm:flex-row sm:items-center"
               onClick={toggleRecommended}
               type="button"
             >
@@ -342,24 +339,24 @@ export default function PublicJobsPage() {
                 <span className={`material-symbols-outlined text-[26px] ${isAiScanning ? 'animate-spin' : mode === 'recommended' ? 'animate-pulse' : ''}`}>auto_awesome</span>
               </span>
               <span className="flex-1">
-                <span className="block font-h2 text-h2 text-primary">Recommended Jobs</span>
+                <span className="block font-h2 text-h2 text-primary">{t('publicJobs.aiCard.title')}</span>
                 <span className="block font-body-md text-body-md text-on-surface-variant">
-                  {isAiScanning ? 'AI is scanning your profile and skills...' : 'Turn on AI matching to show jobs ranked for your profile.'}
+                  {isAiScanning ? t('publicJobs.aiCard.scanning') : t('publicJobs.aiCard.cta')}
                 </span>
                 {recommendationNotice && <span className="mt-2 block text-sm text-secondary">{recommendationNotice}</span>}
               </span>
               <span className={`inline-flex items-center justify-center rounded-full px-4 py-2 font-label-sm text-label-sm uppercase tracking-wider ${mode === 'recommended' ? 'bg-secondary text-on-secondary' : 'bg-surface-container-lowest text-on-surface-variant border border-outline-variant group-hover:text-secondary'}`}>
-                {mode === 'recommended' ? 'AI On' : 'Use AI'}
+                {mode === 'recommended' ? t('publicJobs.aiCard.aiOn') : t('publicJobs.aiCard.useAi')}
               </span>
             </button>
           </div>
 
           <form className="mt-gutter grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-stack-md" onSubmit={applySearch}>
             <label className="relative" ref={jobInputRef}>
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+              <span className="material-symbols-outlined absolute start-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
               <input
-                className="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
-                placeholder="Job title, keywords, or company"
+                className="w-full bg-surface-container-low border border-outline-variant rounded-lg ps-12 pe-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
+                placeholder={t('publicJobs.searchJobPlaceholder')}
                 type="search"
                 value={searchQuery}
                 onChange={(event) => {
@@ -369,7 +366,7 @@ export default function PublicJobsPage() {
                 onFocus={() => setShowJobSuggestions(true)}
               />
               {showJobSuggestions && filteredJobSuggestions.length > 0 && (
-                <ul className="absolute top-full left-0 right-0 mt-2 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-hover overflow-hidden z-50 py-2">
+                <ul className="absolute top-full start-0 end-0 mt-2 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-hover overflow-hidden z-50 py-2">
                   {filteredJobSuggestions.map((suggestion) => (
                     <li
                       key={suggestion}
@@ -387,10 +384,10 @@ export default function PublicJobsPage() {
               )}
             </label>
             <label className="relative" ref={locationInputRef}>
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">location_on</span>
+              <span className="material-symbols-outlined absolute start-4 top-1/2 -translate-y-1/2 text-on-surface-variant">location_on</span>
               <input
-                className="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
-                placeholder="City, state, or remote"
+                className="w-full bg-surface-container-low border border-outline-variant rounded-lg ps-12 pe-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
+                placeholder={t('publicJobs.searchLocationPlaceholder')}
                 type="search"
                 value={locationQuery}
                 onChange={(event) => {
@@ -400,7 +397,7 @@ export default function PublicJobsPage() {
                 onFocus={() => setShowLocationSuggestions(true)}
               />
               {showLocationSuggestions && filteredLocationSuggestions.length > 0 && (
-                <ul className="absolute top-full left-0 right-0 mt-2 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-hover overflow-hidden z-50 py-2">
+                <ul className="absolute top-full start-0 end-0 mt-2 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-hover overflow-hidden z-50 py-2">
                   {filteredLocationSuggestions.map((suggestion) => (
                     <li
                       key={suggestion}
@@ -418,13 +415,13 @@ export default function PublicJobsPage() {
               )}
             </label>
             <button type="submit" disabled={loading} className="bg-secondary text-on-secondary font-h3 text-h3 px-gutter py-stack-sm rounded-lg shadow-sm hover:opacity-90 transition-opacity whitespace-nowrap disabled:opacity-70 flex items-center justify-center gap-2">
-              {loading && mode === 'all' ? <span className="material-symbols-outlined animate-spin text-[20px]">progress_activity</span> : 'Search Jobs'}
+              {loading && mode === 'all' ? <span className="material-symbols-outlined animate-spin text-[20px]">progress_activity</span> : t('publicJobs.searchButton')}
             </button>
           </form>
 
           {popularSearches.length > 0 && (
             <div className="mt-5 flex items-center gap-2 flex-wrap text-on-surface-variant font-body-md">
-              <span className="text-outline">Popular:</span>
+              <span className="text-outline">{t('publicJobs.popular')}</span>
               {popularSearches.map((term) => (
                 <button
                   key={term}
@@ -447,7 +444,7 @@ export default function PublicJobsPage() {
               type="button"
             >
               <span className="material-symbols-outlined text-[20px]">{showFilters ? 'close' : 'tune'}</span>
-              {showFilters ? 'Hide Filters' : 'Show Filters'}
+              {showFilters ? t('publicJobs.hideFilters') : t('publicJobs.showFilters')}
             </button>
           </div>
 
@@ -455,11 +452,11 @@ export default function PublicJobsPage() {
             <div className="sticky top-6 bg-surface-container-lowest rounded-xl p-stack-md shadow-ambient border border-outline-variant">
               <h3 className="font-h3 text-h3 text-primary mb-stack-md flex items-center gap-2">
                 <span className="material-symbols-outlined text-[20px]">tune</span>
-                Filters
+                {t('publicJobs.filters.title')}
               </h3>
 
               <div className="mb-stack-md">
-                <h4 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-sm">Category</h4>
+                <h4 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-sm">{t('publicJobs.filters.category')}</h4>
                 <div className="flex flex-col gap-2">
                   {CATEGORIES.map((category) => (
                     <label key={category} className="flex items-center gap-2 font-body-md text-on-surface cursor-pointer hover:text-secondary transition-colors">
@@ -469,14 +466,14 @@ export default function PublicJobsPage() {
                         checked={categoryQuery === category}
                         onChange={() => toggleCategory(category)}
                       />
-                      {category}
+                      {t(`categories.${category}`)}
                     </label>
                   ))}
                 </div>
               </div>
 
               <div className="mb-stack-md">
-                <h4 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-sm">Job Type</h4>
+                <h4 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-sm">{t('publicJobs.filters.jobType')}</h4>
                 <div className="flex flex-col gap-2">
                   {JOB_TYPES.map((type) => (
                     <label key={type} className="flex items-center gap-2 font-body-md text-on-surface cursor-pointer hover:text-secondary transition-colors">
@@ -486,14 +483,14 @@ export default function PublicJobsPage() {
                         checked={selectedType === type}
                         onChange={() => toggleType(type)}
                       />
-                      {type}
+                      {t(`jobTypesLabels.${type}`)}
                     </label>
                   ))}
                 </div>
               </div>
 
               <div className="mb-stack-md">
-                <h4 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-sm">Experience Level</h4>
+                <h4 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-sm">{t('publicJobs.filters.experience')}</h4>
                 <div className="flex flex-col gap-2">
                   {EXPERIENCE_LEVELS.map((level) => (
                     <label key={level} className="flex items-center gap-2 font-body-md text-on-surface cursor-pointer hover:text-secondary transition-colors">
@@ -503,7 +500,7 @@ export default function PublicJobsPage() {
                         checked={selectedExperienceLevels.includes(level)}
                         onChange={() => toggleExperienceLevel(level)}
                       />
-                      {level}
+                      {t(`experienceLevels.${level}`)}
                     </label>
                   ))}
                 </div>
@@ -511,7 +508,7 @@ export default function PublicJobsPage() {
 
               {hasActiveFilters && (
                 <button className="mt-stack-md w-full py-2 text-center font-body-md text-error hover:bg-error-container/20 rounded-lg transition-colors" onClick={clearFilters} type="button">
-                  Clear All Filters
+                  {t('publicJobs.filters.clearAll')}
                 </button>
               )}
             </div>
@@ -521,25 +518,25 @@ export default function PublicJobsPage() {
             <div className="flex items-center justify-between mb-6 gap-4">
               <div className="flex flex-col gap-2">
                 <p className="font-body-md text-on-surface-variant">
-                  Showing <span className="font-semibold text-primary">{mode === 'recommended' ? jobs.length : total}</span> {modeLabels[mode]}
+                  {t('publicJobs.results.showing')} <span className="font-semibold text-primary">{mode === 'recommended' ? jobs.length : total}</span> {t(`publicJobs.results.modes.${mode}`)}
                 </p>
                 {(categoryQuery || mode === 'recommended' || selectedExperienceLevels.length > 0) && (
                   <div className="flex flex-wrap items-center gap-2">
                     {mode === 'recommended' && (
                       <span className="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm flex items-center gap-1">
                         <span className="material-symbols-outlined text-[14px]">auto_awesome</span>
-                        Recommended Jobs
+                        {t('publicJobs.results.recommendedTag')}
                       </span>
                     )}
                     {categoryQuery && (
                       <span className="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm flex items-center gap-1">
-                        Category: {categoryQuery}
+                        {t('publicJobs.results.categoryTag', { name: t(`categories.${categoryQuery}`, { defaultValue: categoryQuery }) })}
                         <button onClick={() => toggleCategory(categoryQuery)} className="material-symbols-outlined text-[14px] hover:text-error transition-colors" type="button">close</button>
                       </span>
                     )}
                     {selectedExperienceLevels.map((level) => (
                       <span key={level} className="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm flex items-center gap-1">
-                        {level}
+                        {t(`experienceLevels.${level}`)}
                         <button onClick={() => toggleExperienceLevel(level)} className="material-symbols-outlined text-[14px] hover:text-error transition-colors" type="button">close</button>
                       </span>
                     ))}
@@ -555,20 +552,20 @@ export default function PublicJobsPage() {
             )}
 
             {loading ? (
-              <JobListSkeleton />
+              <JobListSkeleton loadingLabel={t('publicJobs.loadingJobs')} />
             ) : errorStatus === 403 ? (
               <SeekerEmptyState
                 icon="lock"
-                title="Recommendations Locked"
-                description="Please upload your CV and fill your profile to unlock personalized AI job recommendations."
-                action={<a href="/seeker/cv-upload" className="inline-flex items-center justify-center gap-unit bg-secondary text-on-secondary px-stack-md py-stack-sm rounded-lg font-h3 text-h3 shadow-sm hover:opacity-90 transition-opacity">Upload CV</a>}
+                title={t('publicJobs.empty.lockedTitle')}
+                description={t('publicJobs.empty.lockedDescription')}
+                action={<a href="/seeker/cv-upload" className="inline-flex items-center justify-center gap-unit bg-secondary text-on-secondary px-stack-md py-stack-sm rounded-lg font-h3 text-h3 shadow-sm hover:opacity-90 transition-opacity">{t('publicJobs.empty.uploadCv')}</a>}
               />
             ) : visibleJobs.length === 0 ? (
               <SeekerEmptyState
                 icon="search_off"
-                title={mode === 'recommended' ? 'No AI matches found' : 'No jobs match your search'}
-                description={mode === 'recommended' ? 'Try clearing filters or adding more skills to your profile.' : 'Try adjusting your filters or search terms.'}
-                action={<button onClick={clearFilters} className="inline-flex items-center justify-center gap-unit bg-secondary text-on-secondary px-stack-md py-stack-sm rounded-lg font-h3 text-h3 shadow-sm hover:opacity-90 transition-opacity" type="button">Clear Filters</button>}
+                title={mode === 'recommended' ? t('publicJobs.empty.noAiTitle') : t('publicJobs.empty.noJobsTitle')}
+                description={mode === 'recommended' ? t('publicJobs.empty.noAiDescription') : t('publicJobs.empty.noJobsDescription')}
+                action={<button onClick={clearFilters} className="inline-flex items-center justify-center gap-unit bg-secondary text-on-secondary px-stack-md py-stack-sm rounded-lg font-h3 text-h3 shadow-sm hover:opacity-90 transition-opacity" type="button">{t('publicJobs.empty.clearFilters')}</button>}
               />
             ) : (
               <>
@@ -585,12 +582,12 @@ export default function PublicJobsPage() {
                         />
                         {isAdmin && (
                           <button
-                            className="absolute right-5 top-5 z-10 inline-flex items-center gap-1 rounded-lg bg-error-container px-3 py-1.5 text-xs font-bold text-on-error-container transition-colors hover:bg-error hover:text-on-error"
+                            className="absolute end-5 top-5 z-10 inline-flex items-center gap-1 rounded-lg bg-error-container px-3 py-1.5 text-xs font-bold text-on-error-container transition-colors hover:bg-error hover:text-on-error"
                             onClick={(event) => handleForceDelete(event, job)}
                             type="button"
                           >
                             <span className="material-symbols-outlined text-[16px]">delete_forever</span>
-                            Force Delete
+                            {t('publicJobs.admin.forceDelete')}
                           </button>
                         )}
                       </div>
@@ -606,10 +603,10 @@ export default function PublicJobsPage() {
                       onClick={() => setPage((prev) => prev - 1)}
                       type="button"
                     >
-                      Previous
+                      {t('publicJobs.pagination.previous')}
                     </button>
                     <span className="text-on-surface-variant font-label-md">
-                      Page {currentPage} of {lastPage}
+                      {t('publicJobs.pagination.page', { current: currentPage, total: lastPage })}
                     </span>
                     <button
                       className="w-full sm:w-auto px-4 py-2 border border-outline-variant rounded-lg text-primary disabled:opacity-50 hover:bg-surface-container-low transition-colors"
@@ -617,7 +614,7 @@ export default function PublicJobsPage() {
                       onClick={() => setPage((prev) => prev + 1)}
                       type="button"
                     >
-                      Next
+                      {t('publicJobs.pagination.next')}
                     </button>
                   </div>
                 )}

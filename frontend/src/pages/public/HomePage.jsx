@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../utils/constants';
 import Reveal from '../../motion/Reveal';
 import Stagger from '../../motion/Stagger';
@@ -11,12 +12,13 @@ import { EASE, SPRING_PRESS } from '../../motion/variants';
 import { getPublicJobs, getPublicCompanies } from '../../services/publicDataService';
 
 const HOW_IT_WORKS = [
-  { step: '01', icon: 'upload_file', title: 'Upload Your CV', description: 'Our AI instantly parses your resume, extracting your skills, experience, and qualifications into a smart profile.' },
-  { step: '02', icon: 'auto_awesome', title: 'Get AI Matches', description: 'Our matching algorithm analyzes hundreds of factors to surface the jobs that best fit your unique profile and goals.' },
-  { step: '03', icon: 'handshake', title: 'Apply & Connect', description: 'Apply with one click, track your applications in real-time, and connect directly with hiring managers.' },
+  { step: '01', icon: 'upload_file', key: 'upload' },
+  { step: '02', icon: 'auto_awesome', key: 'match' },
+  { step: '03', icon: 'handshake', key: 'apply' },
 ];
 
 export default function HomePage() {
+  const { t } = useTranslation();
   const [jobQuery, setJobQuery] = useState('');
   const [locationQuery, setLocationQuery] = useState('');
   const [showJobSuggestions, setShowJobSuggestions] = useState(false);
@@ -74,11 +76,11 @@ export default function HomePage() {
 
   const dynamicStats = useMemo(() => {
     return [
-      { value: jobs.length || 0, suffix: '', label: 'Active Jobs', icon: 'work' },
-      { value: companiesCount || 0, suffix: '', label: 'Top Companies', icon: 'apartment' },
-      { value: uniqueLocations.length || 0, suffix: '', label: 'Available Locations', icon: 'location_on' },
+      { value: jobs.length || 0, suffix: '', label: t('home.stats.activeJobs'), icon: 'work' },
+      { value: companiesCount || 0, suffix: '', label: t('home.stats.topCompanies'), icon: 'apartment' },
+      { value: uniqueLocations.length || 0, suffix: '', label: t('home.stats.availableLocations'), icon: 'location_on' },
     ];
-  }, [jobs.length, companiesCount, uniqueLocations.length]);
+  }, [jobs.length, companiesCount, uniqueLocations.length, t]);
 
   const dynamicCategories = useMemo(() => {
     if (loading) return [];
@@ -106,11 +108,11 @@ export default function HomePage() {
       .map(([label, count]) => ({
         icon: iconMap[label] || 'work',
         label,
-        count: `${count} ${count === 1 ? 'job' : 'jobs'}`
+        count: t('home.categories.jobCount', { count }),
       }));
 
     return sortedCats.slice(0, 8); // Top 8
-  }, [jobs, loading]);
+  }, [jobs, loading, t]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -174,19 +176,19 @@ export default function HomePage() {
                 <Stagger.Item>
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-secondary/10 text-secondary dark:text-secondary-fixed rounded-full font-label-sm text-label-sm uppercase tracking-wider mb-6 border border-secondary/20">
                     <span className="material-symbols-outlined text-[16px]" data-weight="fill" aria-hidden="true">auto_awesome</span>
-                    AI-Powered Job Matching
+                    {t('home.heroBadge')}
                   </div>
                 </Stagger.Item>
 
               <Stagger.Item as="h1">
                 <span className="block font-h1 text-[clamp(2.5rem,7vw,4.5rem)] font-bold text-primary mb-stack-md leading-[1.05] tracking-tight">
-                  Find Your Dream Job,<br />Smarter & Faster.
+                  {t('home.heroTitleLine1')}<br />{t('home.heroTitleLine2')}
                 </span>
               </Stagger.Item>
 
               <Stagger.Item as="p">
                 <span className="block font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-[640px] mx-auto leading-relaxed">
-                  Join the next-generation job platform. Smart Job Portal uses advanced AI to match your unique skills with the right opportunities at top companies worldwide.
+                  {t('home.heroDescription')}
                 </span>
               </Stagger.Item>
 
@@ -196,7 +198,7 @@ export default function HomePage() {
                     <span className="material-symbols-outlined text-outline text-[20px]" aria-hidden="true">search</span>
                     <input
                       className="w-full bg-transparent border-0 outline-none font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant py-2 md:py-3"
-                      placeholder="Job title, keywords, or company"
+                      placeholder={t('home.searchJobPlaceholder')}
                       type="text"
                       value={jobQuery}
                       onChange={(e) => {
@@ -228,7 +230,7 @@ export default function HomePage() {
                     <span className="material-symbols-outlined text-outline text-[20px]" aria-hidden="true">location_on</span>
                     <input
                       className="w-full bg-transparent border-0 outline-none font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant py-2 md:py-3"
-                      placeholder="City, state, or remote"
+                      placeholder={t('home.searchLocationPlaceholder')}
                       type="text"
                       value={locationQuery}
                       onChange={(e) => {
@@ -260,14 +262,14 @@ export default function HomePage() {
                     whileTap={reduce ? undefined : { scale: 0.96, transition: SPRING_PRESS }}
                     className="w-full md:w-auto px-8 py-3 bg-secondary text-on-secondary font-body-md font-bold rounded-xl md:rounded-full hover:bg-secondary-container transition-colors whitespace-nowrap mt-2 md:mt-0"
                   >
-                    Search Jobs
+                    {t('home.searchSubmit')}
                   </motion.button>
                 </form>
               </Stagger.Item>
 
               <Stagger.Item>
                 <div className="mt-6 flex items-center justify-center gap-2 flex-wrap text-on-surface-variant font-body-md">
-                  <span className="text-outline dark:text-white">Popular:</span>
+                  <span className="text-outline dark:text-white">{t('home.popular')}</span>
                   {popularSearches.map((term) => (
                     <Link key={term} to={`${ROUTES.JOBS}?search=${encodeURIComponent(term)}`} className="px-3 py-1 rounded-full border border-outline-variant hover:border-secondary hover:text-secondary dark:hover:text-secondary-fixed dark:hover:border-secondary-fixed transition-colors text-sm">
                       {term}
@@ -308,9 +310,9 @@ export default function HomePage() {
           <section className="w-full bg-surface-container-low py-[80px] px-margin-desktop border-t border-b border-surface-container-high">
             <div className="max-w-container-max-width mx-auto">
               <Reveal whenInView className="text-center mb-12">
-                <p className="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-2">How It Works</p>
-                <h2 className="font-h1 text-h1 text-primary mb-stack-sm">Your Career, Simplified</h2>
-                <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[560px] mx-auto">Three simple steps to find and land your next role with AI-powered precision.</p>
+                <p className="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-2">{t('home.howItWorks.eyebrow')}</p>
+                <h2 className="font-h1 text-h1 text-primary mb-stack-sm">{t('home.howItWorks.title')}</h2>
+                <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[560px] mx-auto">{t('home.howItWorks.description')}</p>
               </Reveal>
               <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1000px] mx-auto" delayChildren={0.1} staggerChildren={0.1}>
                 {HOW_IT_WORKS.map((item) => (
@@ -319,14 +321,14 @@ export default function HomePage() {
                     className="relative bg-surface-container-lowest rounded-xl p-8 border border-surface-container-high shadow-ambient transition-all group"
                     whileHover={reduce ? undefined : { y: -6, boxShadow: '0px 14px 40px rgba(15,23,42,0.12)', transition: { duration: 0.25, ease: EASE } }}
                   >
-                    <div className="absolute -top-4 left-8 px-3 py-1 bg-secondary text-on-secondary font-label-sm text-label-sm rounded-full">
-                      Step {item.step}
+                    <div className="absolute -top-4 start-8 px-3 py-1 bg-secondary text-on-secondary font-label-sm text-label-sm rounded-full">
+                      {t('home.howItWorks.stepLabel')} {item.step}
                     </div>
                     <div className="w-14 h-14 rounded-xl bg-secondary/10 flex items-center justify-center mb-5 mt-2 group-hover:bg-secondary transition-colors">
                       <span className="material-symbols-outlined text-secondary text-[28px] group-hover:text-on-secondary transition-colors" aria-hidden="true">{item.icon}</span>
                     </div>
-                    <h3 className="font-h3 text-h3 text-primary mb-2">{item.title}</h3>
-                    <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">{item.description}</p>
+                    <h3 className="font-h3 text-h3 text-primary mb-2">{t(`home.howItWorks.steps.${item.key}.title`)}</h3>
+                    <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">{t(`home.howItWorks.steps.${item.key}.description`)}</p>
                   </Stagger.Item>
                 ))}
               </Stagger>
@@ -337,9 +339,9 @@ export default function HomePage() {
           <section className="w-full py-[80px] px-margin-desktop">
             <div className="max-w-container-max-width mx-auto">
               <Reveal whenInView className="text-center mb-12">
-                <p className="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-2">Explore</p>
-                <h2 className="font-h1 text-h1 text-primary mb-stack-sm">Popular Job Categories</h2>
-                <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[560px] mx-auto">Browse jobs across the most in-demand fields and industries.</p>
+                <p className="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-2">{t('home.categories.eyebrow')}</p>
+                <h2 className="font-h1 text-h1 text-primary mb-stack-sm">{t('home.categories.title')}</h2>
+                <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[560px] mx-auto">{t('home.categories.description')}</p>
               </Reveal>
               <Stagger className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-[1000px] mx-auto" delayChildren={0.05} staggerChildren={0.05}>
                 {loading ? (
@@ -352,7 +354,7 @@ export default function HomePage() {
                   ))
                 ) : dynamicCategories.length === 0 ? (
                   <div className="col-span-full text-center py-8 text-on-surface-variant">
-                    No categories available yet.
+                    {t('home.categories.empty')}
                   </div>
                 ) : (
                   dynamicCategories.map((cat) => (
@@ -378,23 +380,23 @@ export default function HomePage() {
             <div className="max-w-[680px] mx-auto text-center">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-on-primary-fixed-variant/30 font-label-sm text-label-sm text-on-primary-container uppercase tracking-wider mb-6">
                 <span className="material-symbols-outlined text-[16px]" aria-hidden="true">rocket_launch</span>
-                Ready to Begin?
+                {t('home.cta.badge')}
               </div>
               <h2 className="font-h1 text-h1 text-on-secondary-container mb-stack-md">
-                Your Next Career Move Starts Here
+                {t('home.cta.title')}
               </h2>
               <p className="font-body-lg text-body-lg text-secondary-fixed mb-8 max-w-[520px] mx-auto">
-                Join thousands of professionals who found their perfect match through our AI-powered platform.
+                {t('home.cta.description')}
               </p>
               <div className="flex items-center justify-center gap-4 flex-wrap">
                 <motion.div whileTap={reduce ? undefined : { scale: 0.96, transition: SPRING_PRESS }}>
                   <Link to={ROUTES.REGISTER} className="inline-block px-8 py-3.5 bg-secondary text-on-secondary font-h3 text-h3 rounded-lg hover:bg-secondary-container transition-colors shadow-sm">
-                    Create Free Account
+                    {t('home.cta.createAccount')}
                   </Link>
                 </motion.div>
                 <motion.div whileTap={reduce ? undefined : { scale: 0.96, transition: SPRING_PRESS }}>
                   <Link to={ROUTES.JOBS} className="inline-block px-8 py-3.5 bg-transparent border border-on-primary-fixed-variant/30 text-on-secondary-container font-h3 text-h3 rounded-lg hover:bg-on-primary-fixed-variant/10 transition-colors">
-                    Browse Jobs
+                    {t('home.cta.browseJobs')}
                   </Link>
                 </motion.div>
               </div>

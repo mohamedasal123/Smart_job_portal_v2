@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import SeekerEmptyState from '../../components/jobSeeker/SeekerEmptyState';
 import SeekerPageHeader from '../../components/jobSeeker/SeekerPageHeader';
 import { useToast } from '../../components/useToast';
@@ -11,7 +12,7 @@ import {
   sendMessage,
 } from '../../services/jobSeekerDataService';
 
-function UndoToast({ target, onClear }) {
+function UndoToast({ target, onClear, t }) {
   const [timeLeft, setTimeLeft] = useState(5);
 
   useEffect(() => {
@@ -33,22 +34,22 @@ function UndoToast({ target, onClear }) {
 
   return (
     <div className="fixed bottom-6 left-1/2 z-[9999] flex min-w-[320px] max-w-[400px] -translate-x-1/2 animate-fade-up items-center justify-between gap-4 rounded-lg bg-inverse-surface px-4 py-3 text-inverse-on-surface shadow-overlay">
-      <p className="flex-1 truncate font-body-sm">Chat with {target.conv.company} deleted.</p>
+      <p className="flex-1 truncate font-body-sm">{t('seekerMessages.deletedToast', { name: target.conv.company })}</p>
       <div className="flex shrink-0 items-center gap-3">
         <span className="w-4 text-center font-label-sm">{timeLeft}s</span>
         <button className="rounded px-2 py-1 font-label-sm uppercase tracking-wider text-secondary transition-colors hover:bg-secondary/10 hover:underline" onClick={() => { target.restore(); onClear(); }} type="button">
-          Undo
+          {t('seekerMessages.undo')}
         </button>
       </div>
     </div>
   );
 }
 
-function MessagesSpinner() {
+function MessagesSpinner({ label }) {
   return (
     <div className="flex h-full min-h-[240px] items-center justify-center" role="status" aria-live="polite">
       <span className="material-symbols-outlined animate-spin text-[40px] text-secondary">progress_activity</span>
-      <span className="sr-only">Loading messages...</span>
+      <span className="sr-only">{label}</span>
     </div>
   );
 }
@@ -62,6 +63,7 @@ const conversationMatches = (conversation, query) => {
 };
 
 export default function JobSeekerMessagesPage() {
+  const { t } = useTranslation();
   const location = useLocation();
   const { addToast } = useToast();
   const [conversations, setConversations] = useState([]);
@@ -131,12 +133,12 @@ export default function JobSeekerMessagesPage() {
         nextConversations = [{
           id: `draft-${targetUser}-${targetJob || 'general'}`,
           other_user_id: Number(targetUser),
-          company: targetName || 'Company conversation',
-          contact: targetName || 'Recruiter',
-          role: targetJob ? 'Job conversation' : 'General conversation',
+          company: targetName || t('seekerMessages.fallbackCompany'),
+          contact: targetName || t('seekerMessages.fallbackContact'),
+          role: targetJob ? t('seekerMessages.jobConversation') : t('seekerMessages.generalConversation'),
           job_id: targetJob ? Number(targetJob) : null,
           last_message: '',
-          time: 'New',
+          time: t('seekerMessages.newLabel'),
           unread: false,
           status: 'Active',
         }, ...nextConversations];
@@ -153,11 +155,11 @@ export default function JobSeekerMessagesPage() {
       }
     } catch (error) {
       console.error(error);
-      addToast({ title: 'Messages unavailable', message: 'Could not load your conversations.', type: 'error' });
+      addToast({ title: t('seekerMessages.errors.loadConversationsTitle'), message: t('seekerMessages.errors.loadConversationsMessage'), type: 'error' });
     } finally {
       setLoading(false);
     }
-  }, [addToast, location.search]);
+  }, [addToast, location.search, t]);
 
   useEffect(() => {
     loadConversations();
@@ -177,7 +179,7 @@ export default function JobSeekerMessagesPage() {
       })
       .catch((error) => {
         console.error(error);
-        if (!cancelled) addToast({ title: 'Conversation unavailable', message: 'Could not load this conversation.', type: 'error' });
+        if (!cancelled) addToast({ title: t('seekerMessages.errors.loadConversationTitle'), message: t('seekerMessages.errors.loadConversationMessage'), type: 'error' });
       })
       .finally(() => {
         if (!cancelled) setMessagesLoading(false);
@@ -195,7 +197,7 @@ export default function JobSeekerMessagesPage() {
     return () => {
       cancelled = true;
     };
-  }, [active?.id, active?.job_id, active?.other_user_id, active?.unread, addToast]);
+  }, [active?.id, active?.job_id, active?.other_user_id, active?.unread, addToast, t]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ block: 'end' });
@@ -210,7 +212,7 @@ export default function JobSeekerMessagesPage() {
       const sent = await sendMessage(active.other_user_id, content, active.job_id);
       const nextMessage = {
         id: sent.id,
-        from: 'You',
+        from: t('seekerMessages.youLabel'),
         text: sent.content,
         created_at: sent.created_at || new Date().toISOString(),
       };
@@ -218,12 +220,12 @@ export default function JobSeekerMessagesPage() {
       setConversations((prev) => prev.map((conversation) => conversation.id === active.id ? {
         ...conversation,
         last_message: content,
-        time: 'Now',
+        time: t('seekerMessages.nowLabel'),
       } : conversation));
       setNewMessage('');
     } catch (error) {
       console.error(error);
-      addToast({ title: 'Message not sent', message: error.message || 'Please try again.', type: 'error' });
+      addToast({ title: t('seekerMessages.errors.sendFailedTitle'), message: error.message || t('seekerMessages.errors.sendFailedMessage'), type: 'error' });
     } finally {
       setSending(false);
     }
@@ -266,19 +268,21 @@ export default function JobSeekerMessagesPage() {
         setConversations(prevConversations);
         setMessages(prevMessages);
         setActiveId(prevActiveId);
-        addToast({ title: 'Error', message: 'Failed to delete chat.', type: 'error' });
+        addToast({ title: t('seekerMessages.errors.deleteFailedTitle'), message: t('seekerMessages.errors.deleteFailedMessage'), type: 'error' });
       }
       setUndoTarget((current) => current === target ? null : current);
     }, 5000);
   };
 
+  const youLabel = t('seekerMessages.youLabel');
+
   return (
     <div className="px-4 sm:px-6 lg:px-margin-desktop py-6 lg:py-margin-desktop max-w-7xl mx-auto flex h-full min-h-0 flex-col overflow-hidden space-y-gutter">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-        <SeekerPageHeader title="Messages" subtitle="Communicate directly with recruiters and hiring managers." icon="chat" />
+        <SeekerPageHeader title={t('seekerMessages.title')} subtitle={t('seekerMessages.subtitle')} icon="chat" />
         <button className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 font-semibold text-sm shadow-sm transition-all duration-200 hover:-translate-y-0.5 ${muteAllMessages ? 'border border-outline-variant bg-surface-container-high text-on-surface-variant' : 'bg-secondary text-on-secondary hover:opacity-90'} ${mutePulse === 'all' ? 'animate-scale-in' : ''}`} onClick={toggleMuteAllMessages} type="button">
           <span className="material-symbols-outlined text-[20px]">{muteAllMessages ? 'notifications_off' : 'notifications_active'}</span>
-          {muteAllMessages ? 'Unmute all messages' : 'Mute all messages'}
+          {muteAllMessages ? t('seekerMessages.unmuteAll') : t('seekerMessages.muteAll')}
         </button>
       </div>
 
@@ -286,25 +290,25 @@ export default function JobSeekerMessagesPage() {
         <section className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient overflow-hidden flex min-h-0 flex-col">
           <div className="border-b border-outline-variant p-stack-md space-y-stack-sm">
             <div className="flex items-center justify-between gap-3">
-              <h2 className="font-h2 text-h2 text-primary">Inbox</h2>
-              <span className="text-sm text-on-surface-variant">{filteredConversations.length} chats</span>
+              <h2 className="font-h2 text-h2 text-primary">{t('seekerMessages.inbox')}</h2>
+              <span className="text-sm text-on-surface-variant">{t('seekerMessages.chatsCount', { count: filteredConversations.length })}</span>
             </div>
             <label className="relative block">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+              <span className="material-symbols-outlined absolute start-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
               <input
-                className="w-full rounded-full border border-outline-variant bg-surface-container-low py-2 pl-10 pr-3 text-on-surface outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                className="w-full rounded-full border border-outline-variant bg-surface-container-low py-2 ps-10 pe-3 text-on-surface outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search companies, roles, messages"
+                placeholder={t('seekerMessages.searchPlaceholder')}
                 value={query}
               />
             </label>
           </div>
 
           <div className="min-h-0 flex-1 divide-y divide-outline-variant overflow-y-auto p-2">
-            {loading ? <MessagesSpinner /> : (
+            {loading ? <MessagesSpinner label={t('seekerMessages.loadingMessages')} /> : (
               filteredConversations.length ? filteredConversations.map((item) => (
                 <button
-                  className={`w-full rounded-lg p-stack-md text-left transition-colors ${active?.id === item.id ? 'bg-secondary-container/15' : 'hover:bg-surface-container-low'}`}
+                  className={`w-full rounded-lg p-stack-md text-start transition-colors ${active?.id === item.id ? 'bg-secondary-container/15' : 'hover:bg-surface-container-low'}`}
                   key={item.id}
                   onClick={() => setActiveId(item.id)}
                   onContextMenu={(event) => handleContextMenu(event, item)}
@@ -323,7 +327,7 @@ export default function JobSeekerMessagesPage() {
                         </span>
                       </div>
                       <p className="truncate text-sm text-on-surface-variant">{item.role}</p>
-                      <p className="mt-2 truncate text-body-sm text-on-surface-variant">{item.last_message || 'No messages yet'}</p>
+                      <p className="mt-2 truncate text-body-sm text-on-surface-variant">{item.last_message || t('seekerMessages.noMessagesYet')}</p>
                       <div className="mt-2 flex items-center justify-between gap-3">
                         <span className="font-medium text-body-sm text-secondary">{item.status}</span>
                         <span className="text-xs text-outline">{item.time}</span>
@@ -331,7 +335,7 @@ export default function JobSeekerMessagesPage() {
                     </div>
                   </div>
                 </button>
-              )) : <SeekerEmptyState icon="chat_bubble" title="No messages" description={query ? 'No conversations match your search.' : 'Recruiter conversations will appear here.'} />
+              )) : <SeekerEmptyState icon="chat_bubble" title={t('seekerMessages.emptyTitle')} description={query ? t('seekerMessages.emptySearchDescription') : t('seekerMessages.emptyDescription')} />
             )}
           </div>
         </section>
@@ -344,27 +348,27 @@ export default function JobSeekerMessagesPage() {
                   <div>
                     <p className="font-label-sm text-label-sm uppercase tracking-wider text-secondary">{active.status}</p>
                     <h2 className="font-h2 text-h2 text-primary mt-unit">{active.company}</h2>
-                    <p className="text-on-surface-variant">{active.contact} about {active.role}</p>
+                    <p className="text-on-surface-variant">{t('seekerMessages.aboutRole', { contact: active.contact, role: active.role })}</p>
                   </div>
                   <button className={`inline-flex items-center justify-center gap-2 rounded-full px-3 py-1.5 font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 ${mutedConversations.includes(conversationKey(active)) ? 'border border-outline-variant bg-surface-container-high text-on-surface-variant' : 'bg-secondary text-on-secondary'} ${mutePulse === conversationKey(active) ? 'animate-scale-in' : ''}`} onClick={() => toggleMuteConversation(active)} type="button">
                     <span className="material-symbols-outlined text-[18px]">{mutedConversations.includes(conversationKey(active)) ? 'notifications_off' : 'notifications_active'}</span>
-                    {mutedConversations.includes(conversationKey(active)) ? 'Unmute Chat' : 'Mute Chat'}
+                    {mutedConversations.includes(conversationKey(active)) ? t('seekerMessages.unmuteChat') : t('seekerMessages.muteChat')}
                   </button>
                 </div>
               </div>
               <div className="min-h-0 flex-1 space-y-stack-md overflow-y-auto bg-surface-container-low p-stack-lg">
-                {messagesLoading ? <MessagesSpinner /> : (
+                {messagesLoading ? <MessagesSpinner label={t('seekerMessages.loadingMessages')} /> : (
                   messages.length ? messages.map((message, index) => {
-                    const mine = message.from === 'You';
+                    const mine = message.from === 'You' || message.from === youLabel;
                     return (
                       <div className={`flex ${mine ? 'justify-end' : 'justify-start'}`} key={`${active.id}-${message.id || index}`}>
                         <div className={`max-w-[75%] rounded-2xl px-stack-md py-stack-sm shadow-sm ${mine ? 'bg-secondary text-on-secondary rounded-tr-none' : 'bg-surface-container-lowest border border-outline-variant text-on-surface rounded-tl-none'}`}>
-                          <p className={`font-label-sm text-label-sm mb-unit ${mine ? 'opacity-80' : 'text-on-surface-variant'}`}>{message.from}</p>
+                          <p className={`font-label-sm text-label-sm mb-unit ${mine ? 'opacity-80' : 'text-on-surface-variant'}`}>{mine ? youLabel : message.from}</p>
                           <p className="leading-relaxed">{message.text}</p>
                         </div>
                       </div>
                     );
-                  }) : <p className="mt-10 text-center font-body-sm italic text-on-surface-variant">No messages yet.</p>
+                  }) : <p className="mt-10 text-center font-body-sm italic text-on-surface-variant">{t('seekerMessages.noMessagesInChat')}</p>
                 )}
                 <div ref={messagesEndRef} />
               </div>
@@ -375,30 +379,30 @@ export default function JobSeekerMessagesPage() {
                     disabled={sending}
                     onChange={(event) => setNewMessage(event.target.value)}
                     onKeyDown={(event) => { if (event.key === 'Enter') handleSend(); }}
-                    placeholder="Type your message..."
+                    placeholder={t('seekerMessages.messagePlaceholder')}
                     value={newMessage}
                   />
                   <button className="inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-stack-md py-stack-sm font-label-md text-on-secondary hover:opacity-90 disabled:opacity-50" disabled={sending || !newMessage.trim()} onClick={handleSend} type="button">
                     <span className="material-symbols-outlined text-[18px]">send</span>
-                    {sending ? 'Sending...' : 'Send'}
+                    {sending ? t('seekerMessages.sending') : t('seekerMessages.send')}
                   </button>
                 </div>
               </div>
             </>
           ) : (
-            <div className="flex flex-1 items-center justify-center p-stack-lg text-on-surface-variant">Select a conversation.</div>
+            <div className="flex flex-1 items-center justify-center p-stack-lg text-on-surface-variant">{t('seekerMessages.selectChat')}</div>
           )}
         </section>
       </div>
       {contextMenu && (
         <div className="fixed z-[9999] overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest shadow-lg" style={{ top: contextMenu.y, left: contextMenu.x }}>
-          <button className="flex w-full items-center gap-2 px-4 py-3 text-left text-error transition-colors hover:bg-error-container" onClick={() => handleDeleteConversation(contextMenu.conversation)} type="button">
+          <button className="flex w-full items-center gap-2 px-4 py-3 text-start text-error transition-colors hover:bg-error-container" onClick={() => handleDeleteConversation(contextMenu.conversation)} type="button">
             <span className="material-symbols-outlined text-[18px]">delete</span>
-            Delete Chat
+            {t('seekerMessages.deleteChat')}
           </button>
         </div>
       )}
-      <UndoToast target={undoTarget} onClear={() => setUndoTarget(null)} />
+      <UndoToast target={undoTarget} onClear={() => setUndoTarget(null)} t={t} />
     </div>
   );
 }

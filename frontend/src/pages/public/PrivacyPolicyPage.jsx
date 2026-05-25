@@ -1,35 +1,37 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../utils/constants';
 import PublicNavBar from '../../components/PublicNavBar';
 import PublicFooter from '../../components/PublicFooter';
 
+const NAV_KEYS = ['collection', 'usage', 'sharing', 'security', 'rights', 'cookies'];
+const LIST_SECTIONS = ['collection', 'usage', 'sharing', 'rights'];
+
 export default function PrivacyPolicyPage() {
+  const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState('collection');
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['collection', 'usage', 'sharing', 'security', 'rights', 'cookies'];
       const scrollPosition = window.scrollY + 200;
-      
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const element = document.getElementById(sections[i]);
+      for (let i = NAV_KEYS.length - 1; i >= 0; i--) {
+        const element = document.getElementById(NAV_KEYS[i]);
         if (element && element.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
+          setActiveSection(NAV_KEYS[i]);
           break;
         }
       }
     };
-    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const getLinkClass = (sectionId) => {
     const isActive = activeSection === sectionId;
-    return `flex items-center justify-between px-3 py-2 font-body-md rounded-lg transition-colors border-l-4 ${
-      isActive 
-        ? 'bg-surface-container-low text-primary font-semibold border-[#2563EB]' 
+    return `flex items-center justify-between px-3 py-2 font-body-md rounded-lg transition-colors border-s-4 ${
+      isActive
+        ? 'bg-surface-container-low text-primary font-semibold border-[#2563EB]'
         : 'text-on-surface-variant hover:bg-surface-container-low hover:text-primary border-transparent'
     }`;
   };
@@ -44,9 +46,9 @@ export default function PrivacyPolicyPage() {
             <div className="absolute inset-0 opacity-5 pointer-events-none" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, #131b2e 1px, transparent 0)', backgroundSize: '32px 32px'}}>
             </div>
             <div className="max-w-[800px] w-full text-center relative z-10">
-              <h1 className="font-h1 text-h1 text-primary mb-stack-md">Privacy Policy</h1>
+              <h1 className="font-h1 text-h1 text-primary mb-stack-md">{t('privacy.title')}</h1>
               <p className="font-body-lg text-body-lg text-on-surface-variant mb-stack-lg max-w-[600px] mx-auto">
-                Your privacy is important to us. This policy explains how Smart Job Portal collects, uses, and protects your personal information.
+                {t('privacy.intro')}
               </p>
             </div>
           </section>
@@ -56,129 +58,65 @@ export default function PrivacyPolicyPage() {
             <aside className="w-full md:w-[280px] shrink-0">
               <div className="sticky top-[100px] bg-surface-container-lowest rounded-xl p-stack-md shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border border-surface-container-high">
                 <h3 className="font-label-sm text-label-sm text-on-surface-variant mb-stack-sm px-3 tracking-widest uppercase">
-                  Sections</h3>
+                  {t('privacy.sectionsHeader')}</h3>
                 <nav className="flex flex-col gap-1">
-                  <a className={getLinkClass('collection')} href="#collection" onClick={() => setActiveSection('collection')}>
-                    Information We Collect
-                  </a>
-                  <a className={getLinkClass('usage')} href="#usage" onClick={() => setActiveSection('usage')}>
-                    How We Use It
-                  </a>
-                  <a className={getLinkClass('sharing')} href="#sharing" onClick={() => setActiveSection('sharing')}>
-                    Data Sharing
-                  </a>
-                  <a className={getLinkClass('security')} href="#security" onClick={() => setActiveSection('security')}>
-                    Data Security
-                  </a>
-                  <a className={getLinkClass('rights')} href="#rights" onClick={() => setActiveSection('rights')}>
-                    Your Rights
-                  </a>
-                  <a className={getLinkClass('cookies')} href="#cookies" onClick={() => setActiveSection('cookies')}>
-                    Cookies
-                  </a>
+                  {NAV_KEYS.map((key) => (
+                    <a key={key} className={getLinkClass(key)} href={`#${key}`} onClick={() => setActiveSection(key)}>
+                      {t(`privacy.nav.${key}`)}
+                    </a>
+                  ))}
                 </nav>
               </div>
             </aside>
             {/* Privacy Policy Content */}
             <div className="flex-grow max-w-[800px]">
-              <div className="mb-12 scroll-mt-[100px]" id="collection">
-                <h2 className="font-h2 text-h2 text-primary mb-stack-md border-b border-surface-container-high pb-2">
-                  Information We Collect</h2>
-                <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border border-surface-container-high p-stack-lg">
-                  <p className="font-body-md text-body-md text-on-surface-variant mb-4">
-                    We collect information you provide directly when you create an account, upload your CV, apply for jobs, or contact us. This includes:
-                  </p>
-                  <ul className="list-disc pl-6 space-y-2 text-on-surface-variant font-body-md">
-                    <li>Name, email address, and contact information</li>
-                    <li>Professional experience, education, and skills</li>
-                    <li>CV/resume documents you upload</li>
-                    <li>Job applications and saved job preferences</li>
-                    <li>Account settings and communication preferences</li>
-                    <li>Usage data such as pages visited and features used</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="mb-12 scroll-mt-[100px]" id="usage">
-                <h2 className="font-h2 text-h2 text-primary mb-stack-md border-b border-surface-container-high pb-2">
-                  How We Use Your Information</h2>
-                <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border border-surface-container-high p-stack-lg">
-                  <p className="font-body-md text-body-md text-on-surface-variant mb-4">
-                    We use your information to provide and improve our services, including:
-                  </p>
-                  <ul className="list-disc pl-6 space-y-2 text-on-surface-variant font-body-md">
-                    <li>Matching you with relevant job opportunities using our AI technology</li>
-                    <li>Facilitating job applications between job seekers and companies</li>
-                    <li>Personalizing your job search and recommendation experience</li>
-                    <li>Analyzing your CV/resume to extract and structure professional data</li>
-                    <li>Sending notifications about application status updates</li>
-                    <li>Improving our platform and developing new features</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="mb-12 scroll-mt-[100px]" id="sharing">
-                <h2 className="font-h2 text-h2 text-primary mb-stack-md border-b border-surface-container-high pb-2">
-                  Data Sharing</h2>
-                <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border border-surface-container-high p-stack-lg">
-                  <p className="font-body-md text-body-md text-on-surface-variant mb-4">
-                    We share your information only in the following circumstances:
-                  </p>
-                  <ul className="list-disc pl-6 space-y-2 text-on-surface-variant font-body-md">
-                    <li><strong>With employers:</strong> When you apply for a job, the hiring company receives your application and profile data.</li>
-                    <li><strong>Service providers:</strong> We may share data with trusted third-party services that help us operate our platform.</li>
-                    <li><strong>Legal requirements:</strong> We may disclose information if required by law or to protect our rights.</li>
-                  </ul>
-                  <div className="bg-surface-container-low p-4 rounded-lg flex items-start gap-3 mt-4">
-                    <span className="material-symbols-outlined text-[#3B82F6] mt-0.5">info</span>
-                    <p className="font-body-md text-body-md text-on-surface text-sm">We never sell your personal data to third parties for advertising or marketing purposes.</p>
+              {NAV_KEYS.map((key) => {
+                const isList = LIST_SECTIONS.includes(key);
+                const items = isList ? t(`privacy.sections.${key}.items`, { returnObjects: true }) : null;
+                const note = key === 'sharing' ? t('privacy.sections.sharing.note') : null;
+                return (
+                  <div key={key} className="mb-12 scroll-mt-[100px]" id={key}>
+                    <h2 className="font-h2 text-h2 text-primary mb-stack-md border-b border-surface-container-high pb-2">
+                      {t(`privacy.sections.${key}.heading`)}</h2>
+                    <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border border-surface-container-high p-stack-lg">
+                      {isList ? (
+                        <>
+                          <p className="font-body-md text-body-md text-on-surface-variant mb-4">
+                            {t(`privacy.sections.${key}.intro`)}
+                          </p>
+                          <ul className="list-disc ps-6 space-y-2 text-on-surface-variant font-body-md">
+                            {Array.isArray(items) && items.map((item, i) => (
+                              <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
+                            ))}
+                          </ul>
+                          {note && (
+                            <div className="bg-surface-container-low p-4 rounded-lg flex items-start gap-3 mt-4">
+                              <span className="material-symbols-outlined text-[#3B82F6] mt-0.5">info</span>
+                              <p className="font-body-md text-body-md text-on-surface text-sm">{note}</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <p className="font-body-md text-body-md text-on-surface-variant">
+                          {t(`privacy.sections.${key}.paragraph`)}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="mb-12 scroll-mt-[100px]" id="security">
-                <h2 className="font-h2 text-h2 text-primary mb-stack-md border-b border-surface-container-high pb-2">
-                  Data Security</h2>
-                <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border border-surface-container-high p-stack-lg">
-                  <p className="font-body-md text-body-md text-on-surface-variant">
-                    We implement industry-standard security measures to protect your personal information, including encryption in transit and at rest, secure authentication, and regular security audits. However, no method of transmission over the Internet is 100% secure, and we cannot guarantee absolute security.
-                  </p>
-                </div>
-              </div>
-              <div className="mb-12 scroll-mt-[100px]" id="rights">
-                <h2 className="font-h2 text-h2 text-primary mb-stack-md border-b border-surface-container-high pb-2">
-                  Your Rights</h2>
-                <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border border-surface-container-high p-stack-lg">
-                  <p className="font-body-md text-body-md text-on-surface-variant mb-4">
-                    You have the following rights regarding your personal data:
-                  </p>
-                  <ul className="list-disc pl-6 space-y-2 text-on-surface-variant font-body-md">
-                    <li><strong>Access:</strong> Request a copy of your personal data.</li>
-                    <li><strong>Correction:</strong> Update or correct inaccurate information.</li>
-                    <li><strong>Deletion:</strong> Request deletion of your account and data.</li>
-                    <li><strong>Export:</strong> Download your data in a portable format.</li>
-                    <li><strong>Opt-out:</strong> Unsubscribe from marketing communications at any time.</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="mb-12 scroll-mt-[100px]" id="cookies">
-                <h2 className="font-h2 text-h2 text-primary mb-stack-md border-b border-surface-container-high pb-2">
-                  Cookies</h2>
-                <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border border-surface-container-high p-stack-lg">
-                  <p className="font-body-md text-body-md text-on-surface-variant">
-                    We use cookies and similar technologies to maintain your session, remember your preferences, and improve your experience. Essential cookies are required for the platform to function. You can manage cookie preferences through your browser settings.
-                  </p>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </section>
           {/* CTA Section */}
           <section className="w-full bg-surface-container-low py-[64px] px-margin-desktop flex flex-col items-center justify-center mt-auto border-t border-surface-container-high">
             <div className="max-w-[600px] text-center bg-surface-container-lowest p-stack-lg rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border border-outline-variant relative overflow-hidden">
-              <div className="absolute -top-10 -right-10 text-surface-container-high opacity-20 transform rotate-12">
+              <div className="absolute -top-10 -end-10 text-surface-container-high opacity-20 transform rotate-12">
                 <span className="material-symbols-outlined text-[120px]">security</span>
               </div>
-              <h2 className="font-h2 text-h2 text-primary mb-2 relative z-10">Have questions about your data?</h2>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-6 relative z-10">Our privacy team is here to help. Contact us for any data-related inquiries.</p>
+              <h2 className="font-h2 text-h2 text-primary mb-2 relative z-10">{t('privacy.ctaTitle')}</h2>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-6 relative z-10">{t('privacy.ctaDescription')}</p>
               <Link className="px-6 py-3 bg-transparent border border-outline text-primary font-body-md font-bold rounded-lg hover:bg-surface-container transition-colors relative z-10 flex items-center gap-2 mx-auto w-fit" to={ROUTES.CONTACT}>
-                <span className="material-symbols-outlined text-[20px]">mail</span> Contact Privacy Team
+                <span className="material-symbols-outlined text-[20px]">mail</span> {t('privacy.ctaButton')}
               </Link>
             </div>
           </section>

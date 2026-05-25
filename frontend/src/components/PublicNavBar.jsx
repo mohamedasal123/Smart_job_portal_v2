@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ThemeToggle from './ThemeToggle';
+import LanguageSwitcher from './LanguageSwitcher';
 import { ROUTES, getRoleRedirect } from '../utils/constants';
 import { useAuth } from '../context/useAuth';
 import { adminDataService } from '../services/adminDataService';
 import icon from '../assets/icon.png';
 
 const navItems = [
-  { label: 'Browse Jobs', to: ROUTES.JOBS, matches: ['/jobs'] },
-  { label: 'Companies', to: ROUTES.COMPANIES, matches: ['/companies'] },
-  { label: 'Salaries', to: ROUTES.SALARIES, matches: ['/salaries', '/salary-guide'] },
+  { labelKey: 'nav.findJobs', to: ROUTES.JOBS, matches: ['/jobs'] },
+  { labelKey: 'nav.companies', to: ROUTES.COMPANIES, matches: ['/companies'] },
+  { labelKey: 'nav.salaryGuide', to: ROUTES.SALARIES, matches: ['/salaries', '/salary-guide'] },
 ];
 
 const isActive = (pathname, item) =>
@@ -17,6 +19,7 @@ const isActive = (pathname, item) =>
 
 export default function PublicNavBar({ showAuthActions = true }) {
   const { pathname } = useLocation();
+  const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
 
@@ -65,12 +68,12 @@ export default function PublicNavBar({ showAuthActions = true }) {
     <header className="bg-surface-container-lowest/95 sticky top-0 z-50 w-full border-b border-outline-variant shadow-ambient backdrop-blur">
       <div className="mx-auto flex min-h-16 w-full max-w-container-max-width flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-gutter lg:px-margin-desktop relative">
         <Link className="flex items-center gap-2 font-h2 text-h2 font-bold text-primary" to={ROUTES.HOME}>
-          <img src={icon} alt="Smart Job Portal" className="h-8 w-auto object-contain" />
-          <span className="hidden sm:inline">Smart Job Portal</span>
+          <img src={icon} alt={t('app.productName')} className="h-8 w-auto object-contain" />
+          <span className="hidden sm:inline">{t('app.productName')}</span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex gap-2 items-center" aria-label="Primary navigation">
+        <nav className="hidden md:flex gap-2 items-center" aria-label={t('a11y.primaryNav')}>
           {navItems.map((item) => {
             const active = isActive(pathname, item);
             return (
@@ -84,13 +87,14 @@ export default function PublicNavBar({ showAuthActions = true }) {
                 key={item.to}
                 to={item.to}
               >
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             );
           })}
         </nav>
 
         <div className="flex items-center gap-stack-sm">
+          <LanguageSwitcher compact />
           <ThemeToggle compact />
 
           {isAdmin && (
@@ -110,8 +114,8 @@ export default function PublicNavBar({ showAuthActions = true }) {
               {isNotifOpen && (
                 <div className="absolute right-0 mt-2 w-80 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-md overflow-hidden z-50">
                   <div className="px-4 py-3 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
-                    <h3 className="font-h3 text-primary">Notifications</h3>
-                    <Link to={ROUTES.ADMIN_ACTIVITY_LOG} className="text-xs text-secondary hover:underline" onClick={() => setIsNotifOpen(false)}>View all</Link>
+                    <h3 className="font-h3 text-primary">{t('sidebar.notifications')}</h3>
+                    <Link to={ROUTES.ADMIN_ACTIVITY_LOG} className="text-xs text-secondary hover:underline" onClick={() => setIsNotifOpen(false)}>{t('buttons.viewAll')}</Link>
                   </div>
                   <div className="max-h-[300px] overflow-y-auto">
                     {recentActivities.length > 0 ? recentActivities.map((act, i) => (
@@ -124,7 +128,7 @@ export default function PublicNavBar({ showAuthActions = true }) {
                         <p className="text-outline text-xs mt-1">{new Date(act.createdAt).toLocaleString()}</p>
                       </div>
                     )) : (
-                      <p className="p-4 text-center text-on-surface-variant text-sm">No new notifications.</p>
+                      <p className="p-4 text-center text-on-surface-variant text-sm">{t('emptyStatesShort.notifications')}</p>
                     )}
                   </div>
                 </div>
@@ -145,19 +149,19 @@ export default function PublicNavBar({ showAuthActions = true }) {
               {isAuthenticated ? (
                 <>
                   <Link className="items-center justify-center rounded-lg border border-outline-variant px-4 py-2 font-body-md text-body-md font-semibold text-on-surface transition-colors hover:bg-surface-container-low" to={getRoleRedirect(user?.role)}>
-                    Dashboard
+                    {t('buttons.dashboard')}
                   </Link>
                   <button onClick={() => logout()} className="items-center justify-center rounded-lg border border-error/30 text-error px-4 py-2 font-body-md text-body-md font-semibold transition-colors hover:bg-error-container">
-                    Logout
+                    {t('buttons.logout')}
                   </button>
                 </>
               ) : (
                 <>
                   <Link className="items-center justify-center rounded-lg border border-outline-variant px-4 py-2 font-body-md text-body-md font-semibold text-on-surface transition-colors hover:bg-surface-container-low" to={ROUTES.LOGIN}>
-                    Sign In
+                    {t('buttons.signIn')}
                   </Link>
                   <Link className="inline-flex items-center justify-center rounded-lg bg-secondary text-on-secondary px-4 py-2 font-body-md text-body-md font-bold shadow-sm transition-colors hover:bg-secondary-container" to={ROUTES.POST_JOB}>
-                    Post a Job
+                    {t('buttons.postJob')}
                   </Link>
                 </>
               )}
@@ -183,7 +187,7 @@ export default function PublicNavBar({ showAuthActions = true }) {
                 to={item.to}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             );
           })}
@@ -192,19 +196,19 @@ export default function PublicNavBar({ showAuthActions = true }) {
               {isAuthenticated ? (
                 <>
                   <Link className="w-full text-center items-center justify-center rounded-lg border border-outline-variant px-4 py-3 font-body-md text-body-md font-semibold text-on-surface transition-colors hover:bg-surface-container-low" to={getRoleRedirect(user?.role)} onClick={() => setMobileMenuOpen(false)}>
-                    Dashboard
+                    {t('buttons.dashboard')}
                   </Link>
                   <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="w-full text-center items-center justify-center rounded-lg border border-error/30 text-error px-4 py-3 font-body-md text-body-md font-semibold transition-colors hover:bg-error-container">
-                    Logout
+                    {t('buttons.logout')}
                   </button>
                 </>
               ) : (
                 <>
                   <Link className="w-full text-center items-center justify-center rounded-lg border border-outline-variant px-4 py-3 font-body-md text-body-md font-semibold text-on-surface transition-colors hover:bg-surface-container-low" to={ROUTES.LOGIN} onClick={() => setMobileMenuOpen(false)}>
-                    Sign In
+                    {t('buttons.signIn')}
                   </Link>
                   <Link className="w-full text-center inline-flex items-center justify-center rounded-lg bg-secondary text-on-secondary px-4 py-3 font-body-md text-body-md font-bold shadow-sm transition-colors hover:bg-secondary-container" to={ROUTES.POST_JOB} onClick={() => setMobileMenuOpen(false)}>
-                    Post a Job
+                    {t('buttons.postJob')}
                   </Link>
                 </>
               )}

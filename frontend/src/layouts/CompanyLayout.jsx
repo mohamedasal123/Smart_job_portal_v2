@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/useAuth';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { companyDataService } from '../services/companyDataService';
@@ -6,18 +7,19 @@ import { ROUTES } from '../utils/constants';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import PageTransition from '../motion/PageTransition';
 import ThemeToggle from '../components/ThemeToggle';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import icon from '../assets/icon.png';
 
 const navItems = [
-  { key: 'dashboard', label: 'Dashboard', icon: 'dashboard', to: ROUTES.COMPANY_DASHBOARD },
-  { key: 'profile', label: 'Company Profile', icon: 'domain', to: ROUTES.COMPANY_PROFILE },
-  { key: 'jobs', label: 'Manage Jobs', icon: 'work', to: ROUTES.COMPANY_JOBS },
-  { key: 'create-job', label: 'Create Job', icon: 'add_circle', to: ROUTES.COMPANY_CREATE_JOB },
-  { key: 'applicants', label: 'Applicants / Smart ATS', icon: 'group', to: ROUTES.COMPANY_APPLICANTS },
-  { key: 'messages', label: 'Messages', icon: 'chat', to: ROUTES.COMPANY_MESSAGES },
-  { key: 'notifications', label: 'Notifications', icon: 'notifications', to: ROUTES.COMPANY_NOTIFICATIONS },
-  { key: 'settings', label: 'Settings', icon: 'settings', to: ROUTES.COMPANY_SETTINGS },
-  { key: 'public-site', label: 'View Public Site', icon: 'public', to: ROUTES.HOME },
+  { key: 'dashboard', labelKey: 'companyNav.dashboard', icon: 'dashboard', to: ROUTES.COMPANY_DASHBOARD },
+  { key: 'profile', labelKey: 'companyNav.companyProfile', icon: 'domain', to: ROUTES.COMPANY_PROFILE },
+  { key: 'jobs', labelKey: 'companyNav.manageJobs', icon: 'work', to: ROUTES.COMPANY_JOBS },
+  { key: 'create-job', labelKey: 'companyNav.createJob', icon: 'add_circle', to: ROUTES.COMPANY_CREATE_JOB },
+  { key: 'applicants', labelKey: 'companyNav.applicants', icon: 'group', to: ROUTES.COMPANY_APPLICANTS },
+  { key: 'messages', labelKey: 'companyNav.messages', icon: 'chat', to: ROUTES.COMPANY_MESSAGES },
+  { key: 'notifications', labelKey: 'companyNav.notifications', icon: 'notifications', to: ROUTES.COMPANY_NOTIFICATIONS },
+  { key: 'settings', labelKey: 'companyNav.settings', icon: 'settings', to: ROUTES.COMPANY_SETTINGS },
+  { key: 'public-site', labelKey: 'companyNav.publicSite', icon: 'public', to: ROUTES.HOME },
 ];
 
 const ROUTE_PATH_KEY = 'path' + 'name';
@@ -62,6 +64,7 @@ const navClass = (isActive) =>
   ].join(' ');
 
 export default function CompanyLayout() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -183,7 +186,7 @@ export default function CompanyLayout() {
     }
   };
 
-  const displayName = profile.name || user?.name || 'Company';
+  const displayName = profile.name || user?.name || t('roles.company');
   const displayEmail = user?.email || '';
   const initials = displayName.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase();
   const companyImage = user?.profile_image || user?.avatar || profile.logo || null;
@@ -192,15 +195,15 @@ export default function CompanyLayout() {
     <>
       <Link to={ROUTES.COMPANY_DASHBOARD} className="mb-stack-lg flex items-center gap-stack-sm px-stack-sm shrink-0 hover:opacity-80 transition-opacity" onClick={onNavigate}>
         <div className="w-10 h-10 flex items-center justify-center shrink-0">
-          <img src={icon} alt="Smart Job Portal" className="w-full h-full object-contain" />
+          <img src={icon} alt={t('app.productName')} className="w-full h-full object-contain" />
         </div>
         <div>
-          <h1 className="font-h3 text-h3 font-bold text-primary">Smart Job Portal</h1>
-          <p className="font-label-sm text-label-sm text-on-surface-variant">Recruiter Workspace</p>
+          <h1 className="font-h3 text-h3 font-bold text-primary">{t('app.productName')}</h1>
+          <p className="font-label-sm text-label-sm text-on-surface-variant">{t('companyNav.workspaceLabel')}</p>
         </div>
       </Link>
 
-      <nav className="flex-1 min-h-0 flex flex-col gap-unit overflow-y-auto pr-unit">
+      <nav className="flex-1 min-h-0 flex flex-col gap-unit overflow-y-auto pe-unit">
         {navItems.map((item) => {
           const isActive = isCompanyNavActive(item, routePath);
           return (
@@ -211,7 +214,7 @@ export default function CompanyLayout() {
               to={item.to}
             >
               <span className="material-symbols-outlined">{item.icon}</span>
-              <span>{item.label}</span>
+              <span>{t(item.labelKey)}</span>
             </NavLink>
           );
         })}
@@ -279,6 +282,7 @@ export default function CompanyLayout() {
           </div>
 
           <div className="flex items-center gap-stack-md">
+            <LanguageSwitcher compact />
             <ThemeToggle compact />
 
             {/* Notifications Dropdown */}
