@@ -994,7 +994,7 @@ export function CompanyJobPostPreview() {
         actions={<><Link className={buttonSecondary} to={`/company/jobs/${job.id}/edit`}>{t('companyFlow.preview.backToEdit')}</Link><button className={buttonPrimary} onClick={toggle}>{job.status === 'active' ? t('companyFlow.preview.pause') : t('companyFlow.preview.publish')}</button><Link className={buttonSecondary} to={`/company/jobs/${job.id}/applicants`}>{t('companyFlow.preview.viewApplicants')}</Link></>}
         eyebrow={t('companyFlow.preview.eyebrow')}
         title={job.title}
-        description={`${job.location} · ${job.workMode} · ${job.type}`}
+        description={`${job.location} · ${t(`companyFlow.workModes.${job.workMode}`, { defaultValue: job.workMode })} · ${t(`companyFlow.jobTypeOptions.${job.type}`, { defaultValue: job.type })}`}
       />
       <Section title={t('companyFlow.preview.previewTitle')}>
         <div className="flex items-center justify-between"><CompanyStatusBadge status={job.status} /><p className="font-h2 text-h2 text-primary">{salary(job)}</p></div>
@@ -1053,7 +1053,7 @@ export function CompanyJobDetails() {
         actions={<><Link className={buttonSecondary} to={`/company/jobs/${job.id}/applicants`}>{t('companyFlow.jobDetails.viewApplicants')}</Link><Link className={buttonSecondary} to={`/company/jobs/${job.id}/edit`}>{t('companyFlow.jobDetails.editJob')}</Link><Link className={buttonSecondary} to={`/company/jobs/${job.id}/preview`}>{t('companyFlow.jobDetails.preview')}</Link><button className={buttonPrimary} onClick={async () => { const updated = await companyDataService.toggleJobStatus(job.id); setJob(updated); addToast({ title: t('companyFlow.manageJobs.statusUpdatedTitle'), message: t('companyFlow.manageJobs.statusUpdatedMessage', { title: updated.title, status: updated.status }) }); }}>{job.status === 'active' ? t('companyFlow.jobDetails.pause') : t('companyFlow.jobDetails.publish')}</button><button className={buttonDanger} onClick={() => setDeleteOpen(true)}>{t('companyFlow.jobDetails.delete')}</button></>}
         eyebrow={t('companyFlow.jobDetails.eyebrow')}
         title={job.title}
-        description={`${job.location} · ${job.workMode} · ${salary(job)}`}
+        description={`${job.location} · ${t(`companyFlow.workModes.${job.workMode}`, { defaultValue: job.workMode })} · ${salary(job)}`}
       />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter">
         <CompanyStatsCard icon="visibility" label={t('companyFlow.jobDetails.views')} value={job.views} />
@@ -1065,7 +1065,7 @@ export function CompanyJobDetails() {
         <p className="font-body-lg text-body-lg text-on-surface-variant">{job.description}</p>
         <div className="flex flex-wrap gap-unit">{job.requiredSkills.map((skill) => <CompanySkillTag key={skill}>{skill}</CompanySkillTag>)}</div>
         <ul className="list-disc ps-6 text-on-surface-variant space-y-unit">{job.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul>
-        <p className="text-on-surface-variant">{t('companyFlow.jobDetails.experiencePrefix')}: {job.experienceLevel} · {t('companyFlow.jobDetails.educationPrefix')}: {job.education}</p>
+        <p className="text-on-surface-variant">{t('companyFlow.jobDetails.experiencePrefix')}: {t(`experienceLevels.${job.experienceLevel}`, { defaultValue: job.experienceLevel })} · {t('companyFlow.jobDetails.educationPrefix')}: {job.education}</p>
       </Section>
       <Section title={t('companyFlow.jobDetails.recentApplicants')}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-stack-md">
@@ -1370,7 +1370,7 @@ export function CompanyApplicantMatchingDetails() {
             }) : <CompanyEmptyState title={t('companyFlow.matching.noRequiredTitle')} message={t('companyFlow.matching.noRequiredMessage')} />}
           </div>
           <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm space-y-3">
-            <p className="text-on-surface-variant font-body-md flex items-center gap-2"><span className="material-symbols-outlined text-secondary">work</span> {t('companyFlow.matching.expMatch')} <span className="font-bold text-primary">{t('companyFlow.matching.expValue', { years: applicant.yearsExperience })}</span> {t('companyFlow.matching.expSuffix', { level: job.experienceLevel })}</p>
+            <p className="text-on-surface-variant font-body-md flex items-center gap-2"><span className="material-symbols-outlined text-secondary">work</span> {t('companyFlow.matching.expMatch')} <span className="font-bold text-primary">{t('companyFlow.matching.expValue', { years: applicant.yearsExperience })}</span> {t('companyFlow.matching.expSuffix', { level: t(`experienceLevels.${job.experienceLevel}`, { defaultValue: job.experienceLevel }) })}</p>
             <p className="text-on-surface-variant font-body-md flex items-center gap-2"><span className="material-symbols-outlined text-secondary">school</span> {t('companyFlow.matching.eduMatch')} <span className="font-bold text-primary">{applicant.education}</span></p>
             <div className="border-t border-outline-variant pt-3 mt-3">
               <p className="font-h3 text-h3 text-primary flex items-center gap-2">

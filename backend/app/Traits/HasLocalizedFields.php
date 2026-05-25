@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 
 /**
  * Resolves `*_localized` accessors for every column listed in $localizedFields.
@@ -18,6 +19,19 @@ use Illuminate\Support\Facades\App;
  */
 trait HasLocalizedFields
 {
+    public function __call($method, $parameters)
+    {
+        if (is_string($method) && str_starts_with($method, 'get') && str_ends_with($method, 'LocalizedAttribute')) {
+            $base = Str::snake(substr($method, 3, -strlen('LocalizedAttribute')));
+
+            if (in_array($base, $this->localizedFields ?? [], true)) {
+                return $this->resolveLocalized($base);
+            }
+        }
+
+        return parent::__call($method, $parameters);
+    }
+
     public function getAttribute($key)
     {
         if (is_string($key) && str_ends_with($key, '_localized')) {

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 const styles = {
   active: 'bg-[#22C55E]/10 text-[#15803D] border-[#22C55E]/30',
   banned: 'bg-error-container text-error border-error/20',
@@ -11,24 +13,25 @@ const styles = {
   warning: 'bg-error-container text-error border-error/20',
 };
 
-const labels = {
-  active: 'Active',
-  banned: 'Banned',
-  verified: 'Verified',
-  unverified: 'Unverified',
-  paused: 'Paused',
-  draft: 'Draft',
-  deleted: 'Deleted',
-  success: 'Success',
-  pending: 'Pending',
-  warning: 'Warning',
+const labelKeys = {
+  active: 'statuses.user.active',
+  banned: 'statuses.user.banned',
+  verified: 'statuses.user.verified',
+  unverified: 'statuses.user.unverified',
+  paused: 'statuses.job.paused',
+  draft: 'statuses.job.draft',
+  deleted: 'statuses.job.deleted',
+  success: 'statuses.success',
+  pending: 'statuses.pending',
+  warning: 'statuses.warning',
 };
 
 export default function AdminStatusBadge({ status }) {
+  const { t } = useTranslation();
   const key = String(status || '').toLowerCase();
   return (
     <span className={`inline-flex items-center rounded-full border px-2.5 py-1 font-label-sm text-label-sm ${styles[key] || styles.draft}`}>
-      {labels[key] || status}
+      {labelKeys[key] ? t(labelKeys[key]) : status}
     </span>
   );
 }

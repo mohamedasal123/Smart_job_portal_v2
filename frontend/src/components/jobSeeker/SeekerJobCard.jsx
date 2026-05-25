@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'framer-motion';
 import { isJobSaved, toggleSavedJob } from '../../services/jobSeekerDataService';
 import { useToast } from '../useToast';
@@ -7,6 +8,7 @@ import MatchScoreBadge from './MatchScoreBadge';
 import { EASE, SPRING_PRESS } from '../../motion/variants';
 
 export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: detailsPathOverride, saveEnabled = true, onSaveUnavailable, showSaveButton = true }) {
+  const { t, i18n } = useTranslation();
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { addToast } = useToast();
@@ -41,8 +43,8 @@ export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: de
       const result = await toggleSavedJob(job.id);
       setIsSaved(result.isSaved);
       addToast({
-        title: result.isSaved ? 'Job Saved' : 'Job Removed',
-        message: result.isSaved ? 'Added to your saved jobs wishlist.' : 'Removed from your saved jobs wishlist.',
+        title: result.isSaved ? t('dashboardComponents.seekerJobCard.savedTitle') : t('dashboardComponents.seekerJobCard.removedTitle'),
+        message: result.isSaved ? t('dashboardComponents.seekerJobCard.savedMessage') : t('dashboardComponents.seekerJobCard.removedMessage'),
         type: 'success',
       });
       if (onSavedStateChange) {
@@ -50,8 +52,8 @@ export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: de
       }
     } catch {
       addToast({
-        title: 'Error',
-        message: 'Could not update saved status.',
+        title: t('statuses.error'),
+        message: t('dashboardComponents.seekerJobCard.saveErrorMessage'),
         type: 'error',
       });
     } finally {
@@ -89,6 +91,9 @@ export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: de
 
   const matchScore = Number(job.recommendation?.matchScore ?? job.matchScore ?? 0);
   const salaryText = formatSalary(job.salaryMin, job.salaryMax, job.currency);
+  const typeKey = String(job.type || '');
+  const jobTypeLabel = typeKey ? t(`companyFlow.jobTypeOptions.${typeKey}`, { defaultValue: typeKey }) : '';
+  const dateLocale = i18n.language === 'ar' ? 'ar-EG' : 'en-US';
 
   return (
     <motion.div
@@ -126,10 +131,10 @@ export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: de
               whileTap={reduce || isSaving ? undefined : { scale: 0.85, transition: SPRING_PRESS }}
               animate={reduce ? undefined : { scale: isSaved ? [1, 1.18, 1] : 1 }}
               transition={reduce ? undefined : { duration: 0.32, ease: EASE }}
-              aria-label={isSaved ? `Remove ${job.title} from saved jobs` : `Save ${job.title} to your saved jobs`}
+              aria-label={isSaved ? t('dashboardComponents.seekerJobCard.removeAria', { title: job.title }) : t('dashboardComponents.seekerJobCard.saveAria', { title: job.title })}
               aria-pressed={isSaved}
               className={`w-8 h-8 inline-flex items-center justify-center rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary ${isSaved ? 'text-secondary hover:bg-secondary/10' : 'text-on-surface-variant hover:text-secondary hover:bg-surface-container-low'}`}
-              title={isSaved ? 'Remove from saved jobs' : 'Save this job'}
+              title={isSaved ? t('dashboardComponents.seekerJobCard.removeTitle') : t('dashboardComponents.seekerJobCard.saveTitle')}
             >
               <span className={`material-symbols-outlined text-[22px] ${isSaved ? 'fill-current' : ''}`} style={{ fontVariationSettings: isSaved ? '"FILL" 1' : '"FILL" 0' }} aria-hidden="true">
                 bookmark
@@ -146,7 +151,7 @@ export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: de
         </span>
         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant text-xs font-medium border border-outline-variant">
           <span className="material-symbols-outlined text-[14px]">work</span>
-          {job.type === 'full_time' ? 'Full Time' : job.type}
+          {jobTypeLabel}
         </span>
         {salaryText && (
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant text-xs font-medium border border-outline-variant">
@@ -162,7 +167,7 @@ export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: de
 
       <div className="mt-auto pt-4 border-t border-outline-variant flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <span className="font-body-sm text-xs text-on-surface-variant">
-          Posted {new Date(job.postedAt).toLocaleDateString()}
+          {t('dashboardComponents.common.posted', { date: new Date(job.postedAt).toLocaleDateString(dateLocale) })}
         </span>
         <motion.div whileTap={reduce ? undefined : { scale: 0.97, transition: SPRING_PRESS }} className="w-full sm:w-auto">
           <Link
@@ -170,7 +175,7 @@ export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: de
             onClick={(event) => event.stopPropagation()}
             className="group inline-flex items-center gap-unit text-secondary font-label-md text-label-md hover:text-primary transition-colors whitespace-nowrap"
           >
-            <span className="group-hover:underline">View Details</span>
+            <span className="group-hover:underline">{t('buttons.viewDetails')}</span>
             <span className="material-symbols-outlined text-[18px] no-underline">arrow_forward</span>
           </Link>
         </motion.div>

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 const statusStyles = {
   active: 'bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/30',
   paused: 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30',
@@ -13,23 +15,26 @@ const statusStyles = {
   pending: 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30',
 };
 
-const labels = {
-  active: 'Active',
-  paused: 'Paused',
-  draft: 'Draft',
-  closed: 'Closed',
-  new: 'New',
-  under_review: 'Under review',
-  shortlisted: 'Shortlisted',
-  approved: 'Approved',
-  rejected: 'Rejected',
+const labelKeys = {
+  active: 'statuses.job.active',
+  paused: 'statuses.job.paused',
+  draft: 'statuses.job.draft',
+  closed: 'statuses.job.closed',
+  new: 'statuses.application.new',
+  applied: 'statuses.application.applied',
+  under_review: 'statuses.application.underReview',
+  shortlisted: 'statuses.application.shortlisted',
+  approved: 'statuses.application.approved',
+  rejected: 'statuses.application.rejected',
+  pending: 'statuses.pending',
 };
 
 export default function CompanyStatusBadge({ status }) {
+  const { t } = useTranslation();
   const normalized = String(status || '').toLowerCase();
   return (
     <span className={`inline-flex items-center rounded-full border px-2.5 py-1 font-label-sm text-label-sm ${statusStyles[normalized] || statusStyles.draft}`}>
-      {labels[normalized] || status}
+      {labelKeys[normalized] ? t(labelKeys[normalized]) : status}
     </span>
   );
 }

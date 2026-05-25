@@ -40,6 +40,12 @@
     "signIn": "Sign In",
     "dashboard": "Dashboard",
     "viewAll": "View all",
+    "viewDetails": "View Details",
+    "pause": "Pause",
+    "publish": "Publish",
+    "forceDelete": "Force delete",
+    "ban": "Ban",
+    "unban": "Unban",
     "help": "Help"
   },
   "a11y": {
@@ -1124,6 +1130,265 @@
     "settings": "Settings",
     "workspaceLabel": "Admin Workspace"
   },
+  "dashboardComponents": {
+    "common": {
+      "job": "Job",
+      "company": "Company",
+      "location": "Location",
+      "applicants": "Applicants",
+      "reports": "Reports",
+      "views": "Views",
+      "salary": "Salary",
+      "status": "Status",
+      "actions": "Actions",
+      "candidate": "Candidate",
+      "matchScore": "Match Score",
+      "experience": "Experience",
+      "yearsShort": "{{count}} yrs",
+      "applied": "Applied {{date}}",
+      "posted": "Posted {{date}}",
+      "created": "Created",
+      "user": "User",
+      "role": "Role",
+      "verification": "Verification",
+      "profile": "Profile",
+      "matching": "Matching",
+      "cv": "CV",
+      "shortlist": "Shortlist",
+      "unshortlist": "Unshortlist",
+      "approve": "Approve",
+      "reject": "Reject",
+      "unknownJob": "Unknown Job",
+      "unknownCompany": "Unknown Company",
+      "aiMatchScore": "AI Match Score",
+      "aiMatchTooltip": "AI match score is based on your skills and the job requirements.",
+      "system": "System"
+    },
+    "empty": {
+      "nothingFound": "Nothing found",
+      "adjustFilters": "Try adjusting your filters.",
+      "noJobsTitle": "No jobs match your filters",
+      "noJobsMessage": "Try a different search, status, or sort option.",
+      "noAdminJobsMessage": "Try a different search, status, reported, or sort option.",
+      "noApplicantsTitle": "No applicants match your filters",
+      "noApplicantsMessage": "Try a different search, status, or sort option.",
+      "noUsersTitle": "No users match your filters",
+      "noUsersMessage": "Try a different search, role, status, or sort option."
+    },
+    "seekerJobCard": {
+      "savedTitle": "Job Saved",
+      "removedTitle": "Job Removed",
+      "savedMessage": "Added to your saved jobs wishlist.",
+      "removedMessage": "Removed from your saved jobs wishlist.",
+      "saveErrorMessage": "Could not update saved status.",
+      "saveAria": "Save {{title}} to your saved jobs",
+      "removeAria": "Remove {{title}} from saved jobs",
+      "saveTitle": "Save this job",
+      "removeTitle": "Remove from saved jobs"
+    },
+    "match": {
+      "low": "Low Match",
+      "fair": "Fair Match",
+      "good": "Good Match",
+      "strong": "Strong Match"
+    }
+  },
+  "adminFlow": {
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {{page}}"
+    },
+    "saving": "Saving...",
+    "deleting": "Deleting...",
+    "notFoundTitle": "Record not found",
+    "notFoundMessage": "This admin record is unavailable.",
+    "dashboard": {
+      "eyebrow": "Admin Dashboard",
+      "title": "Platform overview",
+      "description": "Monitor users, jobs, reports, and administrative activity across Smart Job Portal.",
+      "totalUsers": "Total users",
+      "jobSeekers": "Job seekers",
+      "companies": "Companies",
+      "activeJobs": "Active jobs",
+      "totalApplications": "Applications",
+      "bannedUsers": "Banned users",
+      "recentUsers": "Recent users",
+      "noRecentUsers": "No recent users.",
+      "recentJobs": "Recent jobs",
+      "noRecentJobs": "No recent jobs.",
+      "recentActivity": "Recent activity",
+      "noRecentActivity": "No activity has been recorded yet.",
+      "errorTitle": "Dashboard Error",
+      "errorMessage": "Failed to load admin metrics."
+    },
+    "users": {
+      "eyebrow": "Users Management",
+      "title": "Users",
+      "description": "Search, filter, inspect, ban, and unban platform accounts.",
+      "searchPlaceholder": "Search name, email, role, or status",
+      "filterOptions": {
+        "all": "All Roles",
+        "job_seekers": "Job Seekers",
+        "companies": "Companies",
+        "admins": "Admins",
+        "active": "Active",
+        "banned": "Banned"
+      },
+      "verificationOptions": {
+        "all": "All Verification",
+        "verified": "Verified",
+        "unverified": "Unverified"
+      },
+      "sortOptions": {
+        "newest": "Newest",
+        "oldest": "Oldest",
+        "name": "Name"
+      },
+      "banConfirmMessage": "Ban {{name}}?",
+      "unbanConfirmMessage": "Restore access for {{name}}?",
+      "bannedTitle": "User banned",
+      "unbannedTitle": "User unbanned",
+      "statusUpdatedMessage": "{{name}} status updated.",
+      "statusUpdateError": "Failed to update user status.",
+      "banTitle": "Ban user",
+      "unbanTitle": "Unban user"
+    },
+    "jobs": {
+      "forceDeleteConfirmMessage": "Force delete {{title}}? This marks the job as permanently deleted.",
+      "forceDeletedTitle": "Job force deleted",
+      "forceDeletedMessage": "{{title}} has been deleted.",
+      "forceDeleteError": "Failed to delete job.",
+      "forceDeleteTitle": "Force delete job",
+      "eyebrow": "Jobs Management",
+      "title": "Jobs",
+      "description": "Review platform job posts, reports, and force-delete problematic listings.",
+      "searchPlaceholder": "Search by Job title, Company name, or Location...",
+      "filterOptions": {
+        "all": "All",
+        "active": "Active",
+        "paused": "Paused",
+        "deleted": "Deleted"
+      },
+      "sortOptions": {
+        "newest": "Newest",
+        "applicants": "Most applicants",
+        "reports": "Most reports"
+      }
+    },
+    "jobDetails": {
+      "eyebrow": "Job Details",
+      "backToJobs": "Back to Jobs",
+      "notFoundTitle": "Job not found",
+      "notFoundMessage": "This job post does not exist.",
+      "forceDeleteWarningTitle": "Force delete is permanent on the backend.",
+      "forceDeleteWarningMsg": "This action will physically remove the job post and cannot be undone.",
+      "jobInfo": "Job information",
+      "companyId": "Company ID",
+      "jobDescription": "Job Description",
+      "noDescription": "No description provided.",
+      "responsibilities": "Responsibilities",
+      "requirements": "Requirements",
+      "requiredSkills": "Required Skills"
+    },
+    "activityLog": {
+      "eyebrow": "Activity Log",
+      "title": "Administrative activity",
+      "description": "Audit user, job, admin, and security events.",
+      "activityStream": "Activity stream",
+      "filterAll": "All Activity",
+      "filterAdmin": "Admin Actions",
+      "filterEvents": "{{item}} Events",
+      "noActivityTitle": "No activity",
+      "noActivityMessage": "No activity matches this filter.",
+      "systemLogs": "System Logs",
+      "systemLogsTooltip": "This stream is a live representation of activities across the platform. It automatically tracks user status changes and job modifications.",
+      "userEvents": "User events",
+      "companyEvents": "Company events",
+      "jobEvents": "Job events",
+      "adminOperations": "Admin operations"
+    },
+    "settings": {
+      "eyebrow": "Settings",
+      "title": "Admin settings",
+      "description": "Manage your admin profile and security preferences.",
+      "errors": {
+        "nameRequired": "Name is required.",
+        "emailInvalid": "Enter a valid email.",
+        "passwordMin": "Password must be at least 8 characters.",
+        "passwordMatch": "Passwords must match.",
+        "incorrectPassword": "Incorrect password. Please try again."
+      },
+      "savedTitle": "Settings saved",
+      "savedMessage": "Admin profile was updated successfully.",
+      "updateFailedTitle": "Update failed",
+      "updateFailedMessage": "Could not update settings.",
+      "securityCheck": "Security Check Required",
+      "securityHint": "Please enter your current password to unlock {{targetName}} changes.",
+      "currentPassword": "Current password",
+      "adminProfile": "Admin profile",
+      "name": "Name",
+      "emailAddress": "Email Address",
+      "change": "Change",
+      "securityAndAuth": "Security & Authentication",
+      "passwordHint": "Your password is securely hashed. You can update it at any time by verifying your current password.",
+      "changePassword": "Change Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "saveChanges": "Save Changes"
+    },
+    "userDetails": {
+      "eyebrow": "User Details",
+      "verifiedTitle": "User verified",
+      "verifiedMessage": "{{name}} email verified successfully.",
+      "verifyError": "Failed to verify user.",
+      "notFoundTitle": "User not found",
+      "notFoundMessage": "This user account does not exist.",
+      "backToUsers": "Back to Users",
+      "viewPublicProfile": "View Public Profile",
+      "verifyEmail": "Verify Email",
+      "verifying": "Verifying...",
+      "accountDetails": "Account details",
+      "emailVerified": "Email Verified",
+      "verifiedBadge": "Verified",
+      "notVerifiedBadge": "Not Verified",
+      "accountStatus": "Account Status",
+      "emailField": "Email",
+      "profileSummary": "Profile summary",
+      "jobSeekerSkills": "Job Seeker Skills",
+      "noSkills": "No skills listed.",
+      "cvDataAvailable": "CV Data Available",
+      "viewProfile": "View Profile",
+      "companyInfo": "Company Info",
+      "postedJobs": "Posted jobs",
+      "industry": "Industry",
+      "location": "Location",
+      "employees": "Employees",
+      "website": "Website",
+      "description": "Description",
+      "noDescription": "No description available.",
+      "notAvailable": "N/A",
+      "adminPermissions": "Administrator account with platform management permissions."
+    },
+    "userProfile": {
+      "eyebrow": "Job Seeker Profile",
+      "title": "Candidate Profile",
+      "notFoundTitle": "Profile not found",
+      "notFoundMessage": "This profile is either missing or the user is not a job seeker.",
+      "backToDetails": "Back to Details",
+      "verifiedAccount": "Verified Account",
+      "unverifiedAccount": "Unverified Account",
+      "activeStatus": "Active Status",
+      "bannedStatus": "Banned",
+      "topSkills": "Top Skills",
+      "cvExtractedInfo": "CV Extracted Information",
+      "noCvDataTitle": "No CV Data",
+      "noCvDataMessage": "This user has not uploaded a CV to extract data from."
+    },
+    "profile": {
+      "noValidData": "No valid data"
+    }
+  },
   "experienceLevels": {
     "Internship": "Internship",
     "Entry Level / Junior": "Entry Level / Junior",
@@ -1599,22 +1864,34 @@
   },
   "statuses": {
     "application": {
+      "new": "New",
       "applied": "Applied",
       "underReview": "Under review",
       "shortlisted": "Shortlisted",
+      "approved": "Approved",
+      "interviewScheduled": "Interview Scheduled",
+      "waitingInterview": "Waiting Interview",
       "rejected": "Rejected"
     },
     "job": {
       "active": "Active",
-      "inactive": "Inactive"
+      "inactive": "Inactive",
+      "paused": "Paused",
+      "draft": "Draft",
+      "closed": "Closed",
+      "deleted": "Deleted"
     },
     "user": {
       "active": "Active",
-      "banned": "Banned"
+      "banned": "Banned",
+      "verified": "Verified",
+      "unverified": "Unverified"
     },
     "loading": "Loading",
     "success": "Success",
-    "error": "Error"
+    "error": "Error",
+    "pending": "Pending",
+    "warning": "Warning"
   },
   "jobTypes": {
     "fullTime": "Full time",

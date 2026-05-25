@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 const MatchScoreBadge = ({ 
   score = 0, 
   size = 'md', 
@@ -5,29 +7,30 @@ const MatchScoreBadge = ({
   showLabel = false, 
   className = '' 
 }) => {
+  const { t } = useTranslation();
   // Determine color and label based on score
   let config = {
     color: 'text-error bg-error-container/10 border-error/20',
-    label: 'Low Match',
+    labelKey: 'dashboardComponents.match.low',
     icon: 'sentiment_very_dissatisfied'
   };
 
   if (score >= 85) {
     config = {
       color: 'text-success bg-success-container/30 border-success/30',
-      label: 'Strong Match',
+      labelKey: 'dashboardComponents.match.strong',
       icon: 'verified'
     };
   } else if (score >= 70) {
     config = {
       color: 'text-secondary bg-secondary-container/10 border-secondary/20',
-      label: 'Good Match',
+      labelKey: 'dashboardComponents.match.good',
       icon: 'thumb_up'
     };
   } else if (score >= 50) {
     config = {
       color: 'text-warning bg-warning/10 border-warning/30',
-      label: 'Fair Match',
+      labelKey: 'dashboardComponents.match.fair',
       icon: 'trending_up'
     };
   }
@@ -50,7 +53,7 @@ const MatchScoreBadge = ({
     const offset = circumference - (score / 100) * circumference;
     
     return (
-      <div className={`relative flex items-center justify-center ${ringSize[size]} ${className}`} title="AI Match Score">
+      <div className={`relative flex items-center justify-center ${ringSize[size]} ${className}`} title={t('dashboardComponents.common.aiMatchScore')}>
         <svg className="w-full h-full transform -rotate-90">
           <circle
             cx="50%" cy="50%" r={radius}
@@ -75,7 +78,7 @@ const MatchScoreBadge = ({
     return (
       <div className={`flex items-center ${sizeClasses[size]} ${config.color.split(' ')[0]} ${className}`}>
         <span className="font-bold">{score}%</span>
-        {showLabel && <span className="font-medium">{config.label}</span>}
+        {showLabel && <span className="font-medium">{t(config.labelKey)}</span>}
       </div>
     );
   }
@@ -83,13 +86,13 @@ const MatchScoreBadge = ({
   return (
     <div 
       className={`inline-flex items-center font-bold rounded-full border ${config.color} ${sizeClasses[size]} ${className}`}
-      title="AI match score is based on your skills and the job requirements."
+      title={t('dashboardComponents.common.aiMatchTooltip')}
     >
       <span className="material-symbols-outlined text-[1.2em]" style={{ fontVariationSettings: '"FILL" 1' }}>
         {config.icon}
       </span>
       <span>{score}%</span>
-      {showLabel && <span className="font-medium opacity-90">{config.label}</span>}
+      {showLabel && <span className="font-medium opacity-90">{t(config.labelKey)}</span>}
     </div>
   );
 };

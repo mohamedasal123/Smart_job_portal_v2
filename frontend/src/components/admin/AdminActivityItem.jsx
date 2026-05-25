@@ -1,10 +1,14 @@
+import { useTranslation } from 'react-i18next';
 import AdminStatusBadge from './AdminStatusBadge';
 
 export default function AdminActivityItem({ item, onClick }) {
+  const { t, i18n } = useTranslation();
+  const dateLocale = i18n.language === 'ar' ? 'ar-EG' : 'en-US';
+
   // Use a professional date formatter
   const formatDate = (dateString) => {
     try {
-      return new Date(dateString).toLocaleString('en-US', {
+      return new Date(dateString).toLocaleString(dateLocale, {
         month: 'short',
         day: 'numeric',
         hour: 'numeric',
@@ -31,10 +35,23 @@ export default function AdminActivityItem({ item, onClick }) {
   };
 
   const style = getStyle();
+  const targetTypeLabel = (targetType) => {
+    const key = String(targetType || '').toLowerCase();
+    if (key === 'user') return t('dashboardComponents.common.user');
+    if (key === 'job') return t('dashboardComponents.common.job');
+    if (key === 'company') return t('dashboardComponents.common.company');
+    return targetType;
+  };
+  const performedByLabel = (performedBy) => {
+    const key = String(performedBy || '').toLowerCase();
+    if (key === 'admin') return t('roles.admin');
+    if (key === 'system') return t('dashboardComponents.common.system');
+    return performedBy;
+  };
 
   return (
     <div
-      className={`w-full text-left flex flex-col xl:flex-row xl:items-center gap-4 bg-surface-container-lowest hover:bg-surface-container-low transition-all px-6 py-4 group ${onClick ? 'cursor-pointer' : 'cursor-default'}`}
+      className={`w-full text-start flex flex-col xl:flex-row xl:items-center gap-4 bg-surface-container-lowest hover:bg-surface-container-low transition-all px-6 py-4 group ${onClick ? 'cursor-pointer' : 'cursor-default'}`}
       onClick={onClick}
     >
       {/* Icon + Title */}
@@ -55,7 +72,7 @@ export default function AdminActivityItem({ item, onClick }) {
         {/* Type Badge */}
         <div className="w-20 flex justify-start shrink-0">
           <span className="text-on-surface-variant text-xs px-2 py-0.5 bg-surface-container-high/30 rounded-md font-medium uppercase tracking-wider text-center w-full">
-            {item.targetType}
+            {targetTypeLabel(item.targetType)}
           </span>
         </div>
 
@@ -65,7 +82,7 @@ export default function AdminActivityItem({ item, onClick }) {
             <span className="material-symbols-outlined text-[16px] text-outline shrink-0">
               {item.performedBy === 'Admin' || item.performedBy === 'System' ? 'admin_panel_settings' : 'account_circle'}
             </span>
-            <span className="truncate">{item.performedBy}</span>
+            <span className="truncate">{performedByLabel(item.performedBy)}</span>
           </p>
           <p className="font-label-sm text-outline mt-1 flex items-center gap-2">
             <span className="material-symbols-outlined text-[16px] text-outline shrink-0">schedule</span>

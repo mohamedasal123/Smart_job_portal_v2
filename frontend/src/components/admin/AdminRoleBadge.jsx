@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next';
+
 const labels = {
-  job_seeker: 'Job Seeker',
-  company: 'Company',
-  admin: 'Admin',
+  job_seeker: 'roles.jobSeeker',
+  company: 'roles.company',
+  admin: 'roles.admin',
 };
 
 const styles = {
@@ -11,10 +13,11 @@ const styles = {
 };
 
 export default function AdminRoleBadge({ role }) {
+  const { t } = useTranslation();
   const key = String(role || '').toLowerCase();
   return (
     <span className={`inline-flex items-center rounded-full px-3 py-1 font-label-sm text-label-sm ${styles[key] || styles.admin}`}>
-      {labels[key] || role}
+      {labels[key] ? t(labels[key]) : role}
     </span>
   );
 }

@@ -40,6 +40,12 @@
     "signIn": "تسجيل الدخول",
     "dashboard": "لوحة التحكم",
     "viewAll": "عرض الكل",
+    "viewDetails": "عرض التفاصيل",
+    "pause": "إيقاف",
+    "publish": "نشر",
+    "forceDelete": "حذف نهائي",
+    "ban": "حظر",
+    "unban": "إلغاء الحظر",
     "help": "مساعدة"
   },
   "a11y": {
@@ -1136,6 +1142,265 @@
     "settings": "الإعدادات",
     "workspaceLabel": "مساحة عمل المسؤول"
   },
+  "dashboardComponents": {
+    "common": {
+      "job": "الوظيفة",
+      "company": "الشركة",
+      "location": "الموقع",
+      "applicants": "المتقدّمون",
+      "reports": "البلاغات",
+      "views": "المشاهدات",
+      "salary": "الراتب",
+      "status": "الحالة",
+      "actions": "الإجراءات",
+      "candidate": "المرشّح",
+      "matchScore": "درجة المطابقة",
+      "experience": "الخبرة",
+      "yearsShort": "{{count}} سنة",
+      "applied": "تم التقديم {{date}}",
+      "posted": "نُشرت {{date}}",
+      "created": "تاريخ الإنشاء",
+      "user": "المستخدم",
+      "role": "الدور",
+      "verification": "التحقّق",
+      "profile": "الملف",
+      "matching": "المطابقة",
+      "cv": "السيرة الذاتية",
+      "shortlist": "إدراج",
+      "unshortlist": "إلغاء الإدراج",
+      "approve": "موافقة",
+      "reject": "رفض",
+      "unknownJob": "وظيفة غير معروفة",
+      "unknownCompany": "شركة غير معروفة",
+      "aiMatchScore": "درجة مطابقة الذكاء الاصطناعي",
+      "aiMatchTooltip": "تعتمد درجة مطابقة الذكاء الاصطناعي على مهاراتك ومتطلبات الوظيفة.",
+      "system": "النظام"
+    },
+    "empty": {
+      "nothingFound": "لا توجد نتائج",
+      "adjustFilters": "حاول تعديل الفلاتر.",
+      "noJobsTitle": "لا توجد وظائف تطابق الفلاتر",
+      "noJobsMessage": "جرّب بحثًا أو حالة أو ترتيبًا مختلفًا.",
+      "noAdminJobsMessage": "جرّب بحثًا أو حالة أو بلاغًا أو ترتيبًا مختلفًا.",
+      "noApplicantsTitle": "لا يوجد متقدّمون يطابقون الفلاتر",
+      "noApplicantsMessage": "جرّب بحثًا أو حالة أو ترتيبًا مختلفًا.",
+      "noUsersTitle": "لا يوجد مستخدمون يطابقون الفلاتر",
+      "noUsersMessage": "جرّب بحثًا أو دورًا أو حالة أو ترتيبًا مختلفًا."
+    },
+    "seekerJobCard": {
+      "savedTitle": "تم حفظ الوظيفة",
+      "removedTitle": "تمت إزالة الوظيفة",
+      "savedMessage": "أُضيفت إلى قائمة الوظائف المحفوظة لديك.",
+      "removedMessage": "أُزيلت من قائمة الوظائف المحفوظة لديك.",
+      "saveErrorMessage": "تعذّر تحديث حالة الحفظ.",
+      "saveAria": "احفظ {{title}} ضمن وظائفك المحفوظة",
+      "removeAria": "إزالة {{title}} من الوظائف المحفوظة",
+      "saveTitle": "حفظ هذه الوظيفة",
+      "removeTitle": "إزالة من الوظائف المحفوظة"
+    },
+    "match": {
+      "low": "تطابق منخفض",
+      "fair": "تطابق مقبول",
+      "good": "تطابق جيد",
+      "strong": "تطابق قوي"
+    }
+  },
+  "adminFlow": {
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي",
+      "page": "صفحة {{page}}"
+    },
+    "saving": "جارٍ الحفظ...",
+    "deleting": "جارٍ الحذف...",
+    "notFoundTitle": "السجل غير موجود",
+    "notFoundMessage": "سجل المسؤول هذا غير متاح.",
+    "dashboard": {
+      "eyebrow": "لوحة تحكم المسؤول",
+      "title": "نظرة عامة على المنصة",
+      "description": "راقب المستخدمين والوظائف والبلاغات والنشاط الإداري عبر بوابة الوظائف الذكية.",
+      "totalUsers": "إجمالي المستخدمين",
+      "jobSeekers": "الباحثون عن عمل",
+      "companies": "الشركات",
+      "activeJobs": "الوظائف النشطة",
+      "totalApplications": "الطلبات",
+      "bannedUsers": "المستخدمون المحظورون",
+      "recentUsers": "أحدث المستخدمين",
+      "noRecentUsers": "لا يوجد مستخدمون جدد.",
+      "recentJobs": "أحدث الوظائف",
+      "noRecentJobs": "لا توجد وظائف جديدة.",
+      "recentActivity": "أحدث الأنشطة",
+      "noRecentActivity": "لم يتم تسجيل أي نشاط بعد.",
+      "errorTitle": "خطأ في لوحة التحكم",
+      "errorMessage": "فشل تحميل مقاييس المسؤول."
+    },
+    "users": {
+      "eyebrow": "إدارة المستخدمين",
+      "title": "المستخدمون",
+      "description": "ابحث وفلتر وافحص واحظر وألغِ حظر حسابات المنصة.",
+      "searchPlaceholder": "ابحث بالاسم أو البريد الإلكتروني أو الدور أو الحالة",
+      "filterOptions": {
+        "all": "كل الأدوار",
+        "job_seekers": "الباحثون عن عمل",
+        "companies": "الشركات",
+        "admins": "المسؤولون",
+        "active": "نشط",
+        "banned": "محظور"
+      },
+      "verificationOptions": {
+        "all": "حالة التحقق",
+        "verified": "مُتحقّق منه",
+        "unverified": "غير مُتحقّق منه"
+      },
+      "sortOptions": {
+        "newest": "الأحدث",
+        "oldest": "الأقدم",
+        "name": "الاسم"
+      },
+      "banConfirmMessage": "حظر {{name}}؟",
+      "unbanConfirmMessage": "استعادة وصول {{name}}؟",
+      "bannedTitle": "تم حظر المستخدم",
+      "unbannedTitle": "تم إلغاء حظر المستخدم",
+      "statusUpdatedMessage": "تم تحديث حالة {{name}}.",
+      "statusUpdateError": "فشل تحديث حالة المستخدم.",
+      "banTitle": "حظر المستخدم",
+      "unbanTitle": "إلغاء حظر المستخدم"
+    },
+    "jobs": {
+      "forceDeleteConfirmMessage": "حذف نهائي لـ {{title}}؟ سيتم اعتبار الوظيفة محذوفة بشكل دائم.",
+      "forceDeletedTitle": "تم حذف الوظيفة نهائيًا",
+      "forceDeletedMessage": "تمت إزالة {{title}}.",
+      "forceDeleteError": "فشل حذف الوظيفة.",
+      "forceDeleteTitle": "حذف الوظيفة نهائيًا",
+      "eyebrow": "إدارة الوظائف",
+      "title": "الوظائف",
+      "description": "راجع إعلانات الوظائف على المنصة والبلاغات واحذف الوظائف المخالفة نهائيًا.",
+      "searchPlaceholder": "ابحث باسم الوظيفة أو الشركة أو الموقع...",
+      "filterOptions": {
+        "all": "الكل",
+        "active": "نشطة",
+        "paused": "متوقفة",
+        "deleted": "محذوفة"
+      },
+      "sortOptions": {
+        "newest": "الأحدث",
+        "applicants": "الأكثر متقدّمين",
+        "reports": "الأكثر بلاغات"
+      }
+    },
+    "jobDetails": {
+      "eyebrow": "تفاصيل الوظيفة",
+      "backToJobs": "العودة إلى الوظائف",
+      "notFoundTitle": "الوظيفة غير موجودة",
+      "notFoundMessage": "إعلان الوظيفة هذا غير موجود.",
+      "forceDeleteWarningTitle": "الحذف النهائي لا رجعة فيه في قاعدة البيانات.",
+      "forceDeleteWarningMsg": "سيؤدي هذا الإجراء إلى إزالة إعلان الوظيفة ماديًا ولا يمكن التراجع عنه.",
+      "jobInfo": "معلومات الوظيفة",
+      "companyId": "مُعرّف الشركة",
+      "jobDescription": "وصف الوظيفة",
+      "noDescription": "لا يوجد وصف مقدّم.",
+      "responsibilities": "المسؤوليات",
+      "requirements": "المتطلبات",
+      "requiredSkills": "المهارات المطلوبة"
+    },
+    "activityLog": {
+      "eyebrow": "سجل النشاط",
+      "title": "النشاط الإداري",
+      "description": "راجع أحداث المستخدمين والوظائف والمسؤولين والأمان.",
+      "activityStream": "سجل الأنشطة",
+      "filterAll": "كل الأنشطة",
+      "filterAdmin": "إجراءات المسؤولين",
+      "filterEvents": "أحداث {{item}}",
+      "noActivityTitle": "لا يوجد نشاط",
+      "noActivityMessage": "لا يوجد نشاط يطابق هذا الفلتر.",
+      "systemLogs": "سجلات النظام",
+      "systemLogsTooltip": "هذا السجل هو تمثيل حي للأنشطة عبر المنصة. يقوم تلقائيًا بتتبع تغييرات حالة المستخدمين وتعديلات الوظائف.",
+      "userEvents": "أحداث المستخدمين",
+      "companyEvents": "أحداث الشركات",
+      "jobEvents": "أحداث الوظائف",
+      "adminOperations": "عمليات المسؤولين"
+    },
+    "settings": {
+      "eyebrow": "الإعدادات",
+      "title": "إعدادات المسؤول",
+      "description": "أدِر ملف حسابك كمسؤول وتفضيلات الأمان.",
+      "errors": {
+        "nameRequired": "الاسم مطلوب.",
+        "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا.",
+        "passwordMin": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
+        "passwordMatch": "يجب أن تتطابق كلمتا المرور.",
+        "incorrectPassword": "كلمة مرور غير صحيحة. حاول مرة أخرى."
+      },
+      "savedTitle": "تم حفظ الإعدادات",
+      "savedMessage": "تم تحديث ملف المسؤول بنجاح.",
+      "updateFailedTitle": "فشل التحديث",
+      "updateFailedMessage": "تعذّر تحديث الإعدادات.",
+      "securityCheck": "مطلوب تحقّق أمني",
+      "securityHint": "يرجى إدخال كلمة المرور الحالية لإلغاء قفل تغييرات {{targetName}}.",
+      "currentPassword": "كلمة المرور الحالية",
+      "adminProfile": "ملف المسؤول",
+      "name": "الاسم",
+      "emailAddress": "البريد الإلكتروني",
+      "change": "تغيير",
+      "securityAndAuth": "الأمان والمصادقة",
+      "passwordHint": "كلمة مرورك مشفّرة بأمان. يمكنك تحديثها في أي وقت عبر التحقق من كلمة مرورك الحالية.",
+      "changePassword": "تغيير كلمة المرور",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
+      "saveChanges": "حفظ التغييرات"
+    },
+    "userDetails": {
+      "eyebrow": "تفاصيل المستخدم",
+      "verifiedTitle": "تم التحقق من المستخدم",
+      "verifiedMessage": "تم التحقق من البريد الإلكتروني لـ {{name}} بنجاح.",
+      "verifyError": "فشل التحقق من المستخدم.",
+      "notFoundTitle": "المستخدم غير موجود",
+      "notFoundMessage": "حساب المستخدم هذا غير موجود.",
+      "backToUsers": "العودة إلى المستخدمين",
+      "viewPublicProfile": "عرض الملف العام",
+      "verifyEmail": "التحقق من البريد",
+      "verifying": "جارٍ التحقق...",
+      "accountDetails": "تفاصيل الحساب",
+      "emailVerified": "البريد مُتحقّق منه",
+      "verifiedBadge": "مُتحقّق منه",
+      "notVerifiedBadge": "غير مُتحقّق منه",
+      "accountStatus": "حالة الحساب",
+      "emailField": "البريد الإلكتروني",
+      "profileSummary": "ملخص الملف الشخصي",
+      "jobSeekerSkills": "مهارات الباحث عن عمل",
+      "noSkills": "لا توجد مهارات مدرجة.",
+      "cvDataAvailable": "بيانات السيرة الذاتية متاحة",
+      "viewProfile": "عرض الملف",
+      "companyInfo": "معلومات الشركة",
+      "postedJobs": "الوظائف المنشورة",
+      "industry": "الصناعة",
+      "location": "الموقع",
+      "employees": "الموظفون",
+      "website": "الموقع الإلكتروني",
+      "description": "الوصف",
+      "noDescription": "لا يوجد وصف متاح.",
+      "notAvailable": "غير متاح",
+      "adminPermissions": "حساب مسؤول بصلحيات إدارة المنصة."
+    },
+    "userProfile": {
+      "eyebrow": "ملف الباحث عن عمل",
+      "title": "ملف المرشّح",
+      "notFoundTitle": "الملف غير موجود",
+      "notFoundMessage": "هذا الملف مفقود أو المستخدم ليس باحثًا عن عمل.",
+      "backToDetails": "العودة للتفاصيل",
+      "verifiedAccount": "حساب مُتحقّق منه",
+      "unverifiedAccount": "حساب غير مُتحقّق منه",
+      "activeStatus": "حالة نشطة",
+      "bannedStatus": "محظور",
+      "topSkills": "أبرز المهارات",
+      "cvExtractedInfo": "المعلومات المستخرجة من السيرة",
+      "noCvDataTitle": "لا توجد بيانات سيرة",
+      "noCvDataMessage": "لم يرفع هذا المستخدم سيرة ذاتية لاستخراج البيانات منها."
+    },
+    "profile": {
+      "noValidData": "لا توجد بيانات صالحة"
+    }
+  },
   "experienceLevels": {
     "Internship": "تدريب",
     "Entry Level / Junior": "مبتدئ / مستوى أوّل",
@@ -1619,22 +1884,34 @@
   },
   "statuses": {
     "application": {
+      "new": "جديد",
       "applied": "تم التقديم",
       "underReview": "قيد المراجعة",
       "shortlisted": "في القائمة المختصرة",
+      "approved": "تمت الموافقة",
+      "interviewScheduled": "تم جدولة المقابلة",
+      "waitingInterview": "بانتظار المقابلة",
       "rejected": "مرفوض"
     },
     "job": {
       "active": "نشطة",
-      "inactive": "غير نشطة"
+      "inactive": "غير نشطة",
+      "paused": "متوقفة",
+      "draft": "مسودة",
+      "closed": "مغلقة",
+      "deleted": "محذوفة"
     },
     "user": {
       "active": "نشط",
-      "banned": "محظور"
+      "banned": "محظور",
+      "verified": "مُتحقّق منه",
+      "unverified": "غير مُتحقّق منه"
     },
     "loading": "جارٍ التحميل",
     "success": "نجح",
-    "error": "خطأ"
+    "error": "خطأ",
+    "pending": "معلّق",
+    "warning": "تحذير"
   },
   "jobTypes": {
     "fullTime": "دوام كامل",

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import AdminActivityItem from '../../components/admin/AdminActivityItem';
 import AdminConfirmModal from '../../components/admin/AdminConfirmModal';
 import AdminEmptyState from '../../components/admin/AdminEmptyState';
@@ -67,82 +68,87 @@ function Section({ title, children }) {
 }
 
 function PaginationControls({ page, setPage, itemsCount }) {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-stack-md bg-surface-container-lowest p-stack-sm rounded-lg border border-outline-variant">
-      <button className={buttonSecondary} disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Previous</button>
-      <span className="text-on-surface-variant font-label-md">Page {page}</span>
-      <button className={buttonSecondary} disabled={itemsCount < 15} onClick={() => setPage(p => p + 1)}>Next</button>
+      <button className={buttonSecondary} disabled={page <= 1} onClick={() => setPage(p => p - 1)}>{t('adminFlow.pagination.previous')}</button>
+      <span className="text-on-surface-variant font-label-md">{t('adminFlow.pagination.page', { page })}</span>
+      <button className={buttonSecondary} disabled={itemsCount < 15} onClick={() => setPage(p => p + 1)}>{t('adminFlow.pagination.next')}</button>
     </div>
   );
 }
 
 function UserStatusModal({ target, onCancel, onComplete }) {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const [saving, setSaving] = useState(false);
   const isBanned = target?.accountStatus === 'banned' || target?.is_banned;
 
   return (
     <AdminConfirmModal
-      confirmLabel={saving ? "Saving..." : (isBanned ? 'Unban User' : 'Ban User')}
-      message={target ? `${isBanned ? 'Restore access for' : 'Ban'} ${target.name}?` : ''}
+      confirmLabel={saving ? t('adminFlow.saving') : (isBanned ? t('buttons.unban') : t('buttons.ban'))}
+      message={target ? t(isBanned ? 'adminFlow.users.unbanConfirmMessage' : 'adminFlow.users.banConfirmMessage', { name: target.name }) : ''}
       onCancel={onCancel}
       onConfirm={async () => {
         setSaving(true);
         try {
           await adminApi.toggleBan(target.id);
-          addToast({ title: isBanned ? 'User unbanned' : 'User banned', message: `${target.name} status updated.`, type: 'success' });
+          addToast({ title: isBanned ? t('adminFlow.users.unbannedTitle') : t('adminFlow.users.bannedTitle'), message: t('adminFlow.users.statusUpdatedMessage', { name: target.name }), type: 'success' });
           onComplete?.();
         } catch (e) {
-          addToast({ title: 'Error', message: 'Failed to update user status.', type: 'error' });
+          addToast({ title: t('statuses.error'), message: t('adminFlow.users.statusUpdateError'), type: 'error' });
         } finally {
           setSaving(false);
         }
       }}
       open={Boolean(target)}
-      title={isBanned ? 'Unban user' : 'Ban user'}
+      title={isBanned ? t('adminFlow.users.unbanTitle') : t('adminFlow.users.banTitle')}
       variant={isBanned ? 'primary' : 'danger'}
     />
   );
 }
 
 function JobDeleteModal({ target, onCancel, onComplete }) {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const [saving, setSaving] = useState(false);
 
   return (
     <AdminConfirmModal
-      confirmLabel={saving ? "Deleting..." : "Force Delete Job"}
-      message={target ? `Force delete ${target.title}? This marks the job as permanently deleted.` : ''}
+      confirmLabel={saving ? t('adminFlow.deleting') : t('buttons.forceDelete')}
+      message={target ? t('adminFlow.jobs.forceDeleteConfirmMessage', { title: target.title }) : ''}
       onCancel={onCancel}
       onConfirm={async () => {
         setSaving(true);
         try {
           await adminApi.forceDeleteJob(target.id);
-          addToast({ title: 'Job force deleted', message: `${target.title} has been deleted.`, type: 'success' });
+          addToast({ title: t('adminFlow.jobs.forceDeletedTitle'), message: t('adminFlow.jobs.forceDeletedMessage', { title: target.title }), type: 'success' });
           onComplete?.();
         } catch (e) {
-          addToast({ title: 'Error', message: 'Failed to delete job.', type: 'error' });
+          addToast({ title: t('statuses.error'), message: t('adminFlow.jobs.forceDeleteError'), type: 'error' });
         } finally {
           setSaving(false);
         }
       }}
       open={Boolean(target)}
-      title="Force delete job"
+      title={t('adminFlow.jobs.forceDeleteTitle')}
       variant="danger"
     />
   );
 }
 
-function NotFoundState({ title = 'Record not found', message = 'This admin record is unavailable.' }) {
-  return <AdminEmptyState title={title} message={message} />;
+function NotFoundState({ title, message }) {
+  const { t } = useTranslation();
+  return <AdminEmptyState title={title || t('adminFlow.notFoundTitle')} message={message || t('adminFlow.notFoundMessage')} />;
 }
 
 function CVParsedDataDisplay({ data }) {
-  if (!data || typeof data !== 'object') return <p>No valid data</p>;
+  const { t, i18n } = useTranslation();
+  if (!data || typeof data !== 'object') return <p>{t('adminFlow.profile.noValidData')}</p>;
   
   const renderValue = (val) => {
     if (typeof val === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(val)) {
-      return <span className="text-primary">{new Date(val).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short', hour12: true })}</span>;
+      return <span className="text-primary">{new Date(val).toLocaleString(i18n.language === 'ar' ? 'ar-EG' : 'en-US', { dateStyle: 'medium', timeStyle: 'short', hour12: true })}</span>;
     }
 
     if (Array.isArray(val)) {
@@ -204,6 +210,7 @@ function CVParsedDataDisplay({ data }) {
 }
 
 export function AdminDashboard() {
+  const { t } = useTranslation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -215,26 +222,26 @@ export function AdminDashboard() {
   }, []);
 
   if (loading) return <FullPageSpinner />;
-  if (!data) return <NotFoundState title="Dashboard Error" message="Failed to load admin metrics." />;
+  if (!data) return <NotFoundState title={t('adminFlow.dashboard.errorTitle')} message={t('adminFlow.dashboard.errorMessage')} />;
 
   return (
     <>
       <AdminPageHeader
-        eyebrow="Admin Dashboard"
-        title="Platform overview"
-        description="Monitor users, jobs, reports, and administrative activity across Smart Job Portal."
+        eyebrow={t('adminFlow.dashboard.eyebrow')}
+        title={t('adminFlow.dashboard.title')}
+        description={t('adminFlow.dashboard.description')}
       />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-8">
-        <AdminStatsCard icon="group" label="Total users" to={ROUTES.ADMIN_USERS} value={data.metrics?.totalUsers ?? 0} />
-        <AdminStatsCard icon="person_search" label="Job seekers" to={ROUTES.ADMIN_USERS} value={data.metrics?.jobSeekers ?? 0} />
-        <AdminStatsCard icon="domain" label="Companies" to={ROUTES.ADMIN_USERS} value={data.metrics?.companies ?? 0} />
-        <AdminStatsCard icon="work" label="Active jobs" to={ROUTES.ADMIN_JOBS} value={data.metrics?.activeJobs ?? 0} />
-        <AdminStatsCard icon="assignment" label="Applications" to={ROUTES.ADMIN_JOBS} value={data.metrics?.totalApplications ?? 0} />
-        <AdminStatsCard icon="block" label="Banned users" to={ROUTES.ADMIN_USERS} value={data.metrics?.bannedUsers ?? 0} />
+        <AdminStatsCard icon="group" label={t('adminFlow.dashboard.totalUsers')} to={ROUTES.ADMIN_USERS} value={data.metrics?.totalUsers ?? 0} />
+        <AdminStatsCard icon="person_search" label={t('adminFlow.dashboard.jobSeekers')} to={ROUTES.ADMIN_USERS} value={data.metrics?.jobSeekers ?? 0} />
+        <AdminStatsCard icon="domain" label={t('adminFlow.dashboard.companies')} to={ROUTES.ADMIN_USERS} value={data.metrics?.companies ?? 0} />
+        <AdminStatsCard icon="work" label={t('adminFlow.dashboard.activeJobs')} to={ROUTES.ADMIN_JOBS} value={data.metrics?.activeJobs ?? 0} />
+        <AdminStatsCard icon="assignment" label={t('adminFlow.dashboard.totalApplications')} to={ROUTES.ADMIN_JOBS} value={data.metrics?.totalApplications ?? 0} />
+        <AdminStatsCard icon="block" label={t('adminFlow.dashboard.bannedUsers')} to={ROUTES.ADMIN_USERS} value={data.metrics?.bannedUsers ?? 0} />
       </div>
 
       <section className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-        <Section title="Recent users">
+        <Section title={t('adminFlow.dashboard.recentUsers')}>
           {data.recentUsers?.map((user) => (
             <Link className="flex items-center justify-between border-b border-outline-variant py-stack-md last:border-b-0 hover:bg-surface-container-low rounded-lg px-stack-sm transition-colors" key={user.id} to={`/admin/users/${user.id}`}>
               <div>
@@ -244,9 +251,9 @@ export function AdminDashboard() {
               <AdminRoleBadge role={user.role} />
             </Link>
           ))}
-          {!data.recentUsers?.length && <p className="text-on-surface-variant p-4">No recent users.</p>}
+          {!data.recentUsers?.length && <p className="text-on-surface-variant p-4">{t('adminFlow.dashboard.noRecentUsers')}</p>}
         </Section>
-        <Section title="Recent jobs">
+        <Section title={t('adminFlow.dashboard.recentJobs')}>
           {data.recentJobs?.map((job) => (
             <Link className="flex items-center justify-between border-b border-outline-variant py-stack-md last:border-b-0 hover:bg-surface-container-low rounded-lg px-stack-sm transition-colors" key={job.id} to={`/admin/jobs/${job.id}`}>
               <div>
@@ -256,14 +263,14 @@ export function AdminDashboard() {
               <AdminStatusBadge status={job.status} />
             </Link>
           ))}
-          {!data.recentJobs?.length && <p className="text-on-surface-variant p-4">No recent jobs.</p>}
+          {!data.recentJobs?.length && <p className="text-on-surface-variant p-4">{t('adminFlow.dashboard.noRecentJobs')}</p>}
         </Section>
       </section>
 
       <section className="grid grid-cols-1 gap-8 mb-8">
-        <Section title="Recent activity">
+        <Section title={t('adminFlow.dashboard.recentActivity')}>
           {data.recentActivity?.map((item) => <AdminActivityItem item={item} key={item.id} />)}
-          {!data.recentActivity?.length && <p className="text-on-surface-variant p-4">No activity has been recorded yet.</p>}
+          {!data.recentActivity?.length && <p className="text-on-surface-variant p-4">{t('adminFlow.dashboard.noRecentActivity')}</p>}
         </Section>
       </section>
     </>
@@ -271,6 +278,7 @@ export function AdminDashboard() {
 }
 
 export function AdminUsersManagement() {
+  const { t } = useTranslation();
   const [filters, setFilters] = useState({ query: '', filter: 'all', sort: 'newest', verification: 'all' });
   const [page, setPage] = useState(1);
   const [users, setUsers] = useState([]);
@@ -298,29 +306,26 @@ export function AdminUsersManagement() {
   return (
     <>
       <AdminPageHeader
-        eyebrow="Users Management"
-        title="Users"
-        description="Search, filter, inspect, ban, and unban platform accounts."
+        eyebrow={t('adminFlow.users.eyebrow')}
+        title={t('adminFlow.users.title')}
+        description={t('adminFlow.users.description')}
       />
       <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient p-6 grid grid-cols-1 md:grid-cols-[1fr_160px_160px_160px] gap-6 mb-8">
-        <TextInput onChange={(e) => updateFilter('query', e.target.value)} placeholder="Search name, email, role, or status" value={filters.query} />
+        <TextInput onChange={(e) => updateFilter('query', e.target.value)} placeholder={t('adminFlow.users.searchPlaceholder')} value={filters.query} />
         <SelectInput onChange={(e) => updateFilter('filter', e.target.value)} value={filters.filter}>
-          <option value="all">All Roles</option>
-          <option value="job_seekers">Job Seekers</option>
-          <option value="companies">Companies</option>
-          <option value="admins">Admins</option>
-          <option value="active">Active</option>
-          <option value="banned">Banned</option>
+          {['all', 'job_seekers', 'companies', 'admins', 'active', 'banned'].map(val => (
+            <option key={val} value={val}>{t(`adminFlow.users.filterOptions.${val}`)}</option>
+          ))}
         </SelectInput>
         <SelectInput onChange={(e) => updateFilter('verification', e.target.value)} value={filters.verification}>
-          <option value="all">All Verification</option>
-          <option value="verified">Verified</option>
-          <option value="unverified">Unverified</option>
+          {['all', 'verified', 'unverified'].map(val => (
+            <option key={val} value={val}>{t(`adminFlow.users.verificationOptions.${val}`)}</option>
+          ))}
         </SelectInput>
         <SelectInput onChange={(e) => updateFilter('sort', e.target.value)} value={filters.sort}>
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="name">Name</option>
+          {['newest', 'oldest', 'name'].map(val => (
+            <option key={val} value={val}>{t(`adminFlow.users.sortOptions.${val}`)}</option>
+          ))}
         </SelectInput>
       </div>
 
@@ -341,6 +346,7 @@ export function AdminUsersManagement() {
 }
 
 export function AdminUserDetails() {
+  const { t } = useTranslation();
   const { userId, id } = useParams();
   const { addToast } = useToast();
   const [user, setUser] = useState(null);
@@ -362,17 +368,17 @@ export function AdminUserDetails() {
     setVerifying(true);
     try {
       await adminApi.verifyUser(user.id);
-      addToast({ title: 'User verified', message: `${user.name} email verified successfully.`, type: 'success' });
+      addToast({ title: t('adminFlow.userDetails.verifiedTitle'), message: t('adminFlow.userDetails.verifiedMessage', { name: user.name }), type: 'success' });
       setUser(prev => ({ ...prev, email_verified_at: new Date().toISOString() }));
     } catch (e) {
-      addToast({ title: 'Error', message: e?.response?.data?.message || 'Failed to verify user.', type: 'error' });
+      addToast({ title: t('statuses.error'), message: e?.response?.data?.message || t('adminFlow.userDetails.verifyError'), type: 'error' });
     } finally {
       setVerifying(false);
     }
   };
 
   if (loading) return <FullPageSpinner />;
-  if (!user) return <NotFoundState title="User not found" message="This user account does not exist." />;
+  if (!user) return <NotFoundState title={t('adminFlow.userDetails.notFoundTitle')} message={t('adminFlow.userDetails.notFoundMessage')} />;
 
   const isBanned = Boolean(user.is_banned);
   const isVerified = Boolean(user.email_verified_at);
@@ -382,11 +388,11 @@ export function AdminUserDetails() {
       <AdminPageHeader
         actions={
           <>
-            <Link className={buttonSecondary} to={ROUTES.ADMIN_USERS}>Back to Users</Link>
+            <Link className={buttonSecondary} to={ROUTES.ADMIN_USERS}>{t('adminFlow.userDetails.backToUsers')}</Link>
             {user.role === 'company' && (
               <Link className={buttonSecondary} to={`/companies/${user.id}`} target="_blank">
                 <span className="material-symbols-outlined text-[18px]">open_in_new</span>
-                View Public Profile
+                {t('adminFlow.userDetails.viewPublicProfile')}
               </Link>
             )}
             {!isVerified && (
@@ -396,36 +402,36 @@ export function AdminUserDetails() {
                 onClick={handleVerify}
               >
                 <span className="material-symbols-outlined text-[18px]">verified</span>
-                {verifying ? 'Verifying...' : 'Verify Email'}
+                {verifying ? t('adminFlow.userDetails.verifying') : t('adminFlow.userDetails.verifyEmail')}
               </button>
             )}
             <button
               className={isBanned ? buttonPrimary : buttonDanger}
               onClick={() => setTarget(user)}
             >
-              {isBanned ? 'Unban User' : 'Ban User'}
+              {isBanned ? t('buttons.unban') : t('buttons.ban')}
             </button>
           </>
         }
-        eyebrow="User Details"
+        eyebrow={t('adminFlow.userDetails.eyebrow')}
         title={user.name}
         description={user.email}
       />
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-8">
-        <Section title="Account details">
+        <Section title={t('adminFlow.userDetails.accountDetails')}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              ['Role', <AdminRoleBadge role={user.role} key="role" />],
-              ['Email Verified', (
+              [t('dashboardComponents.common.role'), <AdminRoleBadge role={user.role} key="role" />],
+              [t('adminFlow.userDetails.emailVerified'), (
                 <span key="verified" className={`inline-flex items-center gap-1 font-label-sm px-2 py-1 rounded-full ${isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                   <span className="material-symbols-outlined text-[14px]">{isVerified ? 'check_circle' : 'pending'}</span>
-                  {isVerified ? 'Verified' : 'Not Verified'}
+                  {isVerified ? t('adminFlow.userDetails.verifiedBadge') : t('adminFlow.userDetails.notVerifiedBadge')}
                 </span>
               )],
-              ['Account Status', <AdminStatusBadge status={isBanned ? 'banned' : 'active'} key="banned" />],
-              ['Created date', new Date(user.created_at).toLocaleDateString()],
-              ['Email', user.email],
+              [t('adminFlow.userDetails.accountStatus'), <AdminStatusBadge status={isBanned ? 'banned' : 'active'} key="banned" />],
+              [t('dashboardComponents.common.created'), new Date(user.created_at).toLocaleDateString()],
+              [t('adminFlow.userDetails.emailField'), user.email],
             ].map(([label, value]) => (
               <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm flex flex-col justify-center" key={label}>
                 <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2">{label}</p>
@@ -435,30 +441,30 @@ export function AdminUserDetails() {
           </div>
         </Section>
 
-        <Section title="Profile summary">
+        <Section title={t('adminFlow.userDetails.profileSummary')}>
           <div className="flex flex-col gap-6">
             {user.role === 'job_seeker' && user.profile && (
               <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm">
                 <p className="font-h3 text-primary mb-4 flex items-center gap-2">
                   <span className="material-symbols-outlined text-secondary">psychology</span>
-                  Job Seeker Skills
+                  {t('adminFlow.userDetails.jobSeekerSkills')}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {user.profile.job_seeker_skills?.map((s) => (
                     <CompanySkillTag key={s.id}>{s.skill?.name}</CompanySkillTag>
                   ))}
                   {!user.profile.job_seeker_skills?.length && (
-                    <p className="text-sm text-on-surface-variant italic">No skills listed.</p>
+                    <p className="text-sm text-on-surface-variant italic">{t('adminFlow.userDetails.noSkills')}</p>
                   )}
                 </div>
                 {user.profile.cv_parsed_data && (
                   <div className="mt-6 pt-4 border-t border-outline-variant flex items-center justify-between">
                     <p className="font-h3 text-primary flex items-center gap-2">
                       <span className="material-symbols-outlined text-success text-[20px]">check_circle</span>
-                      CV Data Available
+                      {t('adminFlow.userDetails.cvDataAvailable')}
                     </p>
                     <Link to={`/admin/users/${user.id}/profile`} className="text-secondary font-semibold hover:underline flex items-center gap-1 bg-secondary-container/20 px-4 py-2 rounded-lg transition-colors">
-                      View Profile
+                      {t('adminFlow.userDetails.viewProfile')}
                       <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                     </Link>
                   </div>
@@ -469,38 +475,38 @@ export function AdminUserDetails() {
               <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm flex flex-col gap-4">
                 <p className="font-h3 text-primary flex items-center gap-2 border-b border-outline-variant pb-4 mb-2">
                   <span className="material-symbols-outlined text-secondary">domain</span>
-                  Company Info
+                  {t('adminFlow.userDetails.companyInfo')}
                 </p>
                 <div className="flex flex-col gap-3">
                   <p className="text-on-surface-variant flex items-center justify-between">
-                    <span>Posted jobs:</span>
+                    <span>{t('adminFlow.userDetails.postedJobs')}:</span>
                     <Link to={`/admin/jobs?query=${encodeURIComponent(user.name)}`} className="font-bold text-secondary flex items-center gap-1 hover:underline bg-surface-container-highest/10 px-3 py-1.5 rounded-lg border border-outline-variant/50 transition-colors">
                       {user.profile.job_posts_count || 0}
                       <span className="material-symbols-outlined text-[16px]">link</span>
                     </Link>
                   </p>
                   <p className="text-on-surface-variant flex items-center justify-between">
-                    <span>Industry:</span>
-                    <span className="font-bold text-primary">{user.profile.industry || 'N/A'}</span>
+                    <span>{t('adminFlow.userDetails.industry')}:</span>
+                    <span className="font-bold text-primary">{user.profile.industry || t('adminFlow.userDetails.notAvailable')}</span>
                   </p>
                   <p className="text-on-surface-variant flex items-center justify-between">
-                    <span>Location:</span>
-                    <span className="font-bold text-primary text-right break-words max-w-[200px]">{user.profile.location || 'N/A'}</span>
+                    <span>{t('adminFlow.userDetails.location')}:</span>
+                    <span className="font-bold text-primary text-right break-words max-w-[200px]">{user.profile.location || t('adminFlow.userDetails.notAvailable')}</span>
                   </p>
                   <p className="text-on-surface-variant flex items-center justify-between">
-                    <span>Employees:</span>
-                    <span className="font-bold text-primary">{user.profile.employees || 'N/A'}</span>
+                    <span>{t('adminFlow.userDetails.employees')}:</span>
+                    <span className="font-bold text-primary">{user.profile.employees || t('adminFlow.userDetails.notAvailable')}</span>
                   </p>
                   <p className="text-on-surface-variant flex flex-col gap-1 mt-2">
-                    <span>Website:</span>
+                    <span>{t('adminFlow.userDetails.website')}:</span>
                     <a href={user.profile.website} target="_blank" rel="noreferrer" className="text-secondary hover:underline font-medium break-all">
-                      {user.profile.website || 'N/A'}
+                      {user.profile.website || t('adminFlow.userDetails.notAvailable')}
                     </a>
                   </p>
                   <div className="mt-2 pt-4 border-t border-outline-variant">
-                    <span className="text-on-surface-variant mb-1 block">Description:</span>
+                    <span className="text-on-surface-variant mb-1 block">{t('adminFlow.userDetails.description')}:</span>
                     <p className="text-primary font-body-sm leading-relaxed max-h-40 overflow-auto">
-                      {user.profile.description || 'No description available.'}
+                      {user.profile.description || t('adminFlow.userDetails.noDescription')}
                     </p>
                   </div>
                 </div>
@@ -510,7 +516,7 @@ export function AdminUserDetails() {
               <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm">
                 <p className="text-on-surface-variant flex items-center gap-3">
                   <span className="material-symbols-outlined text-secondary text-[32px]">admin_panel_settings</span>
-                  <span>Administrator account with platform management permissions.</span>
+                  <span>{t('adminFlow.userDetails.adminPermissions')}</span>
                 </p>
               </div>
             )}
@@ -528,6 +534,7 @@ export function AdminUserDetails() {
 }
 
 export function AdminUserProfile() {
+  const { t } = useTranslation();
   const { userId, id } = useParams();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -543,7 +550,7 @@ export function AdminUserProfile() {
   useEffect(() => { fetchUser(); }, [fetchUser]);
 
   if (loading) return <FullPageSpinner />;
-  if (!user || user.role !== 'job_seeker') return <NotFoundState title="Profile not found" message="This profile is either missing or the user is not a job seeker." />;
+  if (!user || user.role !== 'job_seeker') return <NotFoundState title={t('adminFlow.userProfile.notFoundTitle')} message={t('adminFlow.userProfile.notFoundMessage')} />;
 
   return (
     <>
@@ -551,11 +558,11 @@ export function AdminUserProfile() {
         actions={
           <Link className={buttonSecondary} to={`/admin/users/${user.id}`}>
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-            Back to Details
+            {t('adminFlow.userProfile.backToDetails')}
           </Link>
         }
-        eyebrow="Job Seeker Profile"
-        title="Candidate Profile"
+        eyebrow={t('adminFlow.userProfile.eyebrow')}
+        title={t('adminFlow.userProfile.title')}
       />
 
       <div className="flex flex-col gap-8">
@@ -587,18 +594,18 @@ export function AdminUserProfile() {
               <div className="flex flex-col gap-2">
                 <span className={`inline-flex items-center gap-1 font-label-sm px-3 py-1.5 rounded-full ${user.email_verified_at ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                   <span className="material-symbols-outlined text-[16px]">{user.email_verified_at ? 'check_circle' : 'pending'}</span>
-                  {user.email_verified_at ? 'Verified Account' : 'Unverified Account'}
+                  {user.email_verified_at ? t('adminFlow.userProfile.verifiedAccount') : t('adminFlow.userProfile.unverifiedAccount')}
                 </span>
                 <span className={`inline-flex items-center gap-1 font-label-sm px-3 py-1.5 rounded-full ${!user.is_banned ? 'bg-surface-container text-primary' : 'bg-error-container text-error'}`}>
                   <span className="material-symbols-outlined text-[16px]">{!user.is_banned ? 'verified_user' : 'block'}</span>
-                  {!user.is_banned ? 'Active Status' : 'Banned'}
+                  {!user.is_banned ? t('adminFlow.userProfile.activeStatus') : t('adminFlow.userProfile.bannedStatus')}
                 </span>
               </div>
             </div>
 
             {user.profile?.job_seeker_skills?.length > 0 && (
               <div className="mt-6 pt-6 border-t border-outline-variant">
-                <h3 className="font-h3 text-primary mb-3">Top Skills</h3>
+                <h3 className="font-h3 text-primary mb-3">{t('adminFlow.userProfile.topSkills')}</h3>
                 <div className="flex flex-wrap gap-2">
                   {user.profile.job_seeker_skills.map((s) => (
                     <CompanySkillTag key={s.id}>{s.skill?.name}</CompanySkillTag>
@@ -610,11 +617,11 @@ export function AdminUserProfile() {
         </div>
 
         {/* Extracted CV Data */}
-        <Section title="CV Extracted Information">
+        <Section title={t('adminFlow.userProfile.cvExtractedInfo')}>
           {user.profile?.cv_parsed_data ? (
             <CVParsedDataDisplay data={user.profile.cv_parsed_data} />
           ) : (
-            <AdminEmptyState title="No CV Data" message="This user has not uploaded a CV to extract data from." />
+            <AdminEmptyState title={t('adminFlow.userProfile.noCvDataTitle')} message={t('adminFlow.userProfile.noCvDataMessage')} />
           )}
         </Section>
       </div>
@@ -623,6 +630,7 @@ export function AdminUserProfile() {
 }
 
 export function AdminJobsManagement() {
+  const { t } = useTranslation();
   const location = useLocation();
   const [filters, setFilters] = useState(() => {
     const params = new URLSearchParams(location.search);
@@ -654,22 +662,21 @@ export function AdminJobsManagement() {
   return (
     <>
       <AdminPageHeader
-        eyebrow="Jobs Management"
-        title="Jobs"
-        description="Review platform job posts, reports, and force-delete problematic listings."
+        eyebrow={t('adminFlow.jobs.eyebrow')}
+        title={t('adminFlow.jobs.title')}
+        description={t('adminFlow.jobs.description')}
       />
       <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient p-6 grid grid-cols-1 md:grid-cols-[1fr_180px_190px] gap-6 mb-8">
-        <TextInput onChange={(e) => updateFilter('query', e.target.value)} placeholder="Search by Job title, Company name, or Location..." value={filters.query} />
+        <TextInput onChange={(e) => updateFilter('query', e.target.value)} placeholder={t('adminFlow.jobs.searchPlaceholder')} value={filters.query} />
         <SelectInput onChange={(e) => updateFilter('filter', e.target.value)} value={filters.filter}>
-          <option value="all">All</option>
-          <option value="active">Active</option>
-          <option value="paused">Paused</option>
-          <option value="deleted">Deleted</option>
+          {['all', 'active', 'paused', 'deleted'].map(val => (
+            <option key={val} value={val}>{t(`adminFlow.jobs.filterOptions.${val}`)}</option>
+          ))}
         </SelectInput>
         <SelectInput onChange={(e) => updateFilter('sort', e.target.value)} value={filters.sort}>
-          <option value="newest">Newest</option>
-          <option value="applicants">Most applicants</option>
-          <option value="reports">Most reports</option>
+          {['newest', 'applicants', 'reports'].map(val => (
+            <option key={val} value={val}>{t(`adminFlow.jobs.sortOptions.${val}`)}</option>
+          ))}
         </SelectInput>
       </div>
 
@@ -690,6 +697,7 @@ export function AdminJobsManagement() {
 }
 
 export function AdminJobDetails() {
+  const { t } = useTranslation();
   const { jobId, id } = useParams();
   const navigate = useNavigate();
   const [job, setJob] = useState(null);
@@ -710,18 +718,18 @@ export function AdminJobDetails() {
   useEffect(() => { fetchJob(); }, [fetchJob]);
 
   if (loading) return <FullPageSpinner />;
-  if (!job) return <NotFoundState title="Job not found" message="This job post does not exist." />;
+  if (!job) return <NotFoundState title={t('adminFlow.jobDetails.notFoundTitle')} message={t('adminFlow.jobDetails.notFoundMessage')} />;
 
   return (
     <>
       <AdminPageHeader
         actions={
           <>
-            <Link className={buttonSecondary} to={ROUTES.ADMIN_JOBS}>Back to Jobs</Link>
-            <button className={buttonDanger} onClick={() => setTarget(job)}>Force Delete Job</button>
+            <Link className={buttonSecondary} to={ROUTES.ADMIN_JOBS}>{t('adminFlow.jobDetails.backToJobs')}</Link>
+            <button className={buttonDanger} onClick={() => setTarget(job)}>{t('buttons.forceDelete')}</button>
           </>
         }
-        eyebrow="Job Details"
+        eyebrow={t('adminFlow.jobDetails.eyebrow')}
         title={job.title}
         description={`${job.company} · ${job.location}`}
       />
@@ -730,22 +738,22 @@ export function AdminJobDetails() {
         <div className="bg-error-container border border-error/20 text-error rounded-xl p-6 shadow-sm flex items-start gap-4">
           <span className="material-symbols-outlined text-[32px] shrink-0 mt-1">warning</span>
           <div>
-            <p className="font-h3 text-h3">Force delete is permanent on the backend.</p>
-            <p className="font-body-md text-body-md mt-1">This action will physically remove the job post and cannot be undone.</p>
+            <p className="font-h3 text-h3">{t('adminFlow.jobDetails.forceDeleteWarningTitle')}</p>
+            <p className="font-body-md text-body-md mt-1">{t('adminFlow.jobDetails.forceDeleteWarningMsg')}</p>
           </div>
         </div>
 
-        <Section title="Job information">
+        <Section title={t('adminFlow.jobDetails.jobInfo')}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              ['Status', <AdminStatusBadge status={job.status} key="status" />],
-              ['Category', job.category],
-              ['Type', job.type?.replace('_', ' ')],
-              ['Salary', job.salary],
-              ['Posted date', job.postedAt],
-              ['Applicants', job.applicantsCount],
-              ['Reports', job.reportsCount || 0],
-              ['Company ID', job.companyId],
+              [t('dashboardComponents.common.status'), <AdminStatusBadge status={job.status} key="status" />],
+              [t('companyFlow.form.category'), job.category],
+              [t('companyFlow.form.jobType'), t(`jobTypesLabels.${job.type?.replace('_', ' ')?.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-')}`, { defaultValue: job.type?.replace('_', ' ') })],
+              [t('dashboardComponents.common.salary'), job.salary],
+              [t('dashboardComponents.common.posted', { date: '' }).trim(), job.postedAt],
+              [t('dashboardComponents.common.applicants'), job.applicantsCount],
+              [t('dashboardComponents.common.reports'), job.reportsCount || 0],
+              [t('adminFlow.jobDetails.companyId'), job.companyId],
             ].map(([label, value]) => (
               <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm flex flex-col justify-center" key={label}>
                 <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2">{label}</p>
@@ -755,13 +763,13 @@ export function AdminJobDetails() {
           </div>
           
           <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm mt-6">
-            <h3 className="font-h3 text-h3 text-primary mb-4">Job Description</h3>
-            <p className="font-body-lg text-body-lg text-on-surface-variant whitespace-pre-wrap leading-relaxed">{job.description || 'No description provided.'}</p>
+            <h3 className="font-h3 text-h3 text-primary mb-4">{t('adminFlow.jobDetails.jobDescription')}</h3>
+            <p className="font-body-lg text-body-lg text-on-surface-variant whitespace-pre-wrap leading-relaxed">{job.description || t('adminFlow.jobDetails.noDescription')}</p>
           </div>
           
           {job.responsibilities?.length > 0 && (
             <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm mt-6">
-              <h3 className="font-h3 text-h3 text-primary mb-4">Responsibilities</h3>
+              <h3 className="font-h3 text-h3 text-primary mb-4">{t('adminFlow.jobDetails.responsibilities')}</h3>
               <ul className="list-disc pl-5 text-on-surface-variant flex flex-col gap-2 font-body-lg">
                 {job.responsibilities.map((r, i) => <li key={i}>{r}</li>)}
               </ul>
@@ -770,7 +778,7 @@ export function AdminJobDetails() {
 
           {job.requirements?.length > 0 && (
             <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm mt-6">
-              <h3 className="font-h3 text-h3 text-primary mb-4">Requirements</h3>
+              <h3 className="font-h3 text-h3 text-primary mb-4">{t('adminFlow.jobDetails.requirements')}</h3>
               <ul className="list-disc pl-5 text-on-surface-variant flex flex-col gap-2 font-body-lg">
                 {job.requirements.map((r, i) => <li key={i}>{r}</li>)}
               </ul>
@@ -781,7 +789,7 @@ export function AdminJobDetails() {
             <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant shadow-sm mt-6">
               <h3 className="font-h3 text-h3 text-primary mb-4 flex items-center gap-2">
                 <span className="material-symbols-outlined text-secondary">psychology</span>
-                Required Skills
+                {t('adminFlow.jobDetails.requiredSkills')}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {job.requiredSkills.map((skill) => <CompanySkillTag key={skill}>{skill}</CompanySkillTag>)}
@@ -800,6 +808,7 @@ export function AdminJobDetails() {
 }
 
 export function AdminActivityLog() {
+  const { t } = useTranslation();
   const [items, setItems] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
@@ -831,12 +840,12 @@ export function AdminActivityLog() {
   return (
     <>
       <AdminPageHeader
-        eyebrow="Activity Log"
-        title="Administrative activity"
-        description="Audit user, job, admin, and security events."
+        eyebrow={t('adminFlow.activityLog.eyebrow')}
+        title={t('adminFlow.activityLog.title')}
+        description={t('adminFlow.activityLog.description')}
       />
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-8">
-        <Section title="Activity stream">
+        <Section title={t('adminFlow.activityLog.activityStream')}>
           <div className="flex flex-wrap gap-2 mb-6">
             {['all', 'user', 'job', 'company', 'admin'].map((item) => (
               <button
@@ -844,7 +853,7 @@ export function AdminActivityLog() {
                 key={item}
                 onClick={() => setFilter(item)}
               >
-                {item === 'all' ? 'All Activity' : item === 'admin' ? 'Admin Actions' : `${item} Events`}
+                {item === 'all' ? t('adminFlow.activityLog.filterAll') : item === 'admin' ? t('adminFlow.activityLog.filterAdmin') : t('adminFlow.activityLog.filterEvents', { item: t(`dashboardComponents.common.${item}`, { defaultValue: item }) })}
               </button>
             ))}
           </div>
@@ -857,17 +866,17 @@ export function AdminActivityLog() {
               </div>
             </div>
           ) : (
-            <AdminEmptyState title="No activity" message="No activity matches this filter." />
+            <AdminEmptyState title={t('adminFlow.activityLog.noActivityTitle')} message={t('adminFlow.activityLog.noActivityMessage')} />
           )}
         </Section>
         <Section 
           title={
             <div className="flex items-center gap-2">
-              System Logs
+              {t('adminFlow.activityLog.systemLogs')}
               <div className="relative group flex items-center">
                 <span className="material-symbols-outlined text-[20px] text-outline cursor-help hover:text-primary transition-colors">info</span>
                 <div className="absolute right-0 md:left-1/2 md:-translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all w-64 bg-inverse-surface text-inverse-on-surface text-xs p-3 rounded-lg shadow-overlay z-50 font-normal leading-relaxed pointer-events-none text-left md:text-center">
-                  This stream is a live representation of activities across the platform. It automatically tracks user status changes and job modifications.
+                  {t('adminFlow.activityLog.systemLogsTooltip')}
                 </div>
               </div>
             </div>
@@ -883,7 +892,7 @@ export function AdminActivityLog() {
                   <span className="material-symbols-outlined">history</span>
                 </div>
                 <p className="font-display text-[28px] text-primary leading-none mb-1">{items.length}</p>
-                <p className="font-label-sm uppercase tracking-wider text-on-surface-variant">All Activity</p>
+                <p className="font-label-sm uppercase tracking-wider text-on-surface-variant">{t('adminFlow.activityLog.filterAll')}</p>
               </button>
 
               <button 
@@ -894,7 +903,7 @@ export function AdminActivityLog() {
                   <span className="material-symbols-outlined">group</span>
                 </div>
                 <p className="font-display text-[28px] text-primary leading-none mb-1">{items.filter((item) => item.targetType === 'User' && item.performedBy !== 'Admin' && item.performedBy !== 'System').length}</p>
-                <p className="font-label-sm uppercase tracking-wider text-on-surface-variant">User events</p>
+                <p className="font-label-sm uppercase tracking-wider text-on-surface-variant">{t('adminFlow.activityLog.userEvents')}</p>
               </button>
               
               <button 
@@ -905,7 +914,7 @@ export function AdminActivityLog() {
                   <span className="material-symbols-outlined">domain</span>
                 </div>
                 <p className="font-display text-[28px] text-primary leading-none mb-1">{items.filter((item) => item.targetType === 'Job' && item.performedBy !== 'Admin').length}</p>
-                <p className="font-label-sm uppercase tracking-wider text-on-surface-variant">Company events</p>
+                <p className="font-label-sm uppercase tracking-wider text-on-surface-variant">{t('adminFlow.activityLog.companyEvents')}</p>
               </button>
 
               <button 
@@ -916,7 +925,7 @@ export function AdminActivityLog() {
                   <span className="material-symbols-outlined">work</span>
                 </div>
                 <p className="font-display text-[28px] text-primary leading-none mb-1">{items.filter((item) => item.targetType === 'Job').length}</p>
-                <p className="font-label-sm uppercase tracking-wider text-on-surface-variant">Job events</p>
+                <p className="font-label-sm uppercase tracking-wider text-on-surface-variant">{t('adminFlow.activityLog.jobEvents')}</p>
               </button>
               
               <button 
@@ -927,7 +936,7 @@ export function AdminActivityLog() {
                   <span className="material-symbols-outlined">admin_panel_settings</span>
                 </div>
                 <p className="font-display text-[28px] text-primary leading-none mb-1">{items.filter((item) => item.performedBy === 'Admin' || item.performedBy === 'System').length}</p>
-                <p className="font-label-sm uppercase tracking-wider text-on-surface-variant">Admin operations</p>
+                <p className="font-label-sm uppercase tracking-wider text-on-surface-variant">{t('adminFlow.activityLog.adminOperations')}</p>
               </button>
             </div>
           </div>
@@ -938,6 +947,7 @@ export function AdminActivityLog() {
 }
 
 export function AdminSettings() {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const { user, refreshUser } = useAuth();
   
@@ -991,7 +1001,7 @@ export function AdminSettings() {
       setSettings(prev => ({ ...prev, currentPassword: verifyInput }));
       setVerifyTarget(null);
     } catch (e) {
-      setVerifyError('Incorrect password. Please try again.');
+      setVerifyError(t('adminFlow.settings.errors.incorrectPassword'));
     } finally {
       setVerifying(false);
     }
@@ -999,12 +1009,12 @@ export function AdminSettings() {
 
   const validate = () => {
     const next = {};
-    if (!settings.name.trim()) next.name = 'Name is required.';
-    if (unlockState.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(settings.email)) next.email = 'Enter a valid email.';
+    if (!settings.name.trim()) next.name = t('adminFlow.settings.errors.nameRequired');
+    if (unlockState.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(settings.email)) next.email = t('adminFlow.settings.errors.emailInvalid');
     
     if (unlockState.password) {
-      if (!settings.newPassword || settings.newPassword.length < 8) next.newPassword = 'Password must be at least 8 characters.';
-      if (settings.newPassword !== settings.confirmPassword) next.confirmPassword = 'Passwords must match.';
+      if (!settings.newPassword || settings.newPassword.length < 8) next.newPassword = t('adminFlow.settings.errors.passwordMin');
+      if (settings.newPassword !== settings.confirmPassword) next.confirmPassword = t('adminFlow.settings.errors.passwordMatch');
     }
     
     setErrors(next);
@@ -1022,14 +1032,14 @@ export function AdminSettings() {
         newPassword: unlockState.password ? settings.newPassword : undefined,
       });
       
-      addToast({ title: 'Settings saved', message: 'Admin profile was updated successfully.', type: 'success' });
+      addToast({ title: t('adminFlow.settings.savedTitle'), message: t('adminFlow.settings.savedMessage'), type: 'success' });
       
       refreshUser();
       
       setSettings(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }));
       setUnlockState({ email: false, password: false });
     } catch (e) {
-      addToast({ title: 'Update failed', message: e?.response?.data?.message || 'Could not update settings.', type: 'error' });
+      addToast({ title: t('adminFlow.settings.updateFailedTitle'), message: e?.response?.data?.message || t('adminFlow.settings.updateFailedMessage'), type: 'error' });
     } finally {
       setSaving(false);
     }
@@ -1039,22 +1049,22 @@ export function AdminSettings() {
     <div className="bg-surface-container-low p-6 rounded-xl border border-outline-variant shadow-sm mt-2">
       <p className="font-h3 text-primary mb-2 flex items-center gap-2">
         <span className="material-symbols-outlined text-[20px] text-secondary">lock</span>
-        Security Check Required
+        {t('adminFlow.settings.securityCheck')}
       </p>
-      <p className="font-body-sm text-on-surface-variant mb-4">Please enter your current password to unlock {targetName} changes.</p>
+      <p className="font-body-sm text-on-surface-variant mb-4">{t('adminFlow.settings.securityHint', { targetName })}</p>
       <div className="flex flex-col sm:flex-row gap-3">
         <input 
           type="password" 
           className="flex-1 bg-surface border border-outline-variant rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary" 
-          placeholder="Current password"
+          placeholder={t('adminFlow.settings.currentPassword')}
           value={verifyInput}
           onChange={(e) => setVerifyInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && confirmVerify()}
         />
         <div className="flex gap-2">
-          <button className={buttonSecondary} onClick={cancelVerify} disabled={verifying}>Cancel</button>
+          <button className={buttonSecondary} onClick={cancelVerify} disabled={verifying}>{t('buttons.cancel')}</button>
           <button className={buttonPrimary} onClick={confirmVerify} disabled={verifying || !verifyInput}>
-            {verifying ? 'Verifying...' : 'Unlock'}
+            {verifying ? t('adminFlow.userDetails.verifying') : t('buttons.unlock')}
           </button>
         </div>
       </div>
@@ -1065,25 +1075,25 @@ export function AdminSettings() {
   return (
     <>
       <AdminPageHeader
-        eyebrow="Settings"
-        title="Admin settings"
-        description="Manage your admin profile and security preferences."
+        eyebrow={t('adminFlow.settings.eyebrow')}
+        title={t('adminFlow.settings.title')}
+        description={t('adminFlow.settings.description')}
       />
       <div className="flex flex-col gap-8">
-        <Section title="Admin profile">
+        <Section title={t('adminFlow.settings.adminProfile')}>
           <div className="grid grid-cols-1 gap-6">
-            <Field error={errors.name} label="Name">
+            <Field error={errors.name} label={t('adminFlow.settings.name')}>
               <TextInput onChange={(e) => update('name', e.target.value)} value={settings.name} />
             </Field>
             
             <div>
-              <span className="font-label-md text-label-md text-primary block mb-1">Email Address</span>
+              <span className="font-label-md text-label-md text-primary block mb-1">{t('adminFlow.settings.emailAddress')}</span>
               {!unlockState.email ? (
-                verifyTarget === 'email' ? renderVerifyBlock('email') : (
+                verifyTarget === 'email' ? renderVerifyBlock(t('adminFlow.settings.emailAddress').toLowerCase()) : (
                   <div className="flex items-center justify-between bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5">
                     <span className="text-on-surface-variant font-body-md truncate">{user?.email}</span>
                     <button onClick={() => startVerify('email')} className="text-secondary font-semibold text-sm hover:underline flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[16px]">edit</span> Change
+                      <span className="material-symbols-outlined text-[16px]">edit</span> {t('adminFlow.settings.change')}
                     </button>
                   </div>
                 )
@@ -1096,23 +1106,23 @@ export function AdminSettings() {
           </div>
         </Section>
         
-        <Section title="Security & Authentication">
+        <Section title={t('adminFlow.settings.securityAndAuth')}>
           {!unlockState.password ? (
-            verifyTarget === 'password' ? renderVerifyBlock('password') : (
+            verifyTarget === 'password' ? renderVerifyBlock(t('adminFlow.settings.passwordLabel').toLowerCase()) : (
               <div>
-                <p className="text-on-surface-variant font-body-sm mb-4">Your password is securely hashed. You can update it at any time by verifying your current password.</p>
+                <p className="text-on-surface-variant font-body-sm mb-4">{t('adminFlow.settings.passwordHint')}</p>
                 <button onClick={() => startVerify('password')} className={buttonSecondary}>
                   <span className="material-symbols-outlined text-[20px]">key</span>
-                  Change Password
+                  {t('adminFlow.settings.changePassword')}
                 </button>
               </div>
             )
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Field error={errors.newPassword} label="New Password">
+              <Field error={errors.newPassword} label={t('adminFlow.settings.newPassword')}>
                 <TextInput type="password" onChange={(e) => update('newPassword', e.target.value)} value={settings.newPassword} />
               </Field>
-              <Field error={errors.confirmPassword} label="Confirm New Password">
+              <Field error={errors.confirmPassword} label={t('adminFlow.settings.confirmNewPassword')}>
                 <TextInput type="password" onChange={(e) => update('confirmPassword', e.target.value)} value={settings.confirmPassword} />
               </Field>
             </div>
@@ -1122,7 +1132,7 @@ export function AdminSettings() {
         <div className="flex justify-end pt-4 border-t border-outline-variant">
           <button className={buttonPrimary} disabled={saving} onClick={save}>
             <span className="material-symbols-outlined text-[20px]">save</span>
-            {saving ? 'Saving...' : 'Save Changes'}
+            {saving ? t('adminFlow.saving') : t('adminFlow.settings.saveChanges')}
           </button>
         </div>
       </div>
