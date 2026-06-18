@@ -8,6 +8,9 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import { ToastProvider } from './components/ToastProvider.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
+import AnimatedBackground from './components/AnimatedBackground.jsx';
+import CustomCursor from './components/CustomCursor.jsx';
+import BackToTop from './components/BackToTop.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,7 +18,18 @@ createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <AuthProvider>
           <ToastProvider>
+            {/* Global ambient animated background — stays behind everything */}
+            <AnimatedBackground />
+
+            {/* Custom premium cursor — desktop only */}
+            <CustomCursor />
+
+            {/* Scroll & routing utilities */}
             <ScrollToTop />
+
+            {/* Animated back-to-top */}
+            <BackToTop />
+
             <App />
           </ToastProvider>
         </AuthProvider>

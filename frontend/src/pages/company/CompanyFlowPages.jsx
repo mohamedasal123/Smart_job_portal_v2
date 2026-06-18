@@ -18,6 +18,7 @@ import { useAuth } from '../../context/useAuth';
 import { useValidationErrors } from '../../hooks/useValidationErrors';
 import { companyDataService } from '../../services/companyDataService';
 import { companyApi } from '../../api/companyApi';
+import DashboardSkeleton from '../../components/DashboardSkeleton';
 import { ROUTES } from '../../utils/constants';
 
 const salary = (job) => `$${Math.round(job.salaryMin / 1000)}k - $${Math.round(job.salaryMax / 1000)}k`;
@@ -29,12 +30,8 @@ const buttonPrimary = 'inline-flex items-center justify-center gap-unit bg-secon
 const buttonSecondary = 'inline-flex items-center justify-center gap-unit border border-outline-variant text-primary px-stack-md py-stack-sm rounded-lg font-h3 text-h3 hover:bg-surface-container-low transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
 const buttonDanger = 'inline-flex items-center justify-center gap-unit border border-error/30 text-error px-stack-md py-stack-sm rounded-lg font-h3 text-h3 hover:bg-error-container transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
 
-export function FullPageSpinner() {
-  return (
-    <div className="flex w-full min-h-[400px] items-center justify-center">
-      <span className="material-symbols-outlined animate-spin text-4xl text-secondary">progress_activity</span>
-    </div>
-  );
+export function FullPageSpinner({ variant = 'dashboard' }) {
+  return <DashboardSkeleton variant={variant} className="w-full min-h-[400px]" />;
 }
 
 function Field({ label, error, children }) {

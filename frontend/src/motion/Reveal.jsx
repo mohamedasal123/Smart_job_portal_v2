@@ -1,52 +1,64 @@
-import { motion, useReducedMotion } from 'framer-motion';
-import { fadeUp } from './variants';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import * as allVariants from './variants';
 
 /**
- * Reveal — wraps a block in a fade+lift on mount or when scrolled into view.
+ * Reveal — wraps a block in a fade/slide/scale on mount or when scrolled into view.
  *
  * Props
- *  - whenInView: if true, waits for the element to scroll into view (only fires once).
- *  - delay: seconds added to the underlying transition delay.
- *  - className / as / children: passthrough.
- *
- * Honors `prefers-reduced-motion` by short-circuiting to a no-op.
+ *  - children: react nodes to wrap
+ *  - variant: maps to variants.js keys (default: "fadeUp")
+ *  - delay: seconds added to the underlying transition delay (default: 0)
+ *  - duration: transition duration in seconds (default: 0.5)
+ *  - threshold: intersection threshold (default: 0.15)
+ *  - once: triggers animation only once (default: true)
+ *  - whenInView: if true, waits for the element to scroll into view (default: false)
+ *  - className: css class name
+ *  - as: HTML element to render (default: 'div')
+ *  - layout: standard motion layout prop (default: true)
  */
 export default function Reveal({
   children,
-  whenInView = false,
+  variant = 'fadeUp',
   delay = 0,
+  duration = 0.5,
+  threshold = 0.15,
+  once = true,
+  whenInView = false,
   className,
   as = 'div',
+  layout = true,
   ...rest
 }) {
-  const reduce = useReducedMotion();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once, amount: threshold });
+
   const MotionTag = motion[as] || motion.div;
+  const baseVariant = allVariants[variant] || allVariants.fadeUp;
 
-  if (reduce) {
-    const Tag = as;
-    return (
-      <Tag className={className} {...rest}>
-        {children}
-      </Tag>
-    );
-  }
-
-  const variants = {
-    hidden: fadeUp.hidden,
+  // Merge custom duration and delay props into the variant structure
+  const motionVariants = {
+    hidden: baseVariant.hidden,
     visible: {
-      ...fadeUp.visible,
-      transition: { ...fadeUp.visible.transition, delay },
+      ...baseVariant.visible,
+      transition: {
+        ...baseVariant.visible?.transition,
+        duration: allVariants.shouldAnimate() ? duration : 0.01,
+        delay: allVariants.shouldAnimate() ? delay : 0,
+      },
     },
   };
 
+  const animateState = whenInView ? (isInView ? 'visible' : 'hidden') : 'visible';
+
   return (
     <MotionTag
+      ref={ref}
       className={className}
-      variants={variants}
+      variants={motionVariants}
       initial="hidden"
-      {...(whenInView
-        ? { whileInView: 'visible', viewport: { once: true, margin: '-60px' } }
-        : { animate: 'visible' })}
+      animate={animateState}
+      layout={layout}
       {...rest}
     >
       {children}

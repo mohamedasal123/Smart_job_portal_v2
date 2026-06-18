@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 @tailwind base;
@@ -402,5 +402,519 @@ h6 {
   .home-category-grid * {
     animation-duration: 1ms;
     transition-duration: 1ms;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+.dark .animate-shimmer {
+  background: linear-gradient(90deg, #334155 25%, #475569 50%, #334155 75%);
+}
+
+@keyframes shake-field {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake-field 0.45s ease-in-out;
+}
+
+@keyframes btn-shine {
+  0% { transform: translateX(-120%) skewX(-15deg); }
+  100% { transform: translateX(220%) skewX(-15deg); }
+}
+
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 60%
+  );
+  transform: translateX(-120%) skewX(-15deg);
+  pointer-events: none;
+}
+
+.btn-shine:hover:not(:disabled)::after {
+  animation: btn-shine 0.75s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-shake,
+  .btn-shine:hover:not(:disabled)::after {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Custom Cursor
+   ============================================================ */
+
+/* Hide native cursor when custom is active */
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Spotlight Card
+   ============================================================ */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgb(var(--secondary) / 0.08),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+.spotlight-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Animated Mesh Background
+   ============================================================ */
+.animated-mesh {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.animated-mesh-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.045;
+  will-change: transform;
+  animation: meshFloat linear infinite;
+}
+
+.dark .animated-mesh-blob {
+  opacity: 0.06;
+}
+
+@keyframes meshFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.04); }
+  66% { transform: translate(-20px, 15px) scale(0.97); }
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Glass Card
+   ============================================================ */
+.glass-premium {
+  background: rgb(var(--surface-container-lowest) / 0.75);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgb(var(--outline-variant) / 0.6);
+  box-shadow:
+    0 4px 24px rgba(15, 23, 42, 0.06),
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.dark .glass-premium {
+  background: rgb(var(--surface-container-lowest) / 0.6);
+  border: 1px solid rgb(var(--outline-variant) / 0.4);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.25),
+    0 1px 2px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Premium Button
+   ============================================================ */
+.btn-premium {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+/* Ripple effect */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(0);
+  animation: rippleExpand 0.55s linear;
+  pointer-events: none;
+}
+
+@keyframes rippleExpand {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Primary CTA animated gradient shine */
+@keyframes cta-shine {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  100% { transform: translateX(250%) skewX(-20deg); }
+}
+
+.btn-cta-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cta-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 70%
+  );
+  transform: translateX(-150%) skewX(-20deg);
+  pointer-events: none;
+}
+
+.btn-cta-shine:not(:disabled) {
+  animation: cta-shine-auto 3.5s ease-in-out infinite;
+}
+
+@keyframes cta-shine-auto {
+  0%, 70% { }
+  75% { }
+  85% {
+    opacity: 1;
+  }
+  86% { }
+  100% { }
+}
+
+/* Override: trigger shine via ::after */
+.btn-cta-shine::after {
+  animation: cta-shine 3.5s ease-in-out 1.5s infinite;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Image Lazy Fade
+   ============================================================ */
+.img-blur-up {
+  transition: filter 0.4s ease, opacity 0.4s ease;
+  filter: blur(8px);
+  opacity: 0.6;
+}
+
+.img-blur-up.loaded {
+  filter: blur(0px);
+  opacity: 1;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Premium Card Hover (3D)
+   ============================================================ */
+.card-3d-wrapper {
+  perspective: 800px;
+}
+
+.card-3d {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Floating animation utility
+   ============================================================ */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float-gentle 5s ease-in-out infinite;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Orbit animation
+   ============================================================ */
+@keyframes orbit-slow {
+  from { transform: rotate(0deg) translateX(70px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(70px) rotate(-360deg); }
+}
+
+.animate-orbit {
+  animation: orbit-slow 12s linear infinite;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Gradient text
+   ============================================================ */
+.text-gradient {
+  background: linear-gradient(135deg, rgb(var(--secondary)), rgb(var(--tertiary)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Dark Mode Transition
+   ============================================================ */
+html {
+  transition: background-color 0.35s ease;
+}
+
+body {
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+/* Smooth dark mode for all common elements */
+*, ::before, ::after {
+  transition-property: background-color, border-color, box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+/* But don't transition layout properties */
+.no-color-transition,
+.no-color-transition * {
+  transition: none !important;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Back to Top
+   ============================================================ */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Scroll reveal utility
+   ============================================================ */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Nav link animated underline
+   ============================================================ */
+.nav-link-animated {
+  position: relative;
+}
+
+.nav-link-animated::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+  border-radius: 2px;
+}
+
+.nav-link-animated:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Form Focus Effects
+   ============================================================ */
+.form-field-premium {
+  position: relative;
+}
+
+.form-field-premium input:focus,
+.form-field-premium textarea:focus,
+.form-field-premium select:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgb(var(--secondary) / 0.15),
+    0 0 12px rgb(var(--secondary) / 0.08);
+}
+
+/* Floating label */
+.floating-label-wrapper {
+  position: relative;
+}
+
+.floating-label-wrapper label {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  transition: all 0.2s ease;
+  pointer-events: none;
+  color: rgb(var(--on-surface-variant));
+  font-size: 0.9rem;
+}
+
+.floating-label-wrapper input:focus ~ label,
+.floating-label-wrapper input:not(:placeholder-shown) ~ label {
+  top: 0;
+  font-size: 0.75rem;
+  background: rgb(var(--surface-container-lowest));
+  padding: 0 4px;
+  color: rgb(var(--secondary));
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Skeleton refinements
+   ============================================================ */
+@keyframes skeleton-wave {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-premium {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--surface-container-low)) 25%,
+    rgb(var(--surface-container)) 37%,
+    rgb(var(--surface-container-low)) 63%
+  );
+  background-size: 800px 100%;
+  animation: skeleton-wave 1.4s ease infinite;
+}
+
+.dark .skeleton-premium {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--surface-container-low)) 25%,
+    rgb(var(--surface-container-high)) 37%,
+    rgb(var(--surface-container-low)) 63%
+  );
+  background-size: 800px 100%;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Table row hover
+   ============================================================ */
+.table-row-premium {
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.table-row-premium:hover {
+  background-color: rgb(var(--surface-container-low));
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Badge micro animation
+   ============================================================ */
+@keyframes badge-pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  70% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.badge-animate {
+  animation: badge-pop 0.3s ease forwards;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Progress bar grow
+   ============================================================ */
+@keyframes progress-grow {
+  from { width: 0; }
+}
+
+.progress-bar-animated {
+  animation: progress-grow 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ============================================================
+   PREMIUM UI SYSTEM — Reduced motion overrides
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shake,
+  .btn-shine:hover:not(:disabled)::after,
+  .btn-cta-shine::after,
+  .animated-mesh-blob,
+  .animate-float,
+  .animate-orbit,
+  .img-blur-up,
+  .progress-bar-animated,
+  .badge-animate,
+  .skeleton-premium,
+  .animate-shimmer {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .img-blur-up {
+    filter: none;
+    opacity: 1;
+  }
+
+  *, ::before, ::after {
+    transition-duration: 0.01ms !important;
   }
 }

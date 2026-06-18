@@ -15,6 +15,7 @@ import { useToast } from '../../components/useToast';
 import { adminDataService } from '../../services/adminDataService';
 import { adminApi } from '../../api/adminApi';
 import { useAuth } from '../../context/useAuth';
+import DashboardSkeleton from '../../components/DashboardSkeleton';
 import { ROUTES } from '../../utils/constants';
 
 const buttonPrimary = 'inline-flex items-center justify-center gap-unit bg-secondary text-on-secondary px-stack-md py-stack-sm rounded-lg font-h3 text-h3 shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed';
@@ -22,12 +23,8 @@ const buttonSecondary = 'inline-flex items-center justify-center gap-unit border
 const buttonDanger = 'inline-flex items-center justify-center gap-unit border border-error/30 text-error px-stack-md py-stack-sm rounded-lg font-h3 text-h3 hover:bg-error-container transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
 const buttonSuccess = 'inline-flex items-center justify-center gap-unit bg-tertiary text-on-tertiary px-stack-md py-stack-sm rounded-lg font-h3 text-h3 shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed';
 
-export function FullPageSpinner() {
-  return (
-    <div className="flex w-full min-h-[400px] items-center justify-center">
-      <span className="material-symbols-outlined animate-spin text-4xl text-secondary">progress_activity</span>
-    </div>
-  );
+export function FullPageSpinner({ variant = 'dashboard' }) {
+  return <DashboardSkeleton variant={variant} className="w-full min-h-[400px]" />;
 }
 
 function TextInput(props) {

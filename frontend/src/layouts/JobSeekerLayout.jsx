@@ -5,8 +5,11 @@ import { useAuth } from '../context/useAuth';
 import { ROUTES } from '../utils/constants';
 import { addLocalNotification, getNotifications, markNotificationRead } from '../services/jobSeekerDataService';
 import PageTransition from '../motion/PageTransition';
+import Stagger from '../motion/Stagger';
+import Reveal from '../motion/Reveal';
 import ThemeToggle from '../components/ThemeToggle';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import NetworkBackground from '../components/NetworkBackground';
 import { useToast } from '../components/useToast';
 import icon from '../assets/icon.png';
 
@@ -105,7 +108,7 @@ function SidebarContent({ currentPath, onNavigate, onLogout }) {
         </div>
       </Link>
 
-      <nav className="flex-1 min-h-0 flex flex-col gap-unit overflow-y-auto pe-unit">
+      <Stagger className="flex-1 min-h-0 flex flex-col gap-unit overflow-y-auto pe-unit" direction="right">
         {navItems.map((item) => {
           const isActive = isSeekerNavActive(item, currentPath);
           return (
@@ -115,7 +118,7 @@ function SidebarContent({ currentPath, onNavigate, onLogout }) {
             </NavLink>
           );
         })}
-      </nav>
+      </Stagger>
 
       <div className="mt-auto pt-stack-md border-t border-outline-variant flex flex-col gap-unit shrink-0 bg-surface-container-low">
         <NavLink className="flex items-center gap-stack-md text-on-surface-variant hover:bg-surface-container-highest rounded-lg px-stack-md py-stack-sm transition-colors" to={ROUTES.CONTACT} onClick={onNavigate}>
@@ -303,7 +306,9 @@ export default function JobSeekerLayout({ children }) {
   const unreadCount = recentNotifications.filter((notification) => !notification.read_at && !notification.read).length;
 
   return (
-    <div className="stitch-page bg-background text-on-background font-body-md text-body-md flex h-screen overflow-hidden">
+    <div className="stitch-page relative bg-background text-on-background font-body-md text-body-md flex h-screen overflow-hidden">
+      <NetworkBackground color="#10b981" particleCount={60} maxDist={130} />
+      <div className="relative z-10 flex h-screen w-full overflow-hidden">
       {isSidebarOpen && (
         <aside className="hidden md:flex flex-col h-screen p-stack-md border-r border-outline-variant bg-surface-container-low w-sidebar-width shrink-0 overflow-hidden">
           <SidebarContent currentPath={currentPath} onLogout={handleLogout} />
@@ -320,145 +325,147 @@ export default function JobSeekerLayout({ children }) {
 
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden bg-background">
         <header className="min-h-16 h-16 bg-surface-container-lowest border-b border-outline-variant flex items-center justify-between px-gutter lg:px-margin-desktop shrink-0 z-50 shadow-ambient">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setIsSidebarOpen((prev) => !prev)}
-              className="hidden md:flex w-10 h-10 rounded-lg items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"
-              title={t('a11y.toggleSidebar')}
-              type="button"
-            >
-              <span className="material-symbols-outlined">menu</span>
-            </button>
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"
-              title={t('a11y.openMenu')}
-              type="button"
-            >
-              <span className="material-symbols-outlined">menu</span>
-            </button>
-            <Link to={ROUTES.SEEKER_DASHBOARD} className="md:hidden flex items-center gap-stack-sm hover:opacity-80 transition-opacity">
-              <img src={icon} alt={t('app.productName')} className="w-8 h-8 object-contain" />
-              <span className="hidden sm:inline font-h3 text-h3 font-bold text-primary">{t('app.productName')}</span>
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-stack-md">
-            <LanguageSwitcher compact />
-            <ThemeToggle compact />
-
-            <div className="relative" ref={notifRef}>
+          <Reveal variant="fadeDown" className="w-full flex items-center justify-between" layout={false}>
+            <div className="flex items-center gap-4">
               <button
-                onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors relative"
+                onClick={() => setIsSidebarOpen((prev) => !prev)}
+                className="hidden md:flex w-10 h-10 rounded-lg items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"
+                title={t('a11y.toggleSidebar')}
                 type="button"
               >
-                <span className="material-symbols-outlined">notifications</span>
-                {unreadCount > 0 && (
-                  <span className="absolute top-0 right-0 w-4 h-4 bg-error text-on-error rounded-full border-2 border-surface-container-lowest text-[9px] flex items-center justify-center font-bold">
-                    {unreadCount}
-                  </span>
-                )}
+                <span className="material-symbols-outlined">menu</span>
               </button>
-
-              {isNotifOpen && (
-                <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-80 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-md overflow-hidden z-50">
-                  <div className="px-4 py-3 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
-                    <h3 className="font-h3 text-primary">{t('seekerNav.notifications')}</h3>
-                    <Link to={ROUTES.SEEKER_NOTIFICATIONS} className="text-xs text-secondary hover:underline" onClick={() => setIsNotifOpen(false)}>{t('buttons.viewAll')}</Link>
-                  </div>
-                  <div className="max-h-[300px] overflow-y-auto">
-                    {recentNotifications.length > 0 ? recentNotifications.map((notification, index) => (
-                      <div
-                        key={notification.id || index}
-                        className="px-4 py-3 border-b border-outline-variant last:border-0 hover:bg-surface-container-low transition-colors text-left text-sm relative group cursor-pointer"
-                        onClick={(event) => handleNotificationClick(notification, event)}
-                      >
-                        <button onClick={(event) => dismissNotification(index, event)} className="absolute right-2 top-2 w-6 h-6 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container opacity-0 group-hover:opacity-100 transition-all shadow-sm" type="button">
-                          <span className="material-symbols-outlined text-[14px]">close</span>
-                        </button>
-                        <p className="font-semibold text-primary pr-6">{notification.title || notification.data?.title || 'Notification'}</p>
-                        <p className="text-on-surface-variant text-xs mt-1 pr-6">{notification.message || notification.data?.message}</p>
-                        <p className="text-outline text-xs mt-1">{new Date(notification.created_at || Date.now()).toLocaleString()}</p>
-                      </div>
-                    )) : (
-                      <p className="p-4 text-center text-on-surface-variant text-sm">{t('emptyStatesShort.notifications')}</p>
-                    )}
-                  </div>
-                </div>
-              )}
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="md:hidden w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"
+                title={t('a11y.openMenu')}
+                type="button"
+              >
+                <span className="material-symbols-outlined">menu</span>
+              </button>
+              <Link to={ROUTES.SEEKER_DASHBOARD} className="md:hidden flex items-center gap-stack-sm hover:opacity-80 transition-opacity">
+                <img src={icon} alt={t('app.productName')} className="w-8 h-8 object-contain" />
+                <span className="hidden sm:inline font-h3 text-h3 font-bold text-primary">{t('app.productName')}</span>
+              </Link>
             </div>
 
-            <div className="h-8 w-px bg-outline-variant" />
+            <div className="flex items-center gap-stack-md">
+              <LanguageSwitcher compact />
+              <ThemeToggle compact />
 
-            <div className="relative" ref={profileRef}>
-              <button
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center gap-stack-sm hover:opacity-80 transition-opacity"
-                type="button"
-              >
-                {profileImage ? (
-                  <img
-                    alt={displayName}
-                    className="w-10 h-10 rounded-full object-cover border border-outline-variant"
-                    src={profileImage}
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-h3 text-h3">
-                    {initials}
+              <div className="relative" ref={notifRef}>
+                <button
+                  onClick={() => setIsNotifOpen(!isNotifOpen)}
+                  className="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors relative"
+                  type="button"
+                >
+                  <span className="material-symbols-outlined">notifications</span>
+                  {unreadCount > 0 && (
+                    <span className="absolute top-0 right-0 w-4 h-4 bg-error text-on-error rounded-full border-2 border-surface-container-lowest text-[9px] flex items-center justify-center font-bold">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {isNotifOpen && (
+                  <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-80 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-md overflow-hidden z-50">
+                    <div className="px-4 py-3 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+                      <h3 className="font-h3 text-primary">{t('seekerNav.notifications')}</h3>
+                      <Link to={ROUTES.SEEKER_NOTIFICATIONS} className="text-xs text-secondary hover:underline" onClick={() => setIsNotifOpen(false)}>{t('buttons.viewAll')}</Link>
+                    </div>
+                    <div className="max-h-[300px] overflow-y-auto">
+                      {recentNotifications.length > 0 ? recentNotifications.map((notification, index) => (
+                        <div
+                          key={notification.id || index}
+                          className="px-4 py-3 border-b border-outline-variant last:border-0 hover:bg-surface-container-low transition-colors text-left text-sm relative group cursor-pointer"
+                          onClick={(event) => handleNotificationClick(notification, event)}
+                        >
+                          <button onClick={(event) => dismissNotification(index, event)} className="absolute right-2 top-2 w-6 h-6 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container opacity-0 group-hover:opacity-100 transition-all shadow-sm" type="button">
+                            <span className="material-symbols-outlined text-[14px]">close</span>
+                          </button>
+                          <p className="font-semibold text-primary pr-6">{notification.title || notification.data?.title || 'Notification'}</p>
+                          <p className="text-on-surface-variant text-xs mt-1 pr-6">{notification.message || notification.data?.message}</p>
+                          <p className="text-outline text-xs mt-1">{new Date(notification.created_at || Date.now()).toLocaleString()}</p>
+                        </div>
+                      )) : (
+                        <p className="p-4 text-center text-on-surface-variant text-sm">{t('emptyStatesShort.notifications')}</p>
+                      )}
+                    </div>
                   </div>
                 )}
-                <div className="text-left hidden lg:block">
-                  <p className="font-body-md text-body-md font-semibold text-primary leading-tight">{displayName}</p>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant leading-tight max-w-[150px] truncate" title={displayEmail}>{displayEmail}</p>
-                </div>
-                <span className="material-symbols-outlined text-on-surface-variant">expand_more</span>
-              </button>
+              </div>
 
-              {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-md overflow-hidden z-50 flex flex-col">
-                  <div className="px-4 py-3 border-b border-outline-variant bg-surface-container-low">
-                    <p className="font-semibold text-primary">{displayName}</p>
-                    <p className="text-xs text-on-surface-variant truncate" title={displayEmail}>{displayEmail}</p>
+              <div className="h-8 w-px bg-outline-variant" />
+
+              <div className="relative" ref={profileRef}>
+                <button
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="flex items-center gap-stack-sm hover:opacity-80 transition-opacity"
+                  type="button"
+                >
+                  {profileImage ? (
+                    <img
+                      alt={displayName}
+                      className="w-10 h-10 rounded-full object-cover border border-outline-variant"
+                      src={profileImage}
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-h3 text-h3">
+                      {initials}
+                    </div>
+                  )}
+                  <div className="text-left hidden lg:block">
+                    <p className="font-body-md text-body-md font-semibold text-primary leading-tight">{displayName}</p>
+                    <p className="font-label-sm text-label-sm text-on-surface-variant leading-tight max-w-[150px] truncate" title={displayEmail}>{displayEmail}</p>
                   </div>
-                  <Link
-                    to={ROUTES.SEEKER_PROFILE}
-                    className="flex items-center gap-2 px-4 py-3 hover:bg-surface-container-low transition-colors text-on-surface font-body-md"
-                    onClick={() => setIsProfileOpen(false)}
-                  >
-                    <span className="material-symbols-outlined text-[20px]">person</span>
-                    {t('seekerNav.profile')}
-                  </Link>
-                  <Link
-                    to={ROUTES.SEEKER_SETTINGS}
-                    className="flex items-center gap-2 px-4 py-3 hover:bg-surface-container-low transition-colors text-on-surface font-body-md"
-                    onClick={() => setIsProfileOpen(false)}
-                  >
-                    <span className="material-symbols-outlined text-[20px]">manage_accounts</span>
-                    {t('seekerNav.accountSettings')}
-                  </Link>
-                  <Link
-                    to={ROUTES.HOME}
-                    className="flex items-center gap-2 px-4 py-3 hover:bg-surface-container-low transition-colors text-on-surface font-body-md"
-                    onClick={() => setIsProfileOpen(false)}
-                  >
-                    <span className="material-symbols-outlined text-[20px]">public</span>
-                    {t('seekerNav.publicSite')}
-                  </Link>
-                  <div className="border-t border-outline-variant">
-                    <button
-                      onClick={() => { setIsProfileOpen(false); handleLogout(); }}
-                      className="w-full flex items-center gap-2 px-4 py-3 hover:bg-error-container hover:text-error transition-colors text-error font-body-md"
-                      type="button"
+                  <span className="material-symbols-outlined text-on-surface-variant">expand_more</span>
+                </button>
+
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-md overflow-hidden z-50 flex flex-col">
+                    <div className="px-4 py-3 border-b border-outline-variant bg-surface-container-low">
+                      <p className="font-semibold text-primary">{displayName}</p>
+                      <p className="text-xs text-on-surface-variant truncate" title={displayEmail}>{displayEmail}</p>
+                    </div>
+                    <Link
+                      to={ROUTES.SEEKER_PROFILE}
+                      className="flex items-center gap-2 px-4 py-3 hover:bg-surface-container-low transition-colors text-on-surface font-body-md"
+                      onClick={() => setIsProfileOpen(false)}
                     >
-                      <span className="material-symbols-outlined text-[20px]">logout</span>
-                      {t('seekerNav.logout')}
-                    </button>
+                      <span className="material-symbols-outlined text-[20px]">person</span>
+                      {t('seekerNav.profile')}
+                    </Link>
+                    <Link
+                      to={ROUTES.SEEKER_SETTINGS}
+                      className="flex items-center gap-2 px-4 py-3 hover:bg-surface-container-low transition-colors text-on-surface font-body-md"
+                      onClick={() => setIsProfileOpen(false)}
+                    >
+                      <span className="material-symbols-outlined text-[20px]">manage_accounts</span>
+                      {t('seekerNav.accountSettings')}
+                    </Link>
+                    <Link
+                      to={ROUTES.HOME}
+                      className="flex items-center gap-2 px-4 py-3 hover:bg-surface-container-low transition-colors text-on-surface font-body-md"
+                      onClick={() => setIsProfileOpen(false)}
+                    >
+                      <span className="material-symbols-outlined text-[20px]">public</span>
+                      {t('seekerNav.publicSite')}
+                    </Link>
+                    <div className="border-t border-outline-variant">
+                      <button
+                        onClick={() => { setIsProfileOpen(false); handleLogout(); }}
+                        className="w-full flex items-center gap-2 px-4 py-3 hover:bg-error-container hover:text-error transition-colors text-error font-body-md"
+                        type="button"
+                      >
+                        <span className="material-symbols-outlined text-[20px]">logout</span>
+                        {t('seekerNav.logout')}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
+          </Reveal>
         </header>
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
@@ -467,6 +474,7 @@ export default function JobSeekerLayout({ children }) {
           </PageTransition>
         </div>
       </main>
+      </div>
     </div>
   );
 }

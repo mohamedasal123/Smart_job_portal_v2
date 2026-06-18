@@ -1,13 +1,16 @@
 import { useTranslation } from 'react-i18next';
+import EmptyState from '../EmptyState';
 
-export default function AdminEmptyState({ title, message }) {
+export default function AdminEmptyState({ title, message, actionLabel, actionTo }) {
   const { t } = useTranslation();
 
   return (
-    <div className="bg-surface-container-lowest border border-dashed border-outline-variant rounded-xl p-stack-lg text-center">
-      <span className="material-symbols-outlined text-[48px] text-outline mb-stack-sm">manage_search</span>
-      <h3 className="font-h2 text-h2 text-primary">{title || t('dashboardComponents.empty.nothingFound')}</h3>
-      <p className="font-body-md text-body-md text-on-surface-variant mt-unit">{message || t('dashboardComponents.empty.adjustFilters')}</p>
-    </div>
+    <EmptyState
+      icon="manage_search"
+      title={title || t('dashboardComponents.empty.nothingFound')}
+      message={message || t('dashboardComponents.empty.adjustFilters')}
+      actionLabel={actionLabel}
+      actionTo={actionTo}
+    />
   );
 }

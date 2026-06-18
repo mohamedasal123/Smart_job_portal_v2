@@ -5,7 +5,9 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { isJobSaved, toggleSavedJob } from '../../services/jobSeekerDataService';
 import { useToast } from '../useToast';
 import MatchScoreBadge from './MatchScoreBadge';
+import SpotlightCard from '../SpotlightCard';
 import { EASE, SPRING_PRESS } from '../../motion/variants';
+
 
 export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: detailsPathOverride, saveEnabled = true, onSaveUnavailable, showSaveButton = true }) {
   const { t, i18n } = useTranslation();
@@ -96,13 +98,15 @@ export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: de
   const dateLocale = i18n.language === 'ar' ? 'ar-EG' : 'en-US';
 
   return (
-    <motion.div
+    <SpotlightCard
+      as="div"
       onClick={openDetails}
       onKeyDown={handleCardKeyDown}
       role="link"
       tabIndex={0}
-      whileHover={reduce ? undefined : { y: -4, boxShadow: '0px 14px 40px rgba(15,23,42,0.12)', transition: { duration: 0.25, ease: EASE } }}
-      className="bg-surface-container-lowest rounded-xl p-stack-lg border border-outline-variant shadow-ambient hover:shadow-hover transition-all flex flex-col h-full relative group overflow-hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+      className="bg-surface-container-lowest rounded-xl p-stack-lg border border-outline-variant shadow-ambient flex flex-col h-full relative group overflow-hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+      enableTilt={!reduce}
+      enableSpotlight
     >
       <div className="flex items-start justify-between mb-4 gap-4">
         <div className="flex items-center gap-4 flex-1 min-w-0">
@@ -180,6 +184,6 @@ export default function SeekerJobCard({ job, onSavedStateChange, detailsPath: de
           </Link>
         </motion.div>
       </div>
-    </motion.div>
+    </SpotlightCard>
   );
 }

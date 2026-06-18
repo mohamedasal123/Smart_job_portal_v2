@@ -44,6 +44,7 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [shakeForm, setShakeForm] = useState(false);
 
   // 1. التوجيه هيحصل هنا بس! لما الـ user state تتحدث فعلياً
   useEffect(() => {
@@ -87,6 +88,8 @@ export default function LoginPage() {
     const v = validate();
     if (Object.keys(v).length) {
       setErrors(v);
+      setShakeForm(true);
+      window.setTimeout(() => setShakeForm(false), 480);
       return;
     }
 
@@ -182,7 +185,7 @@ export default function LoginPage() {
               </motion.div>
             )}
 
-            <form className="relative flex flex-col gap-stack-md" onSubmit={handleSubmit}>
+            <form className={`relative flex flex-col gap-stack-md ${shakeForm ? 'animate-shake' : ''}`} onSubmit={handleSubmit}>
               <Stagger delayChildren={0.2} staggerChildren={0.05}>
                 <Stagger.Item>
                   <label className="font-label-sm text-label-sm text-on-surface" htmlFor="email">{t('auth.login.emailLabel')}</label>

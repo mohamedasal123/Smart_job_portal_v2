@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AdminEmptyState from './AdminEmptyState';
 import AdminStatusBadge from './AdminStatusBadge';
+import Stagger from '../../motion/Stagger';
 
 export default function AdminJobTable({ jobs, onDeleteRequest }) {
   const { t } = useTranslation();
@@ -21,8 +22,12 @@ export default function AdminJobTable({ jobs, onDeleteRequest }) {
         <div className="col-span-1 flex justify-center">{t('dashboardComponents.common.status')}</div>
         <div className="col-span-2 text-center">{t('dashboardComponents.common.actions')}</div>
       </div>
+      <Stagger className="divide-y divide-outline-variant" delayChildren={0.02} staggerChildren={0.04}>
       {jobs.map((job) => (
-        <div className="grid grid-cols-1 gap-4 px-stack-md sm:px-stack-lg py-stack-md border-t border-outline-variant items-start lg:grid-cols-12 lg:items-center" key={job.id}>
+        <Stagger.Item
+          className="grid grid-cols-1 gap-4 px-stack-md sm:px-stack-lg py-stack-md border-t border-outline-variant items-start lg:grid-cols-12 lg:items-center hover:bg-surface-container-low/60 transition-colors"
+          key={job.id}
+        >
           <div className="lg:col-span-3 min-w-0">
             <Link className="font-h3 text-h3 text-primary hover:text-secondary truncate block" to={`/admin/jobs/${job.id}`}>{job.title}</Link>
             <p className="font-body-sm text-body-sm text-on-surface-variant truncate">{job.postedAt}</p>
@@ -40,8 +45,9 @@ export default function AdminJobTable({ jobs, onDeleteRequest }) {
               <span className="material-symbols-outlined text-[20px]">delete_forever</span>
             </button>
           </div>
-        </div>
+        </Stagger.Item>
       ))}
+      </Stagger>
     </div>
   );
 }
